@@ -1,0 +1,22 @@
+---
+import { GOOGLE_MAPS_EMBED_URL, GOOGLE_MAPS_URL } from "../data/location";
+interface Props { label?: string; className?: string }
+const { label = "Abrir ubicación de TR3C3 en Google Maps", className = "" } = Astro.props;
+---
+<div class:list={["tr-map-preview", className]}>
+  <iframe
+    class="tr-map-preview__frame"
+    src={GOOGLE_MAPS_EMBED_URL}
+    title="Ubicación de TR3C3 Brunch en Google Maps"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    allowfullscreen
+  ></iframe>
+  <span class="tr-map-preview__sheen" aria-hidden="true"></span>
+  <span class="tr-map-preview__place">Miami Platja<small>Av. de Los Ángeles 13 · Costa Daurada</small></span>
+  <a class="tr-map-preview__open" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer" aria-label={label}>
+    Cómo llegar <span aria-hidden="true">→</span>
+  </a>
+</div>
+
+

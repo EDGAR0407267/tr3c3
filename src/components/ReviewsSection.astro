@@ -1,0 +1,530 @@
+---
+import { type Language } from "../i18n/config";
+import { reviews, GOOGLE_RATING, GOOGLE_REVIEWS_URL } from "../data/reviews";
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+
+// Copys por idioma. El título/subtítulo siguen la petición del negocio.
+const labels: Record<Language, {
+  kicker: string; title: string; lead: string;
+  badgeTitle: string; based: string; cta: string; prev: string; next: string; goto: string;
+}> = {
+  es: {
+    kicker: "Reseñas reales",
+    title: "Lo que dicen de TR3C3",
+    lead: "Experiencias reales de quienes ya han disfrutado nuestro brunch, café de especialidad y cocina mediterránea.",
+    badgeTitle: "Google Reviews",
+    based: "Basado en reseñas reales de Google",
+    cta: "Ver más reseñas en Google",
+    prev: "Reseña anterior", next: "Siguiente reseña", goto: "Ir a la reseña",
+  },
+  ca: {
+    kicker: "Ressenyes reals",
+    title: "El que diuen de TR3C3",
+    lead: "Experiències reals de qui ja ha gaudit del nostre brunch, cafè d’especialitat i cuina mediterrània.",
+    badgeTitle: "Google Reviews",
+    based: "Basat en ressenyes reals de Google",
+    cta: "Veure més ressenyes a Google",
+    prev: "Ressenya anterior", next: "Ressenya següent", goto: "Anar a la ressenya",
+  },
+  en: {
+    kicker: "Real reviews",
+    title: "What people say about TR3C3",
+    lead: "Real experiences from those who have already enjoyed our brunch, specialty coffee and Mediterranean cooking.",
+    badgeTitle: "Google Reviews",
+    based: "Based on real Google reviews",
+    cta: "See more reviews on Google",
+    prev: "Previous review", next: "Next review", goto: "Go to review",
+  },
+  fr: {
+    kicker: "Avis réels",
+    title: "Ce que l’on dit de TR3C3",
+    lead: "Des expériences réelles de ceux qui ont déjà savouré notre brunch, notre café de spécialité et notre cuisine méditerranéenne.",
+    badgeTitle: "Google Reviews",
+    based: "Basé sur de vrais avis Google",
+    cta: "Voir plus d’avis sur Google",
+    prev: "Avis précédent", next: "Avis suivant", goto: "Aller à l’avis",
+  },
+  de: {
+    kicker: "Echte Bewertungen",
+    title: "Was man über TR3C3 sagt",
+    lead: "Echte Erfahrungen von Gästen, die unseren Brunch, Spezialitätenkaffee und die mediterrane Küche bereits genossen haben.",
+    badgeTitle: "Google Reviews",
+    based: "Basierend auf echten Google-Bewertungen",
+    cta: "Mehr Bewertungen auf Google ansehen",
+    prev: "Vorherige Bewertung", next: "Nächste Bewertung", goto: "Zur Bewertung",
+  },
+  zh: {
+    kicker: "真实评价",
+    title: "大家对 TR3C3 的评价",
+    lead: "来自已经品尝过我们早午餐、精品咖啡与地中海料理的客人的真实体验。",
+    badgeTitle: "Google Reviews",
+    based: "基于真实的 Google 评价",
+    cta: "在 Google 查看更多评价",
+    prev: "上一条评价", next: "下一条评价", goto: "前往评价",
+  },
+  nl: {
+    kicker: "Echte reviews",
+    title: "Wat men zegt over TR3C3",
+    lead: "Echte ervaringen van wie al genoot van onze brunch, specialty koffie en mediterrane keuken.",
+    badgeTitle: "Google Reviews",
+    based: "Gebaseerd op echte Google-reviews",
+    cta: "Meer reviews op Google bekijken",
+    prev: "Vorige review", next: "Volgende review", goto: "Ga naar review",
+  },
+  it: {
+    kicker: "Recensioni reali",
+    title: "Cosa dicono di TR3C3",
+    lead: "Esperienze reali di chi ha già gustato il nostro brunch, il caffè speciale e la cucina mediterranea.",
+    badgeTitle: "Google Reviews",
+    based: "Basato su recensioni reali di Google",
+    cta: "Vedi altre recensioni su Google",
+    prev: "Recensione precedente", next: "Recensione successiva", goto: "Vai alla recensione",
+  },
+};
+const l = labels[lang] ?? labels.es;
+
+const initialOf = (name: string) => (name.trim().charAt(0) || "?").toUpperCase();
+const gmapsUrl = GOOGLE_REVIEWS_URL;
+---
+<section class="reviews reveal" data-reveal aria-labelledby="reviews-title">
+  <span class="reviews__steam reviews__steam--left" aria-hidden="true"></span>
+  <span class="reviews__steam reviews__steam--right" aria-hidden="true"></span>
+  <span class="reviews__wash reviews__wash--one" aria-hidden="true"></span>
+  <span class="reviews__wash reviews__wash--two" aria-hidden="true"></span>
+  <span class="reviews__leaf reviews__leaf--one" aria-hidden="true">
+    <svg viewBox="0 0 40 90"><path d="M20 2C6 20 6 46 20 88M20 88C34 46 34 20 20 2M8 30h24M6 50h28M9 68h22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+  </span>
+  <span class="reviews__leaf reviews__leaf--two" aria-hidden="true">
+    <svg viewBox="0 0 40 90"><path d="M20 2C6 20 6 46 20 88M20 88C34 46 34 20 20 2M8 30h24M6 50h28M9 68h22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+  </span>
+
+  <div class="tr-shell reviews__inner">
+    <header class="reviews__head">
+      <p class="editorial-kicker">{l.kicker}</p>
+      <h2 id="reviews-title">{l.title}</h2>
+      <p class="reviews__lead">{l.lead}</p>
+    </header>
+
+    <aside class="gbadge" aria-label={l.badgeTitle}>
+      <div class="gbadge__brand">
+        <span class="gbadge__logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.8-5H1.2v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.2 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.2a12 12 0 0 0 0 10.8l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 12 0 12 12 0 0 0 1.2 6.6l4 3.1c1-2.9 3.7-4.9 6.8-4.9z"/></svg>
+        </span>
+        <span class="gbadge__name">{l.badgeTitle}</span>
+      </div>
+      <div class="gbadge__score">
+        <strong class="gbadge__value">{GOOGLE_RATING.average}</strong>
+        <span class="gbadge__outof">/ 5</span>
+      </div>
+      <span class="stars stars--gold" aria-hidden="true">
+        {Array.from({ length: 5 }).map(() => (
+          <svg viewBox="0 0 20 20"><path d="M10 1.6l2.47 5.01 5.53.8-4 3.9.94 5.5L10 14.2l-4.94 2.6.94-5.5-4-3.9 5.53-.8z" /></svg>
+        ))}
+      </span>
+      <p class="gbadge__based">{l.based}{GOOGLE_RATING.count ? ` · ${GOOGLE_RATING.count}` : ""}</p>
+      <a class="gbadge__cta" href={gmapsUrl} target="_blank" rel="noopener noreferrer">
+        {l.cta}<span aria-hidden="true"> ↗</span>
+      </a>
+    </aside>
+
+    <div class="reviews__carousel" data-carousel>
+      <button type="button" class="reviews__arrow reviews__arrow--prev" data-prev aria-label={l.prev}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <ul class="reviews__track" data-track role="list">
+        {reviews.map((review) => (
+          <li class="rcard" role="listitem">
+            <span class="rcard__quote" aria-hidden="true">”</span>
+            <div class="rcard__top">
+              <span class="rcard__avatar" aria-hidden="true">{initialOf(review.name)}</span>
+              <div class="rcard__who">
+                <strong class="rcard__name">{review.name}</strong>
+                {review.date && <span class="rcard__date">{review.date}</span>}
+              </div>
+              <span class="rcard__g" aria-label="Google" title="Google">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.8-5H1.2v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.2 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.2a12 12 0 0 0 0 10.8l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 12 0 12 12 0 0 0 1.2 6.6l4 3.1c1-2.9 3.7-4.9 6.8-4.9z"/></svg>
+              </span>
+            </div>
+            <span class="stars stars--card" aria-label={`${review.rating} / 5`}>
+              {Array.from({ length: review.rating }).map(() => (
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.6l2.47 5.01 5.53.8-4 3.9.94 5.5L10 14.2l-4.94 2.6.94-5.5-4-3.9 5.53-.8z" /></svg>
+              ))}
+            </span>
+            <p class="rcard__text">{review.text}</p>
+          </li>
+        ))}
+      </ul>
+
+      <button type="button" class="reviews__arrow reviews__arrow--next" data-next aria-label={l.next}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div class="reviews__dots" data-dots aria-label={l.goto}></div>
+  </div>
+</section>
+
+<style>
+  /* ===== Section shell (organic, warm, floating) ===== */
+  .reviews {
+    position: relative;
+    isolation: isolate;
+    margin-top: -1.1rem;
+    padding: clamp(6.4rem, 10vw, 9.6rem) 0 clamp(6rem, 9vw, 9rem);
+    overflow: hidden;
+    background:
+      radial-gradient(120% 80% at 82% 6%, rgba(188, 82, 48, .07), transparent 55%),
+      linear-gradient(180deg, var(--cream) 0%, #f6ecde 58%, var(--cream) 100%);
+    border-radius: 46% 54% 0 0 / 3.8rem 3.1rem 0 0;
+    box-shadow: 0 -22px 70px rgb(58 35 20 / .1);
+  }
+  /* Organic top curve blending with the section above */
+  .reviews::before {
+    content: "";
+    position: absolute;
+    left: -7%; right: -7%; top: -4.7rem;
+    height: 7.4rem; z-index: 0;
+    border-radius: 46% 54% 0 0 / 100% 76% 0 0;
+    background: var(--cream);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .44);
+    transform: rotate(-.35deg);
+  }
+  /* Handmade paper grain */
+  .reviews::after {
+    content: "";
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(115deg, rgb(255 255 255 / .22), transparent 34%, rgb(150 61 30 / .035) 68%, transparent),
+      var(--grain);
+    background-size: auto, 150px 150px;
+    opacity: .34; mix-blend-mode: multiply; pointer-events: none;
+  }
+  .reviews__inner { position: relative; z-index: 2; }
+
+  /* Soft watercolour blooms + steam wisps + linear leaves */
+  .reviews__wash, .reviews__steam, .reviews__leaf {
+    position: absolute; z-index: 1; display: block; pointer-events: none;
+  }
+  .reviews__wash {
+    border-radius: 50%;
+    filter: blur(46px);
+    opacity: .5;
+  }
+  .reviews__wash--one {
+    width: clamp(16rem, 30vw, 30rem); height: clamp(16rem, 30vw, 30rem);
+    left: -8%; top: 6%;
+    background: radial-gradient(circle, rgba(188, 82, 48, .34), transparent 70%);
+  }
+  .reviews__wash--two {
+    width: clamp(14rem, 26vw, 26rem); height: clamp(14rem, 26vw, 26rem);
+    right: -6%; bottom: 2%;
+    background: radial-gradient(circle, rgba(214, 176, 132, .5), transparent 70%);
+  }
+  .reviews__steam {
+    width: clamp(8rem, 14vw, 14rem); height: clamp(12rem, 20vw, 19rem);
+    border: 1px solid rgb(150 61 30 / .14);
+    border-color: rgb(150 61 30 / .12) transparent transparent rgb(150 61 30 / .14);
+    border-radius: 62% 38% 58% 42% / 46% 62% 38% 54%;
+    opacity: .6;
+  }
+  .reviews__steam--left { left: max(-3rem, -4vw); top: 14%; transform: rotate(-18deg); }
+  .reviews__steam--right { right: max(-4rem, -5vw); bottom: 10%; transform: rotate(21deg); }
+  .reviews__leaf { width: clamp(2.4rem, 4vw, 3.6rem); color: rgb(111 118 81 / .34); }
+  .reviews__leaf svg { width: 100%; height: auto; }
+  .reviews__leaf--one { left: 4%; bottom: 16%; transform: rotate(-14deg); }
+  .reviews__leaf--two { right: 5%; top: 12%; transform: rotate(160deg); }
+
+  /* ===== Header ===== */
+  .reviews__head { max-width: 46rem; margin: 0 auto; text-align: center; }
+  .reviews__head .editorial-kicker { justify-content: center; }
+  .reviews__head h2 {
+    margin: .4rem 0 .8rem;
+    font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+    line-height: .98;
+  }
+  .reviews__lead {
+    margin: 0 auto;
+    max-width: 40rem;
+    color: rgb(32 23 19 / .72);
+    font-size: 1.05rem; line-height: 1.7;
+  }
+
+  /* ===== Google Reviews badge ===== */
+  .gbadge {
+    display: grid;
+    justify-items: center;
+    gap: .55rem;
+    max-width: 26rem;
+    margin: clamp(2.2rem, 4vw, 3rem) auto clamp(2.6rem, 4.5vw, 3.4rem);
+    padding: 1.8rem 2rem 1.7rem;
+    text-align: center;
+    background: linear-gradient(180deg, rgb(255 253 249 / .96), rgb(250 242 230 / .92));
+    border: 1px solid rgb(150 61 30 / .1);
+    border-radius: var(--r-lg, 2rem);
+    box-shadow: 0 24px 60px -30px rgb(58 35 20 / .5);
+  }
+  .gbadge__brand { display: inline-flex; align-items: center; gap: .5rem; }
+  .gbadge__logo { display: inline-flex; width: 1.35rem; height: 1.35rem; }
+  .gbadge__logo svg { width: 100%; height: 100%; }
+  .gbadge__name { font-weight: 650; font-size: .95rem; letter-spacing: .01em; color: var(--espresso); }
+  .gbadge__score { display: inline-flex; align-items: baseline; gap: .35rem; }
+  .gbadge__value { font-family: var(--serif); font-size: 3rem; line-height: .9; color: var(--espresso); }
+  .gbadge__outof { font-size: .95rem; font-weight: 600; color: rgb(32 23 19 / .5); }
+  .gbadge__based { margin: .1rem 0 .3rem; font-size: .78rem; color: rgb(32 23 19 / .55); }
+  .gbadge__cta {
+    display: inline-flex; align-items: center; gap: .1rem;
+    margin-top: .35rem; padding: .7rem 1.4rem;
+    border-radius: var(--r-pill, 999px);
+    background: var(--terracotta, #bc5230); color: #fff;
+    font-size: .85rem; font-weight: 600; letter-spacing: .01em;
+    text-decoration: none;
+    transition: transform .35s var(--ease, ease), box-shadow .35s var(--ease, ease), background .35s;
+    box-shadow: 0 12px 26px -12px rgba(188, 82, 48, .7);
+  }
+  .gbadge__cta:hover { transform: translateY(-.15rem); background: var(--copper-dark, #963d1e); box-shadow: 0 16px 30px -12px rgba(150, 61, 30, .75); }
+
+  /* ===== Stars ===== */
+  .stars { display: inline-flex; gap: .18rem; }
+  .stars svg { width: 1.1rem; height: 1.1rem; }
+  .stars--gold svg { fill: #f5a623; }
+  .stars--card svg { width: 1.15rem; height: 1.15rem; fill: var(--copper, #b9572d); }
+
+  /* ===== Carousel ===== */
+  .reviews__carousel {
+    position: relative;
+    display: flex; align-items: center;
+    gap: .6rem;
+  }
+  .reviews__track {
+    list-style: none; margin: 0;
+    padding: 1.2rem .4rem 1.6rem;
+    display: flex; gap: clamp(1rem, 2vw, 1.6rem);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    flex: 1 1 auto;
+  }
+  .reviews__track::-webkit-scrollbar { display: none; }
+
+  .rcard {
+    position: relative;
+    flex: 0 0 calc((100% - 2 * clamp(1rem, 2vw, 1.6rem)) / 3);
+    scroll-snap-align: center;
+    display: flex; flex-direction: column; gap: .9rem;
+    padding: 2.1rem 1.9rem 1.9rem;
+    border-radius: 1.9rem 2.2rem 1.7rem 2.1rem;
+    background: linear-gradient(180deg, rgb(255 253 249 / .98), rgb(250 242 230 / .95));
+    border: 1px solid rgb(150 61 30 / .09);
+    box-shadow: 0 26px 60px -34px rgb(58 35 20 / .55);
+    transition: transform .5s var(--ease, ease), box-shadow .5s var(--ease, ease);
+  }
+  .rcard:hover { transform: translateY(-.4rem); box-shadow: 0 32px 66px -30px rgb(58 35 20 / .6); }
+  .rcard__quote {
+    position: absolute; top: .2rem; right: 1.1rem;
+    font-family: var(--serif); font-size: 4.6rem; line-height: 1;
+    color: rgba(188, 82, 48, .16); pointer-events: none;
+  }
+  .rcard__top { display: flex; align-items: center; gap: .75rem; }
+  .rcard__avatar {
+    flex: 0 0 auto;
+    display: grid; place-items: center;
+    width: 2.7rem; height: 2.7rem;
+    border-radius: 50%;
+    background: linear-gradient(150deg, var(--terracotta, #bc5230), var(--copper-dark, #963d1e));
+    color: #fff; font-family: var(--serif); font-weight: 600; font-size: 1.15rem;
+    box-shadow: inset 0 1px 2px rgb(255 255 255 / .3);
+  }
+  .rcard__who { display: flex; flex-direction: column; gap: .05rem; min-width: 0; }
+  .rcard__name { font-size: .95rem; font-weight: 650; color: var(--espresso); }
+  .rcard__date { font-size: .72rem; color: rgb(32 23 19 / .5); }
+  .rcard__g { margin-left: auto; display: inline-flex; width: 1.15rem; height: 1.15rem; }
+  .rcard__g svg { width: 100%; height: 100%; }
+  .rcard__text {
+    margin: 0; flex: 1;
+    font-size: 1rem; line-height: 1.6; color: rgb(32 23 19 / .82);
+  }
+
+  /* ===== Arrows ===== */
+  .reviews__arrow {
+    flex: 0 0 auto;
+    display: grid; place-items: center;
+    width: 3rem; height: 3rem;
+    border: 1px solid rgb(150 61 30 / .16);
+    border-radius: 50%;
+    background: rgb(255 253 249 / .95);
+    color: var(--copper-dark, #963d1e);
+    cursor: pointer;
+    box-shadow: 0 14px 30px -16px rgb(58 35 20 / .5);
+    transition: transform .3s var(--ease, ease), background .3s, color .3s, opacity .3s;
+  }
+  .reviews__arrow svg { width: 1.3rem; height: 1.3rem; }
+  .reviews__arrow:hover { background: var(--terracotta, #bc5230); color: #fff; transform: scale(1.06); }
+  .reviews__arrow:focus-visible { outline: 2px solid var(--terracotta, #bc5230); outline-offset: 3px; }
+  .reviews__arrow[disabled] { opacity: .35; cursor: default; pointer-events: none; }
+
+  /* ===== Dots ===== */
+  .reviews__dots { display: flex; justify-content: center; gap: .5rem; margin-top: 1.4rem; }
+  .reviews__dot {
+    width: .5rem; height: .5rem; padding: 0;
+    border: none; border-radius: 999px;
+    background: rgb(150 61 30 / .25); cursor: pointer;
+    transition: width .35s var(--ease, ease), background .35s;
+  }
+  .reviews__dot[aria-current="true"] { width: 1.5rem; background: var(--terracotta, #bc5230); }
+  .reviews__dot:focus-visible { outline: 2px solid var(--terracotta, #bc5230); outline-offset: 3px; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 1024px) {
+    .rcard { flex-basis: calc((100% - clamp(1rem, 2vw, 1.6rem)) / 2); }
+  }
+  @media (max-width: 720px) {
+    .reviews__carousel { gap: 0; }
+    .reviews__arrow { position: absolute; top: 42%; z-index: 3; }
+    .reviews__arrow--prev { left: -.2rem; }
+    .reviews__arrow--next { right: -.2rem; }
+    .reviews__track { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .rcard { flex-basis: 84%; }
+  }
+  @media (max-width: 640px) {
+    .reviews { border-radius: 40% 60% 0 0 / 2.2rem 2rem 0 0; }
+    .reviews__steam, .reviews__leaf { display: none; }
+    .rcard { flex-basis: 88%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reviews__track { scroll-behavior: auto; }
+    .rcard, .reviews__arrow, .reviews__dot, .gbadge__cta { transition-duration: .01ms !important; }
+  }
+</style>
+
+<script>
+  // Carrusel de reseñas: ligero, sin librerías. Usa scroll-snap nativo para
+  // el swipe fluido; el JS solo añade flechas, indicadores y autoplay suave.
+  type Carousel = HTMLElement & { __init?: boolean };
+
+  const setup = (root: Carousel) => {
+    if (root.__init) return;
+    root.__init = true;
+
+    const track = root.querySelector<HTMLElement>("[data-track]");
+    const prev = root.querySelector<HTMLButtonElement>("[data-prev]");
+    const next = root.querySelector<HTMLButtonElement>("[data-next]");
+    const section = root.closest(".reviews");
+    const dotsBox = section?.querySelector<HTMLElement>("[data-dots]");
+    if (!track || !prev || !next || !dotsBox) return;
+
+    const cards = Array.from(track.children) as HTMLElement[];
+    if (!cards.length) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const gotoLabel = dotsBox.getAttribute("aria-label") || "Ir a la reseña";
+
+    // Build dot indicators
+    const dots = cards.map((_, i) => {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "reviews__dot";
+      dot.setAttribute("aria-label", `${gotoLabel} ${i + 1}`);
+      dot.addEventListener("click", () => scrollToIndex(i, true));
+      dotsBox.appendChild(dot);
+      return dot;
+    });
+
+    const behavior = (): ScrollBehavior => (reduceMotion ? "auto" : "smooth");
+
+    // Ancho de un paso = tarjeta + separación (gap). Se recalcula cada vez por
+    // si cambia el viewport, así el desplazamiento siempre encaja con el snap.
+    const stepSize = () => {
+      const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 0;
+      return cards[0].getBoundingClientRect().width + gap;
+    };
+
+    // Centra una tarjeta concreta (coherente con scroll-snap-align: center y
+    // con la detección de la tarjeta activa, que también trabaja por el centro).
+    const scrollToIndex = (i: number, user = false) => {
+      const clamped = Math.max(0, Math.min(i, cards.length - 1));
+      const card = cards[clamped];
+      const left = card.offsetLeft - track.offsetLeft - (track.clientWidth - card.clientWidth) / 2;
+      track.scrollTo({ left, behavior: behavior() });
+      if (user) pauseAutoplay();
+    };
+
+    // Avanza/retrocede una tarjeta usando el propio scroll (independiente del
+    // índice recalculado): la flecha izquierda siempre resta un paso y la
+    // derecha suma uno, sin quedarse "atascada" tras cambiar de sentido.
+    const nudge = (dir: number) => {
+      track.scrollBy({ left: dir * stepSize(), behavior: behavior() });
+    };
+
+    const updateActive = () => {
+      const center = track.scrollLeft + track.clientWidth / 2;
+      let best = 0;
+      let bestDist = Infinity;
+      cards.forEach((card, i) => {
+        const cardCenter = card.offsetLeft - track.offsetLeft + card.clientWidth / 2;
+        const dist = Math.abs(cardCenter - center);
+        if (dist < bestDist) { bestDist = dist; best = i; }
+      });
+      dots.forEach((d, i) => d.setAttribute("aria-current", i === best ? "true" : "false"));
+      const atStart = track.scrollLeft <= 2;
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+      prev.disabled = atStart;
+      next.disabled = atEnd;
+    };
+
+    prev.addEventListener("click", () => { nudge(-1); pauseAutoplay(); });
+    next.addEventListener("click", () => { nudge(1); pauseAutoplay(); });
+
+    let raf = 0;
+    track.addEventListener("scroll", () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(updateActive);
+    }, { passive: true });
+
+    // ----- Autoplay (suave, se pausa al interactuar) -----
+    let timer: number | undefined;
+    let stopped = false;
+    const INTERVAL = 5200;
+
+    const tick = () => {
+      if (stopped) return;
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+      if (atEnd) track.scrollTo({ left: 0, behavior: behavior() });
+      else nudge(1);
+    };
+    const startAutoplay = () => {
+      if (reduceMotion || stopped || cards.length < 2) return;
+      clearInterval(timer);
+      timer = window.setInterval(tick, INTERVAL);
+    };
+    const pauseAutoplay = () => { clearInterval(timer); };
+    // Interacción del usuario detiene el autoplay de forma permanente y suave.
+    const stopAutoplay = () => { stopped = true; clearInterval(timer); };
+
+    ["pointerdown", "wheel", "touchstart", "keydown"].forEach((ev) =>
+      track.addEventListener(ev, stopAutoplay, { passive: true, once: true })
+    );
+    [prev, next].forEach((b) => b.addEventListener("click", stopAutoplay, { once: true }));
+    dots.forEach((d) => d.addEventListener("click", stopAutoplay, { once: true }));
+    root.addEventListener("pointerenter", pauseAutoplay);
+    root.addEventListener("pointerleave", () => { if (!stopped) startAutoplay(); });
+    root.addEventListener("focusin", pauseAutoplay);
+
+    // Pausar cuando la sección no está visible.
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { e.isIntersecting && !stopped ? startAutoplay() : pauseAutoplay(); });
+    }, { threshold: 0.35 });
+    io.observe(root);
+
+    updateActive();
+  };
+
+  const init = () => document.querySelectorAll<HTMLElement>("[data-carousel]").forEach(setup);
+  if (document.readyState !== "loading") init();
+  else document.addEventListener("DOMContentLoaded", init);
+</script>

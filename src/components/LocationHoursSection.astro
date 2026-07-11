@@ -1,0 +1,100 @@
+---
+import {
+  GOOGLE_MAPS_EMBED_URL,
+  GOOGLE_MAPS_URL,
+  LOCATION_ADDRESS_LINES,
+  LOCATION_CONTEXT,
+  WEEKDAY_HOURS,
+} from "../data/location";
+import { BUSINESS_ADDRESS, BUSINESS_SHORT_NAME } from "../data/site";
+import { localizedPath, type Language } from "../i18n/config";
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+
+const copy = lang === "es" ? {
+  kicker: "Visítanos",
+  title: "Te esperamos en Miami Platja",
+  lead: "Café de especialidad, brunch mediterráneo y tardes para quedarse. Tu mesa en Miami Platja ya está lista.",
+  phrase: "Del primer café a la última copa.",
+  directions: "Cómo llegar",
+  menu: "Ver carta",
+  hours: "Horarios",
+  everyday: "Lunes — Domingo",
+  mapTitle: "Mapa de TR3C3 en Miami Platja",
+  details: ["Speciality coffee", "Mediterranean brunch", "Late drinks", "Terrace"],
+} : {
+  kicker: "Visit us",
+  title: "We'll see you in Miami Platja",
+  lead: "Specialty coffee, Mediterranean brunch and slow evenings by the coast. Your table in Miami Platja is ready.",
+  phrase: "From first coffee to last glass.",
+  directions: "Get directions",
+  menu: "View menu",
+  hours: "Opening hours",
+  everyday: "Monday — Sunday",
+  mapTitle: "Map of TR3C3 in Miami Platja",
+  details: ["Speciality coffee", "Mediterranean brunch", "Late drinks", "Terrace"],
+};
+
+const menuPath = localizedPath(lang, "menu");
+const addressLabel = `${BUSINESS_ADDRESS.streetAddress}, ${BUSINESS_ADDRESS.postalCode} ${BUSINESS_ADDRESS.addressLocality}, ${BUSINESS_ADDRESS.addressRegion}`;
+const [weekdayOpen, weekdayClose] = WEEKDAY_HOURS.time.split("–");
+---
+
+<section id="visit" class="home-visit-section reveal" data-reveal aria-labelledby="home-visit-title">
+  <span class="home-visit-section__curve" aria-hidden="true"></span>
+  <span class="home-visit-section__bean home-visit-section__bean--one" aria-hidden="true"></span>
+  <span class="home-visit-section__bean home-visit-section__bean--two" aria-hidden="true"></span>
+
+  <div class="tr-shell home-visit-section__grid">
+    <div class="home-visit-section__copy reveal" data-reveal>
+      <p class="editorial-kicker">{copy.kicker}</p>
+      <h2 id="home-visit-title">{copy.title}</h2>
+      <p class="home-visit-section__lead">{copy.lead}</p>
+      <p class="home-visit-section__phrase">{copy.phrase}</p>
+
+      <address class="home-visit-address" aria-label={addressLabel}>
+        <strong>{BUSINESS_SHORT_NAME}</strong>
+        <span>{LOCATION_ADDRESS_LINES[0]}</span>
+        <span>{LOCATION_ADDRESS_LINES[1]}</span>
+        <small>{LOCATION_CONTEXT}</small>
+      </address>
+
+      <div class="home-visit-section__actions" aria-label="TR3C3 visit actions">
+        <a class="tr-button tr-button--primary" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{copy.directions}</a>
+        <a class="tr-button tr-button--secondary" href={menuPath}>{copy.menu}</a>
+      </div>
+
+      <ul class="home-visit-details" aria-label="TR3C3 experience details">
+        {copy.details.map((detail) => <li>{detail}</li>)}
+      </ul>
+    </div>
+
+    <div class="home-visit-section__visual">
+      <figure class="home-visit-map reveal" data-reveal>
+        <span class="home-visit-map__badge" aria-hidden="true">{BUSINESS_SHORT_NAME}</span>
+        <iframe
+          src={GOOGLE_MAPS_EMBED_URL}
+          title={copy.mapTitle}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+        <figcaption>
+          <strong>{BUSINESS_SHORT_NAME}</strong>
+          <address>{addressLabel}</address>
+        </figcaption>
+      </figure>
+
+      <article class="home-visit-hours reveal" data-reveal aria-labelledby="home-visit-hours-title">
+        <p class="editorial-kicker">{copy.hours}</p>
+        <h3 id="home-visit-hours-title">{copy.phrase}</h3>
+        <div class="home-visit-hours__list">
+          <div class="home-visit-hours__row">
+            <span>{copy.everyday}</span>
+            <strong><time datetime={weekdayOpen}>{weekdayOpen}</time> — <time datetime={weekdayClose}>{weekdayClose}</time></strong>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

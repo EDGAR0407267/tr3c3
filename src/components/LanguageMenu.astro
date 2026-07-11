@@ -1,0 +1,50 @@
+---
+import {
+  getTranslation,
+  languageNames,
+  languages,
+  localizedPath,
+  type Language,
+  type PageKey,
+} from "../i18n/config";
+
+interface Props {
+  lang: Language;
+  page?: PageKey;
+  tone?: "light" | "dark";
+  paths?: Partial<Record<Language, string>>;
+}
+
+const { lang, page = "home", tone = "dark", paths } = Astro.props;
+const t = getTranslation(lang);
+const hrefForLanguage = (code: Language) => paths?.[code] ?? localizedPath(code, page);
+---
+
+<details class:list={["language-menu", `language-menu--${tone}`]} data-language-menu>
+  <summary aria-label={t.nav.language}>
+    <span class="language-menu__current">
+      <span class="language-menu__code">{lang.toUpperCase()}</span>
+      <span class="language-menu__separator" aria-hidden="true">&middot;</span>
+      <span class="language-menu__name">{languageNames[lang]}</span>
+    </span>
+    <svg class="language-menu__caret" viewBox="0 0 12 8" aria-hidden="true">
+      <path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </summary>
+
+  <div class="language-menu__popover">
+    <nav class="language-menu__list" aria-label={t.nav.language}>
+      {
+        languages.map((code) => (
+          <a href={hrefForLanguage(code)} lang={code} aria-current={code === lang ? "page" : undefined} data-language-link data-language={code}>
+            <span class="language-menu__code">{code.toUpperCase()}</span>
+            <span>{languageNames[code]}</span>
+            <svg class="language-menu__check" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="m3.25 8.2 3 3.05 6.5-6.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</details>

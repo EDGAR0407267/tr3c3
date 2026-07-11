@@ -1,0 +1,53 @@
+---
+/**
+ * Responsive <img> for the editorial photos served from /public/images.
+ * Pre-generated variants live next to the original as `{name}-{w}.webp`
+ * (currently 640 + 1080). The original is the largest candidate.
+ * Only variants narrower than the declared width are referenced, so a missing
+ * file can never be requested.
+ */
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  sizes?: string;
+  loading?: "lazy" | "eager";
+  fetchpriority?: "high" | "auto";
+  decoding?: "async" | "auto";
+  class?: string;
+  variants?: number[];
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  sizes = "(max-width: 768px) 100vw, 50vw",
+  loading = "lazy",
+  fetchpriority,
+  decoding = "async",
+  class: className,
+  variants = [640, 1080],
+} = Astro.props;
+
+const dot = src.lastIndexOf(".");
+const base = src.slice(0, dot);
+const ext = src.slice(dot);
+const candidates = variants.filter((w) => w < width);
+const srcset = [...candidates.map((w) => `${base}-${w}${ext} ${w}w`), `${src} ${width}w`].join(", ");
+---
+
+<img
+  src={src}
+  srcset={srcset}
+  sizes={sizes}
+  alt={alt}
+  width={width}
+  height={height}
+  loading={loading}
+  decoding={decoding}
+  fetchpriority={fetchpriority}
+  class={className}
+/>

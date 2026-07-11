@@ -1,0 +1,311 @@
+﻿---
+import { wineCategories } from "../data/cartas";
+import { languages, localizedPath, type Language } from "../i18n/config";
+import BrandLogo from "./BrandLogo.astro";
+import LanguageMenu from "./LanguageMenu.astro";
+
+interface Props { lang: Language; backLabel: string }
+
+type WineCategoryId = "tintos" | "blancos" | "rosados" | "cava" | "champagne";
+type WineMenuCopy = {
+  title: string;
+  intro: string;
+  menuLabel: string;
+  categoryTitles: Record<WineCategoryId, string>;
+  categoryNotes: Record<WineCategoryId, string>;
+  glassLabels: Record<WineCategoryId, string>;
+};
+
+const { lang, backLabel } = Astro.props;
+const cartaPath = localizedPath(lang, "menu");
+const languagePaths = Object.fromEntries(
+  languages.map((code) => [code, `${localizedPath(code, "menu")}vinos/`])
+) as Record<Language, string>;
+
+const wineMenuCopy: Record<Language, WineMenuCopy> = {
+  es: {
+    title: "Vinos",
+    intro: "Una selección pensada para acompañar brunch, sobremesas y noches con carácter.",
+    menuLabel: "Carta visual de vinos TR3C3",
+    categoryTitles: { tintos: "Tintos", blancos: "Blancos", rosados: "Rosados", cava: "Cava", champagne: "Champagne" },
+    categoryNotes: {
+      tintos: "Cuerpo, fruta y profundidad para sobremesas largas.",
+      blancos: "Frescura mediterránea, mineralidad y perfiles vibrantes.",
+      rosados: "Luminosos, delicados y perfectos para el ritmo de Miami Platja.",
+      cava: "Burbuja fina para abrir el apetito o celebrar sin prisa.",
+      champagne: "Un clásico elegante para noches con carácter.",
+    },
+    glassLabels: {
+      tintos: "Copa amplia de vino tinto",
+      blancos: "Copa estilizada de vino blanco",
+      rosados: "Copa tulipa de vino rosado",
+      cava: "Copa flauta de cava",
+      champagne: "Copa coupe de champagne",
+    },
+  },
+  ca: {
+    title: "Vins",
+    intro: "Una selecció pensada per acompanyar brunch, sobretaules i nits amb caràcter.",
+    menuLabel: "Carta visual de vins TR3C3",
+    categoryTitles: { tintos: "Negres", blancos: "Blancs", rosados: "Rosats", cava: "Cava", champagne: "Champagne" },
+    categoryNotes: {
+      tintos: "Cos, fruita i profunditat per a sobretaules llargues.",
+      blancos: "Frescor mediterrània, mineralitat i perfils vibrants.",
+      rosados: "Lluminosos, delicats i perfectes per al ritme de Miami Platja.",
+      cava: "Bombolla fina per obrir la gana o celebrar sense pressa.",
+      champagne: "Un clàssic elegant per a nits amb caràcter.",
+    },
+    glassLabels: {
+      tintos: "Copa ampla de vi negre",
+      blancos: "Copa estilitzada de vi blanc",
+      rosados: "Copa tulipa de vi rosat",
+      cava: "Copa flauta de cava",
+      champagne: "Copa coupe de champagne",
+    },
+  },
+  en: {
+    title: "Wines",
+    intro: "A selection designed for brunch, lingering tables and evenings with character.",
+    menuLabel: "TR3C3 visual wine menu",
+    categoryTitles: { tintos: "Reds", blancos: "Whites", rosados: "Rosés", cava: "Cava", champagne: "Champagne" },
+    categoryNotes: {
+      tintos: "Body, fruit and depth for slow conversations.",
+      blancos: "Mediterranean freshness, minerality and vibrant profiles.",
+      rosados: "Bright, delicate and perfect for the rhythm of Miami Platja.",
+      cava: "Fine bubbles to open the appetite or celebrate without rushing.",
+      champagne: "An elegant classic for evenings with character.",
+    },
+    glassLabels: {
+      tintos: "Large red wine glass",
+      blancos: "Slim white wine glass",
+      rosados: "Tulip rosé wine glass",
+      cava: "Cava flute glass",
+      champagne: "Champagne coupe glass",
+    },
+  },
+  fr: {
+    title: "Vins",
+    intro: "Une sélection pensée pour accompagner brunch, longues tables et soirées de caractère.",
+    menuLabel: "Carte visuelle des vins TR3C3",
+    categoryTitles: { tintos: "Rouges", blancos: "Blancs", rosados: "Rosés", cava: "Cava", champagne: "Champagne" },
+    categoryNotes: {
+      tintos: "Corps, fruit et profondeur pour les longues conversations.",
+      blancos: "Fraîcheur méditerranéenne, minéralité et profils vibrants.",
+      rosados: "Lumineux, délicats et parfaits pour le rythme de Miami Platja.",
+      cava: "Bulles fines pour ouvrir l’appétit ou célébrer sans hâte.",
+      champagne: "Un classique élégant pour les soirées de caractère.",
+    },
+    glassLabels: {
+      tintos: "Grand verre de vin rouge",
+      blancos: "Verre élancé de vin blanc",
+      rosados: "Verre tulipe de vin rosé",
+      cava: "Flûte à cava",
+      champagne: "Coupe de champagne",
+    },
+  },
+  de: {
+    title: "Weine",
+    intro: "Eine Auswahl für Brunch, lange Tischmomente und Abende mit Charakter.",
+    menuLabel: "Visuelle Weinkarte von TR3C3",
+    categoryTitles: { tintos: "Rotweine", blancos: "Weißweine", rosados: "Roséweine", cava: "Cava", champagne: "Champagne" },
+    categoryNotes: {
+      tintos: "Körper, Frucht und Tiefe für lange Gespräche.",
+      blancos: "Mediterrane Frische, Mineralität und lebendige Profile.",
+      rosados: "Leuchtend, fein und perfekt für den Rhythmus von Miami Platja.",
+      cava: "Feine Perlage zum Auftakt oder zum entspannten Feiern.",
+      champagne: "Ein eleganter Klassiker für Abende mit Charakter.",
+    },
+    glassLabels: {
+      tintos: "Großes Rotweinglas",
+      blancos: "Schlankes Weißweinglas",
+      rosados: "Tulpenförmiges Roséglas",
+      cava: "Cava-Flöte",
+      champagne: "Champagner-Coupe",
+    },
+  },
+  zh: {
+    title: "è‘¡è„é…’",
+    intro: "ä¸ºæ—©åˆé¤ã€æ‚ é•¿é¤å™å’Œæœ‰æ€§æ ¼çš„å¤œæ™šç²¾é€‰è€Œæˆã€‚",
+    menuLabel: "TR3C3 è‘¡è„é…’è§†è§‰é…’å•",
+    categoryTitles: { tintos: "çº¢è‘¡è„é…’", blancos: "ç™½è‘¡è„é…’", rosados: "æ¡ƒçº¢è‘¡è„é…’", cava: "Cava", champagne: "Champagne" },
+    categoryNotes: {
+      tintos: "é…’ä½“ã€æžœé¦™ä¸Žæ·±åº¦ï¼Œé€‚åˆæ…¢æ…¢å»¶å±•çš„é¤å™ã€‚",
+      blancos: "åœ°ä¸­æµ·å¼æ¸…æ–°ã€çŸ¿ç‰©æ„Ÿä¸Žæ˜Žäº®é£Žæ ¼ã€‚",
+      rosados: "æ˜Žäº®ç»†è…»ï¼Œé€‚åˆ Miami Platja çš„èŠ‚å¥ã€‚",
+      cava: "ç»†è…»æ°”æ³¡ï¼Œé€‚åˆå¼€èƒƒæˆ–ä»Žå®¹åº†ç¥ã€‚",
+      champagne: "ä¼˜é›…ç»å…¸ï¼Œä¸ºæœ‰æ€§æ ¼çš„å¤œæ™šè€Œæ¥ã€‚",
+    },
+    glassLabels: {
+      tintos: "å®½å£çº¢é…’æ¯",
+      blancos: "ä¿®é•¿ç™½è‘¡è„é…’æ¯",
+      rosados: "éƒé‡‘é¦™å½¢æ¡ƒçº¢é…’æ¯",
+      cava: "Cava é•¿ç¬›æ¯",
+      champagne: "é¦™æ§Ÿæµ…ç¢Ÿæ¯",
+    },
+  },
+  nl: {
+    title: "Wijnen",
+    intro: "Een selectie voor brunch, lange tafelmomenten en avonden met karakter.",
+    menuLabel: "Visuele wijnkaart van TR3C3",
+    categoryTitles: { tintos: "Rood", blancos: "Wit", rosados: "Rosé", cava: "Cava", champagne: "Champagne" },
+    categoryNotes: {
+      tintos: "Body, fruit en diepte voor lange gesprekken.",
+      blancos: "Mediterrane frisheid, mineraliteit en levendige profielen.",
+      rosados: "Licht, verfijnd en perfect voor het ritme van Miami Platja.",
+      cava: "Fijne bubbels om de eetlust te openen of rustig te vieren.",
+      champagne: "Een elegante klassieker voor avonden met karakter.",
+    },
+    glassLabels: {
+      tintos: "Ruim glas voor rode wijn",
+      blancos: "Slank glas voor witte wijn",
+      rosados: "Tulpglaasje voor rosé",
+      cava: "Cavaflûte",
+      champagne: "Champagnecoupe",
+    },
+  },
+  it: {
+    title: "Vini",
+    intro: "Una selezione pensata per accompagnare brunch, tavolate lente e serate di carattere.",
+    menuLabel: "Carta vini visuale TR3C3",
+    categoryTitles: { tintos: "Rossi", blancos: "Bianchi", rosados: "Rosati", cava: "Cava", champagne: "Champagne" },
+    categoryNotes: {
+      tintos: "Corpo, frutto e profondità per conversazioni lente.",
+      blancos: "Freschezza mediterranea, mineralità e profili vibranti.",
+      rosados: "Luminosi, delicati e perfetti per il ritmo di Miami Platja.",
+      cava: "Bollicina fine per aprire l’appetito o celebrare senza fretta.",
+      champagne: "Un classico elegante per serate di carattere.",
+    },
+    glassLabels: {
+      tintos: "Calice ampio da vino rosso",
+      blancos: "Calice slanciato da vino bianco",
+      rosados: "Calice tulipano da rosato",
+      cava: "Flûte da cava",
+      champagne: "Coppa champagne",
+    },
+  },
+};
+
+const copy = wineMenuCopy[lang] ?? wineMenuCopy.es;
+---
+
+<section id="contenido" class="wine-menu-section" aria-labelledby="wine-menu-title">
+  <div class="wine-menu-section__wash wine-menu-section__wash--one" aria-hidden="true"></div>
+  <div class="wine-menu-section__wash wine-menu-section__wash--two" aria-hidden="true"></div>
+  <div class="wine-menu-section__wash wine-menu-section__wash--three" aria-hidden="true"></div>
+
+  <svg class="wine-menu-section__leaf wine-menu-section__leaf--one" viewBox="0 0 180 260" aria-hidden="true">
+    <path d="M91 236 C85 190 89 145 103 101 C113 69 124 43 145 19" />
+    <path d="M98 118 C70 109 52 86 43 53" />
+    <path d="M101 103 C125 91 142 70 151 39" />
+    <path d="M90 157 C61 151 37 132 22 102" />
+    <path d="M91 151 C118 139 139 118 154 88" />
+    <path d="M87 196 C59 192 34 176 17 150" />
+    <path d="M88 187 C114 176 135 158 154 130" />
+  </svg>
+
+  <svg class="wine-menu-section__leaf wine-menu-section__leaf--two" viewBox="0 0 220 220" aria-hidden="true">
+    <path d="M28 184 C70 158 105 126 133 88 C151 64 166 42 190 20" />
+    <path d="M79 149 C68 123 68 98 81 73" />
+    <path d="M105 124 C131 122 154 112 176 94" />
+    <path d="M132 88 C119 64 119 43 134 25" />
+    <path d="M56 166 C43 145 38 122 42 96" />
+    <path d="M58 166 C86 169 111 165 134 153" />
+  </svg>
+
+  <div class="tr-shell wine-menu-section__inner">
+    <a class="carta-section__back wine-menu-section__back" href={cartaPath}><span aria-hidden="true">&#8592;</span>{backLabel}</a>
+
+    <header class="wine-menu-section__head reveal" data-reveal>
+      <div class="wine-menu-section__brand" aria-hidden="true">
+        <BrandLogo variant="primary" tone="color" size="lg" />
+      </div>
+      <span class="wine-menu-section__ornament" aria-hidden="true"></span>
+      <h1 id="wine-menu-title">{copy.title}</h1>
+      <p>{copy.intro}</p>
+      <div class="wine-menu-section__language">
+        <LanguageMenu lang={lang} page="menu" tone="dark" paths={languagePaths} />
+      </div>
+    </header>
+
+    <div class="wine-menu-section__grid" aria-label={copy.menuLabel}>
+      {wineCategories.map((category, categoryIndex) => (
+        <article class:list={["wine-card", `wine-card--${category.id}`, categoryIndex === 0 && "wine-card--feature", "reveal"]} data-reveal style={`--wine-index:${categoryIndex};`}>
+          <div class="wine-card__topline" aria-hidden="true">
+            <span></span>
+            <i>{String(categoryIndex + 1).padStart(2, "0")}</i>
+          </div>
+
+          <div class:list={["wine-card__illustration", "wine-illustration", `wine-illustration--${category.id}`]} role="img" aria-label={copy.glassLabels[category.id as WineCategoryId]}>
+            {category.id === "tintos" && (
+              <svg viewBox="0 0 120 160" aria-hidden="true">
+                <path class="wine-illustration__glass" d="M34 18 C28 36 28 65 38 82 C43 91 51 96 60 96 C69 96 77 91 82 82 C92 65 92 36 86 18 Z" />
+                <path class="wine-illustration__liquid wine-illustration__liquid--red" d="M35 52 C46 57 73 46 85 54 C83 70 75 87 60 88 C45 87 37 70 35 52 Z" />
+                <path class="wine-illustration__stem" d="M60 96 L60 130" />
+                <path class="wine-illustration__stem" d="M43 137 C51 130 69 130 77 137" />
+                <path class="wine-illustration__shine" d="M48 29 C43 42 43 55 48 68" />
+              </svg>
+            )}
+            {category.id === "blancos" && (
+              <svg viewBox="0 0 120 160" aria-hidden="true">
+                <path class="wine-illustration__glass" d="M39 18 C35 40 38 69 48 82 C51 86 55 88 60 88 C65 88 69 86 72 82 C82 69 85 40 81 18 Z" />
+                <path class="wine-illustration__liquid wine-illustration__liquid--white" d="M39 55 C49 50 71 50 81 55 C78 71 71 81 60 81 C49 81 42 71 39 55 Z" />
+                <path class="wine-illustration__stem" d="M60 88 L60 130" />
+                <path class="wine-illustration__stem" d="M44 137 C52 131 68 131 76 137" />
+                <path class="wine-illustration__shine" d="M50 30 C47 42 48 57 52 68" />
+              </svg>
+            )}
+            {category.id === "rosados" && (
+              <svg viewBox="0 0 120 160" aria-hidden="true">
+                <path class="wine-illustration__glass" d="M35 19 C33 45 38 77 51 89 C56 94 64 94 69 89 C82 77 87 45 85 19 C73 23 47 23 35 19 Z" />
+                <path class="wine-illustration__liquid wine-illustration__liquid--rose" d="M37 58 C49 63 70 53 83 59 C80 76 72 88 60 88 C48 88 40 76 37 58 Z" />
+                <path class="wine-illustration__stem" d="M60 93 L60 129" />
+                <path class="wine-illustration__stem" d="M42 137 C51 130 69 130 78 137" />
+                <path class="wine-illustration__shine" d="M48 31 C44 47 46 64 52 77" />
+              </svg>
+            )}
+            {category.id === "cava" && (
+              <svg viewBox="0 0 120 160" aria-hidden="true">
+                <path class="wine-illustration__glass" d="M49 16 L71 16 C70 45 68 82 60 98 C52 82 50 45 49 16 Z" />
+                <path class="wine-illustration__liquid wine-illustration__liquid--sparkling" d="M51 46 C56 43 64 43 69 46 C68 68 65 85 60 93 C55 85 52 68 51 46 Z" />
+                <path class="wine-illustration__stem" d="M60 98 L60 130" />
+                <path class="wine-illustration__stem" d="M45 137 C52 131 68 131 75 137" />
+                <circle class="wine-illustration__bubble" cx="57" cy="38" r="1.7" />
+                <circle class="wine-illustration__bubble" cx="64" cy="58" r="1.3" />
+                <circle class="wine-illustration__bubble" cx="58" cy="73" r="1.1" />
+              </svg>
+            )}
+            {category.id === "champagne" && (
+              <svg viewBox="0 0 120 160" aria-hidden="true">
+                <path class="wine-illustration__glass" d="M27 33 C36 22 84 22 93 33 C89 51 76 65 60 65 C44 65 31 51 27 33 Z" />
+                <path class="wine-illustration__liquid wine-illustration__liquid--champagne" d="M31 36 C45 41 75 41 89 36 C84 50 73 58 60 58 C47 58 36 50 31 36 Z" />
+                <path class="wine-illustration__stem" d="M60 65 L60 129" />
+                <path class="wine-illustration__stem" d="M39 137 C49 130 71 130 81 137" />
+                <circle class="wine-illustration__bubble" cx="52" cy="32" r="1.5" />
+                <circle class="wine-illustration__bubble" cx="67" cy="37" r="1.2" />
+                <path class="wine-illustration__shine" d="M41 33 C46 29 54 28 63 29" />
+              </svg>
+            )}
+          </div>
+
+          <header class="wine-card__header">
+            <p>{copy.categoryNotes[category.id as WineCategoryId]}</p>
+            <h3>{copy.categoryTitles[category.id as WineCategoryId]}</h3>
+          </header>
+          <ul class="wine-card__list" aria-label={`${copy.title} ${copy.categoryTitles[category.id as WineCategoryId]}`}>
+            {category.wines.map((wine) => (
+              <li>
+                <span class="wine-card__name">{wine.name}</span>
+                                <span class="wine-card__note">
+                  {wine.note.split("?").map((part, partIndex) => (
+                    <span class:list={["wine-card__note-part", partIndex === 0 && "wine-card__note-part--origin"]}>{part.trim()}</span>
+                  ))}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+

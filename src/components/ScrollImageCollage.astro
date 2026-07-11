@@ -1,0 +1,240 @@
+---
+import { type Language } from "../i18n/config";
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+
+const copy = lang === "es" ? {
+  kicker: "Miami Platja",
+  title: "Speciality Coffee & Brunch",
+  lead: "El mejor café de especialidad y brunch mediterráneo de Miami Platja, en una carta que enamora a la primera.",
+} : {
+  kicker: "Miami Platja",
+  title: "Speciality Coffee & Brunch",
+  lead: "The best specialty coffee and Mediterranean brunch in Miami Platja, in a menu you'll fall for at first sight.",
+};
+
+const images = [
+  {
+    className: "scroll-collage__item--main",
+    src: "/images/interior-cafe.webp",
+    alt: "Interior cálido de TR3C3 con ambiente mediterráneo",
+    width: "clamp(22rem, 48vw, 48rem)",
+    ratio: "4 / 3",
+    radius: "2.7rem 2.7rem 1.55rem 2.2rem",
+    x0: 0, y0: -2, s0: .78, r0: -.8, o0: .96,
+    x1: 0, y1: -1, s1: 1.28, r1: 0, o1: 1,
+    x2: -5, y2: -15, s2: 1.03, r2: -.5, o2: .82,
+  },
+  {
+    className: "scroll-collage__item--left",
+    src: "/images/specialty-coffee.webp",
+    alt: "Café de especialidad preparado en TR3C3",
+    width: "clamp(12rem, 19vw, 19rem)",
+    ratio: "3 / 4",
+    radius: "2.2rem 1.35rem 2.4rem 1.8rem",
+    x0: -48, y0: -6, s0: .76, r0: -4, o0: .56,
+    x1: -38, y1: -10, s1: .98, r1: -2.2, o1: .92,
+    x2: -58, y2: -25, s2: .74, r2: -6, o2: .35,
+  },
+  {
+    className: "scroll-collage__item--right",
+    src: "/images/brunch-table.webp",
+    alt: "Mesa de brunch mediterráneo en TR3C3",
+    width: "clamp(14rem, 23vw, 24rem)",
+    ratio: "5 / 4",
+    radius: "1.7rem 2.7rem 1.9rem 2.35rem",
+    x0: 48, y0: 9, s0: .68, r0: 3.5, o0: .54,
+    x1: 36, y1: 4, s1: .96, r1: 1.5, o1: .9,
+    x2: 57, y2: -12, s2: .82, r2: 5, o2: .4,
+  },
+  {
+    className: "scroll-collage__item--drink",
+    src: "/images/drinks/matcha-orange.webp",
+    alt: "Matcha con naranja servido en TR3C3",
+    width: "clamp(9rem, 15vw, 15rem)",
+    ratio: "3 / 4",
+    radius: "1.55rem 2rem 1.35rem 2.25rem",
+    x0: 26, y0: -33, s0: .6, r0: -3, o0: .38,
+    x1: 31, y1: -26, s1: .93, r1: -1, o1: .86,
+    x2: 20, y2: -44, s2: .62, r2: -5, o2: .3,
+  },
+  {
+    className: "scroll-collage__item--pastry scroll-collage__item--desktop-only",
+    src: "/images/croissant-coffee.webp",
+    alt: "Croissant y café sobre mesa clara en TR3C3",
+    width: "clamp(11rem, 17vw, 17rem)",
+    ratio: "4 / 5",
+    radius: "2.4rem 1.65rem 2rem 1.3rem",
+    x0: -27, y0: 31, s0: .58, r0: 3.2, o0: .36,
+    x1: -31, y1: 24, s1: .92, r1: 1.2, o1: .78,
+    x2: -18, y2: 43, s2: .66, r2: 4.5, o2: .28,
+  },
+  {
+    className: "scroll-collage__item--evening scroll-collage__item--desktop-only",
+    src: "/images/kitchen-evening.webp",
+    alt: "Ambiente de tarde y cocina cuidada en TR3C3",
+    width: "clamp(13rem, 20vw, 21rem)",
+    ratio: "16 / 11",
+    radius: "1.4rem 2.25rem 2rem 1.8rem",
+    x0: 3, y0: 38, s0: .58, r0: -2.4, o0: .34,
+    x1: 5, y1: 31, s1: .86, r1: -.7, o1: .7,
+    x2: 24, y2: 43, s2: .64, r2: 2.8, o2: .25,
+  },
+  {
+    className: "scroll-collage__item--cold",
+    src: "/images/drinks/iced-latte.webp",
+    alt: "Iced latte de TR3C3 sobre fondo cálido",
+    width: "clamp(9rem, 14vw, 14rem)",
+    ratio: "3 / 4",
+    radius: "2rem 1.4rem 2.25rem 1.55rem",
+    x0: -5, y0: -39, s0: .46, r0: 4, o0: .28,
+    x1: -13, y1: -33, s1: .72, r1: 2.2, o1: .64,
+    x2: -35, y2: -45, s2: .5, r2: 7, o2: .18,
+  },
+];
+---
+
+<section id="menu-specials" class="scroll-collage" data-scroll-collage aria-labelledby="scroll-collage-title">
+  <div class="scroll-collage__sticky">
+    <span class="scroll-collage__grain" aria-hidden="true"></span>
+    <span class="scroll-collage__line scroll-collage__line--one" aria-hidden="true"></span>
+    <span class="scroll-collage__line scroll-collage__line--two" aria-hidden="true"></span>
+
+    <div class="scroll-collage__stage" aria-label="TR3C3 editorial image collage">
+      {images.map((image, index) => (
+        <figure
+          class:list={["scroll-collage__item", image.className]}
+          style={`--w:${image.width}; --ratio:${image.ratio}; --radius:${image.radius}; --tx:${image.x0}; --ty:${image.y0}; --scale:${image.s0}; --rot:${image.r0}; --opacity:${image.o0};`}
+          data-collage-item
+          data-x0={image.x0}
+          data-y0={image.y0}
+          data-s0={image.s0}
+          data-r0={image.r0}
+          data-o0={image.o0}
+          data-x1={image.x1}
+          data-y1={image.y1}
+          data-s1={image.s1}
+          data-r1={image.r1}
+          data-o1={image.o1}
+          data-x2={image.x2}
+          data-y2={image.y2}
+          data-s2={image.s2}
+          data-r2={image.r2}
+          data-o2={image.o2}
+        >
+          <img
+            src={image.src}
+            alt={image.alt}
+            width={index === 0 ? "1200" : "800"}
+            height={index === 0 ? "900" : "1000"}
+            loading={index === 0 ? "eager" : "lazy"}
+            decoding="async"
+          />
+        </figure>
+      ))}
+    </div>
+
+    <div class="scroll-collage__outro tr-shell">
+      <p>{copy.kicker}</p>
+      <h2 id="scroll-collage-title">{copy.title}</h2>
+      <span>{copy.lead}</span>
+    </div>
+    <span class="scroll-collage__shore" aria-hidden="true"></span>
+  </div>
+</section>
+
+<script>
+  (() => {
+    const sections = [...document.querySelectorAll<HTMLElement>("[data-scroll-collage]")];
+    if (!sections.length) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+    const lerp = (start: number, end: number, amount: number) => start + (end - start) * amount;
+    const ease = (value: number) => 1 - Math.pow(1 - clamp(value), 3);
+    const smoothstep = (edge0: number, edge1: number, value: number) => {
+      const x = clamp((value - edge0) / (edge1 - edge0));
+      return x * x * (3 - 2 * x);
+    };
+
+    type CollageItem = {
+      node: HTMLElement;
+      x0: number; y0: number; s0: number; r0: number; o0: number;
+      x1: number; y1: number; s1: number; r1: number; o1: number;
+      x2: number; y2: number; s2: number; r2: number; o2: number;
+    };
+
+    const read = (item: HTMLElement, key: string, fallback = 0) => {
+      const raw = item.dataset[key];
+      const value = raw ? Number(raw) : fallback;
+      return Number.isFinite(value) ? value : fallback;
+    };
+
+    const states = sections.map((section) => ({
+      section,
+      current: -1,
+      items: [...section.querySelectorAll<HTMLElement>("[data-collage-item]")].map((node): CollageItem => ({
+        node,
+        x0: read(node, "x0"), y0: read(node, "y0"), s0: read(node, "s0", 1), r0: read(node, "r0"), o0: read(node, "o0", 1),
+        x1: read(node, "x1"), y1: read(node, "y1"), s1: read(node, "s1", 1), r1: read(node, "r1"), o1: read(node, "o1", 1),
+        x2: read(node, "x2"), y2: read(node, "y2"), s2: read(node, "s2", 1), r2: read(node, "r2"), o2: read(node, "o2", 1),
+      })),
+    }));
+
+    const renderItem = (item: CollageItem, progress: number) => {
+      const split = .48;
+      const first = progress <= split;
+      const t = ease(first ? progress / split : (progress - split) / (1 - split));
+      const from = first ? "0" : "1";
+      const to = first ? "1" : "2";
+
+      item.node.style.setProperty("--tx", lerp(item[`x${from}` as keyof CollageItem] as number, item[`x${to}` as keyof CollageItem] as number, t).toFixed(3));
+      item.node.style.setProperty("--ty", lerp(item[`y${from}` as keyof CollageItem] as number, item[`y${to}` as keyof CollageItem] as number, t).toFixed(3));
+      item.node.style.setProperty("--scale", lerp(item[`s${from}` as keyof CollageItem] as number, item[`s${to}` as keyof CollageItem] as number, t).toFixed(4));
+      item.node.style.setProperty("--rot", lerp(item[`r${from}` as keyof CollageItem] as number, item[`r${to}` as keyof CollageItem] as number, t).toFixed(3));
+      item.node.style.setProperty("--opacity", lerp(item[`o${from}` as keyof CollageItem] as number, item[`o${to}` as keyof CollageItem] as number, t).toFixed(4));
+    };
+
+    if (reducedMotion.matches) {
+      states.forEach(({ section }) => {
+        section.style.setProperty("--collage-progress", ".72");
+        section.style.setProperty("--collage-outro", "1");
+      });
+      return;
+    }
+
+    let frame = 0;
+    const render = () => {
+      let keepGoing = false;
+
+      states.forEach((state) => {
+        const rect = state.section.getBoundingClientRect();
+        const distance = Math.max(1, rect.height - window.innerHeight);
+        const target = clamp(-rect.top / distance);
+        state.current = state.current < 0 ? target : lerp(state.current, target, .16);
+        if (Math.abs(target - state.current) > .001) keepGoing = true;
+
+        const progress = clamp(state.current);
+        state.section.style.setProperty("--collage-progress", progress.toFixed(4));
+        state.section.style.setProperty("--collage-outro", smoothstep(.62, .94, progress).toFixed(4));
+        state.items.forEach((item) => renderItem(item, progress));
+      });
+
+      frame = keepGoing ? window.requestAnimationFrame(render) : 0;
+    };
+
+    const queue = () => {
+      if (!frame) frame = window.requestAnimationFrame(render);
+    };
+
+    const controller = new AbortController();
+    window.addEventListener("scroll", queue, { passive: true, signal: controller.signal });
+    window.addEventListener("resize", queue, { passive: true, signal: controller.signal });
+    document.addEventListener("astro:before-swap", () => {
+      controller.abort();
+      if (frame) window.cancelAnimationFrame(frame);
+    }, { once: true });
+    queue();
+  })();
+</script>

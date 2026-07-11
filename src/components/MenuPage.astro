@@ -1,0 +1,80 @@
+﻿---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InternalHero from "./InternalHero.astro";
+import Img from "./Img.astro";
+import { getTranslation, localizedPath, type Language } from "../i18n/config";
+import { cartaSections } from "../data/cartas";
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const t = getTranslation(lang);
+const cardBadges: Record<string, string> = {
+  cafes: "Speciality",
+  cocteles: "Signature",
+  vinos: "Wine Ritual",
+  entrantes: "Fresh",
+  principales: "Mediterranean Brunch",
+  bolleria: "Brunch Favorite",
+};
+---
+
+<BaseLayout title={t.menu.title} description={t.menu.description} lang={lang} page="menu" canonicalPath={localizedPath(lang, "menu")} image="/images/brunch-table.webp">
+  <InternalHero
+    eyebrow="Cafe de especialidad / Cocina mediterranea"
+    title={t.menu.intro}
+    lead={t.menu.description}
+    image="/images/brunch-table.webp"
+    alt="Mesa de brunch mediterraneo en TR3C3"
+    variant="menu"
+    primaryHref={localizedPath(lang, "contact")}
+    primaryLabel={t.home.mapCta}
+  />
+
+  <section id="contenido" class="menu-intro-editorial">
+    <div class="tr-shell">
+      <p>{t.menu.description}</p>
+      <span>{t.menu.note}</span>
+      <small class="menu-intro-editorial__seal">Speciality Coffee & Brunch · Miami Platja · Fresh Kitchen</small>
+    </div>
+  </section>
+
+  <section class="carta-cards">
+    <div class="tr-shell">
+      <div class="carta-cards__grid carta-cards__grid--editorial">
+        {cartaSections.map((section, index) => (
+          <a class:list={["carta-card", `carta-card--${section.id}`]} href={`${localizedPath(lang, "menu")}${section.id}/`}>
+            <div class="carta-card__media">
+              <img src={section.image} alt={section.alt} width="900" height="675" loading="lazy" decoding="async" />
+            </div>
+            <div class="carta-card__body">
+              <span class="carta-card__badge">{cardBadges[section.id] ?? "Fresh"}</span>
+              <span class="carta-card__index">{String(index + 1).padStart(2, "0")}</span>
+              <h2>{section.title}</h2>
+              <p>{section.lead}</p>
+              <span class="carta-card__cta">Ver carta<span aria-hidden="true">&#8599;</span></span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="menu-feature reveal" data-reveal>
+    <Img src="/images/croissant-coffee.webp" alt="Momento de cafe y dulce en TR3C3" width={1400} height={900} sizes="100vw" />
+    <div class="tr-shell menu-feature__content">
+      <p class="editorial-kicker">Algo frio / Algo dulce</p>
+      <h2>Una pausa hecha a tu manera.</h2>
+      <p>{t.menu.note}</p>
+    </div>
+  </section>
+
+  <section class="editorial-final-cta reveal" data-reveal>
+    <div class="tr-shell">
+      <p class="editorial-kicker">TR3C3 / Miami Platja</p>
+      <h2>{t.home.contactTitle}</h2>
+      <div class="editorial-actions"><a class="tr-button tr-button--primary" href={localizedPath(lang, "contact")}>{t.home.mapCta}</a><a class="tr-button tr-button--secondary" href="mailto:hola@tr3c3.com">{t.home.write}</a></div>
+    </div>
+  </section>
+</BaseLayout>
+
+
+

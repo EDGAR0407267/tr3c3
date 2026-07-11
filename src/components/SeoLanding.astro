@@ -1,0 +1,92 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InternalHero from "./InternalHero.astro";
+import Img from "./Img.astro";
+import { seoPages, type SeoSlug } from "../data/seo-pages";
+import { GOOGLE_MAPS_URL } from "../data/location";
+interface Props { slug: SeoSlug }
+const { slug } = Astro.props;
+const page = seoPages[slug];
+const heroImage = slug.includes("brunch") ? "/images/brunch-table.webp"
+  : slug.includes("desayunos") ? "/images/croissant-coffee.webp"
+  : slug.includes("cafe") ? "/images/specialty-coffee.webp"
+  : "/images/interior-cafe.webp";
+const faq = [
+  { question: "¿Qué tipo de café sirve TR3C3?", answer: "Café de especialidad preparado con mimo: espresso, bebidas con leche, filtrados como el V60 y opciones frías. Una carta para disfrutar sin complicaciones en Miami Platja." },
+  { question: "¿Hay opciones para desayunar o tomar brunch?", answer: "Sí. La carta reúne opciones dulces y saladas, tostadas, huevos, platos para compartir y bebidas para acompañar el mejor desayuno o brunch de la zona." },
+  { question: "¿Dónde está TR3C3?", answer: "TR3C3 está en Avinguda de Los Ángeles, 13, 43892 Miami Platja, Tarragona. Abre la ubicación exacta en Google Maps desde esta página y ven a conocernos." },
+];
+const related = (Object.entries(seoPages) as Array<[SeoSlug, typeof page]>).filter(([key]) => key !== slug);
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Article", headline: page.h1, description: page.description, image: heroImage, about: { "@type": "CafeOrCoffeeShop", name: "TR3C3", address: { "@type": "PostalAddress", streetAddress: "Avinguda de Los Ángeles, 13", postalCode: "43892", addressLocality: "Miami Platja", addressRegion: "Tarragona", addressCountry: "ES" } }, inLanguage: "es" },
+    { "@type": "FAQPage", mainEntity: faq.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })) },
+  ],
+};
+---
+
+<BaseLayout title={page.title} description={page.description} lang="es" page="home" canonicalPath={`/${slug}/`} pageType="article" image={heroImage} schema={schema} localizedAlternates={false}>
+  <article class="seo-editorial">
+    <InternalHero
+      eyebrow="Guía local / TR3C3"
+      title={page.h1}
+      lead={page.intro}
+      image={heroImage}
+      alt={page.h1}
+      variant="seo"
+      primaryHref="/es/carta/"
+      primaryLabel="Ver la carta"
+    />
+
+    <section id="contenido" class="seo-lead reveal" data-reveal>
+      <div class="tr-shell seo-lead__grid">
+        <div><p>{page.body}</p></div>
+        <ul>
+          <li><span>01</span>Café de especialidad</li>
+          <li><span>02</span>Producto fresco cada día</li>
+          <li><span>03</span>Calma mediterránea</li>
+          <li><span>04</span>En el corazón de Miami Platja</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="seo-place reveal" data-reveal>
+      <div class="tr-shell seo-place__grid">
+        <figure><Img src="/images/interior-cafe.webp" alt="Interior de TR3C3 en Miami Platja" width={1200} height={900} /></figure>
+        <div><p class="editorial-kicker">Cerca del mar, lejos de lo típico</p><h2>{page.heading}</h2><p>{page.detail}</p><a class="editorial-link" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">Cómo llegar<span aria-hidden="true">&#8599;</span></a></div>
+      </div>
+    </section>
+
+    <section class="editorial-section seo-reasons reveal" data-reveal>
+      <div class="tr-shell">
+        <div class="editorial-heading"><p class="editorial-kicker">Tres razones para venir</p><h2>Una experiencia que enamora.</h2></div>
+        <div class="seo-reasons__grid">
+          <article><span>01</span><h3>El café</h3><p>Una taza cuidada desde la molienda hasta el último sorbo. Tu nuevo café favorito te espera.</p></article>
+          <article><span>02</span><h3>La cocina</h3><p>Brunch y desayunos honestos, frescos y pensados para que no quieras parar.</p></article>
+          <article><span>03</span><h3>El ambiente</h3><p>Un espacio cálido para llegar, parar y quedarte un poco más. O toda la mañana.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="seo-split reveal" data-reveal>
+      <article><Img src="/images/specialty-coffee.webp" alt="Preparación de café de especialidad en TR3C3 Miami Platja" width={1200} height={900} /><div><p class="editorial-kicker">Café de especialidad</p><h2>Cada taza, un pequeño ritual.</h2><a class="editorial-link editorial-link--light" href="/mejor-cafe-especialidad-miami-platja/">Descubrir el café<span aria-hidden="true">&#8594;</span></a></div></article>
+      <article><Img src="/images/brunch-table.webp" alt="Brunch mediterráneo de TR3C3 en Miami Platja" width={1400} height={900} /><div><p class="editorial-kicker">Brunch sin prisa</p><h2>Una mesa que invita a quedarse.</h2><a class="editorial-link editorial-link--light" href="/brunch-miami-platja/">Descubrir el brunch<span aria-hidden="true">&#8594;</span></a></div></article>
+    </section>
+
+    <section class="editorial-section seo-faq reveal" data-reveal>
+      <div class="tr-shell seo-faq__grid">
+        <div><p class="editorial-kicker">Preguntas frecuentes</p><h2>Todo lo que necesitas saber.</h2></div>
+        <div>{faq.map((item, index) => <details><summary><span>0{index + 1}</span>{item.question}<b aria-hidden="true">+</b></summary><p>{item.answer}</p></details>)}</div>
+      </div>
+    </section>
+
+    <nav class="seo-related" aria-label="Más guías locales">
+      <div class="tr-shell"><p class="editorial-kicker">Más guías locales</p>{related.map(([key, item]) => <a href={`/${key}/`}>{item.h1}<span aria-hidden="true">&#8594;</span></a>)}</div>
+    </nav>
+
+    <section class="editorial-final-cta editorial-final-cta--copper reveal" data-reveal>
+      <div class="tr-shell"><p class="editorial-kicker">Te esperamos en TR3C3</p><h2>Buen café, buena comida y un lugar al que querrás volver.</h2><div class="editorial-actions"><a class="tr-button tr-button--light" href="/es/carta/">Ver la carta</a><a class="tr-button tr-button--light" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">Cómo llegar</a></div></div>
+    </section>
+  </article>
+</BaseLayout>

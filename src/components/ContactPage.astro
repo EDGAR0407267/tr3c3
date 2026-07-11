@@ -1,0 +1,69 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InternalHero from "./InternalHero.astro";
+import Img from "./Img.astro";
+import MapPreview from "./MapPreview.astro";
+import { getTranslation, localizedPath, type Language } from "../i18n/config";
+import { GOOGLE_MAPS_URL, HOURS_SUMMARY, LOCATION_ADDRESS_LINES } from "../data/location";
+import { CONTACT_PHONE, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "../data/site";
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const t = getTranslation(lang);
+---
+
+<BaseLayout title={t.contact.title} description={t.contact.description} lang={lang} page="contact" canonicalPath={localizedPath(lang, "contact")} image="/images/interior-cafe.webp">
+  <InternalHero
+    eyebrow="Miami Platja / Tarragona"
+    title={t.contact.heading}
+    lead={t.contact.lead}
+    image="/images/interior-cafe.webp"
+    alt="Interior de TR3C3 cerca del Mediterraneo"
+    variant="contact"
+    primaryHref={GOOGLE_MAPS_URL}
+    primaryLabel={t.home.mapCta}
+  />
+
+  <section id="contenido" class="contact-actions">
+    <div class="tr-shell contact-actions__grid">
+      <a class="contact-action" href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}><b>01</b><strong>{t.home.call}</strong><small>{CONTACT_PHONE}</small></a>
+      <a class="contact-action" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer"><b>02</b><strong>{t.home.maps}</strong><small>Google Maps &#8599;</small></a>
+      <a class="contact-action" href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer"><b>03</b><strong>Instagram</strong><small>{INSTAGRAM_HANDLE}</small></a>
+    </div>
+  </section>
+
+  <section class="editorial-section contact-location reveal" data-reveal>
+    <div class="tr-shell contact-location__grid">
+      <aside>
+        <p class="editorial-kicker">Donde estamos</p>
+        <h2>Miami Platja,<br />Tarragona.</h2>
+        <div class="contact-location__details">
+          <p><span>Direccion</span>{LOCATION_ADDRESS_LINES.map((line) => <>{line}<br /></>)}</p>
+          <p><span>Horario</span>{HOURS_SUMMARY}</p>
+          <p><span>Contacto</span>hola@tr3c3.com</p>
+        </div>
+        <a class="editorial-link" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}<span aria-hidden="true">&#8599;</span></a>
+      </aside>
+      <MapPreview label={t.home.maps} className="contact-location__map" />
+    </div>
+  </section>
+
+  <section class="contact-form-editorial reveal" data-reveal>
+    <div class="tr-shell contact-form-editorial__heading"><p class="editorial-kicker">Escribenos</p><h2>{t.contact.heading}</h2><p>{t.contact.description}</p></div>
+    <form class="tr-shell editorial-form" action="mailto:hola@tr3c3.com" method="post" enctype="text/plain">
+      <label><span>01 / {t.contact.name}</span><input name="name" autocomplete="name" required /></label>
+      <label><span>02 / {t.contact.email}</span><input name="email" type="email" autocomplete="email" required /></label>
+      <label class="editorial-form__message"><span>03 / {t.contact.message}</span><textarea name="message" rows="5" required></textarea></label>
+      <button class="tr-button tr-button--primary" type="submit">{t.contact.send}</button>
+      <small>{t.contact.formNote}</small>
+    </form>
+  </section>
+
+  <section class="contact-visit reveal" data-reveal>
+    <Img src="/images/croissant-coffee.webp" alt="Cafe servido en una mesa de TR3C3" width={1400} height={900} sizes="100vw" />
+    <div class="tr-shell"><p class="editorial-kicker">Ven a disfrutar</p><h2>{t.home.contactTitle}</h2><a class="tr-button tr-button--light" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}</a></div>
+  </section>
+
+  <section class="contact-careers-editorial">
+    <div class="tr-shell"><h2>{t.contact.careers}</h2><a href="mailto:curriculum@tr3c3.com?subject=Candidatura%20para%20trabajar%20en%20TR3C3">curriculum@tr3c3.com</a><a class="editorial-link" href="mailto:curriculum@tr3c3.com?subject=Candidatura%20para%20trabajar%20en%20TR3C3">{t.contact.careersCta}<span aria-hidden="true">&#8594;</span></a></div>
+  </section>
+</BaseLayout>

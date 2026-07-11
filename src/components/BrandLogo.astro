@@ -1,0 +1,39 @@
+﻿---
+type Variant = "primary" | "horizontal" | "mark" | "circle";
+type Tone = "color" | "light" | "dark" | "solid";
+type Size = "sm" | "md" | "lg" | "xl";
+
+interface Props {
+  variant?: Variant;
+  tone?: Tone;
+  size?: Size;
+  class?: string;
+  href?: string;
+  eager?: boolean;
+  ariaLabel?: string;
+}
+
+const {
+  variant = "primary",
+  tone = "color",
+  size = "md",
+  class: className = "",
+  href,
+  ariaLabel = "TR3C3 Coffee & Brunch",
+} = Astro.props;
+
+const logoClass = `brand-logo brand-wordmark brand-wordmark--${variant} brand-logo--${size} brand-wordmark--${tone} ${className}`.trim();
+---
+{href ? (
+  <a href={href} class="brand-logo-link" aria-label={ariaLabel}>
+    <span class={logoClass} role="img" aria-label={ariaLabel}>
+      <span class="brand-wordmark__name">TR3C3</span>
+      <span class="brand-wordmark__descriptor">Coffee &amp; Brunch</span>
+    </span>
+  </a>
+) : (
+  <span class={logoClass} role="img" aria-label={ariaLabel}>
+    <span class="brand-wordmark__name">TR3C3</span>
+    <span class="brand-wordmark__descriptor">Coffee &amp; Brunch</span>
+  </span>
+)}

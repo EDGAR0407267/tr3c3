@@ -1,0 +1,30 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead: string;
+  secondary?: string;
+  image: string;
+  alt: string;
+  variant?: "about" | "team" | "menu" | "contact" | "seo" | "essence";
+  primaryHref?: string;
+  primaryLabel?: string;
+}
+const {
+  eyebrow, title, lead, secondary, image, alt, variant = "about",
+  primaryHref, primaryLabel,
+} = Astro.props;
+---
+
+<header class:list={["editorial-hero", `editorial-hero--${variant}`]}>
+  <img class="editorial-hero__image" src={image} alt={alt} width="1920" height="1080" fetchpriority="high" />
+  <div class="editorial-hero__veil" aria-hidden="true"></div>
+  <div class="tr-shell editorial-hero__content">
+    <p class="editorial-kicker">{eyebrow}</p>
+    <h1>{title}</h1>
+    <p class="editorial-hero__lead">{lead}</p>
+    {secondary && <p class="editorial-hero__lead editorial-hero__lead--secondary">{secondary}</p>}
+    {primaryHref && primaryLabel && <a class="editorial-link editorial-link--light" href={primaryHref}>{primaryLabel}<span aria-hidden="true">&#8599;</span></a>}
+  </div>
+  <a class="editorial-hero__scroll" href="#contenido"><span></span>Scroll</a>
+</header>

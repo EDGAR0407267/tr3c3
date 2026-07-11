@@ -1,0 +1,80 @@
+---
+import { type Language } from "../i18n/config";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "../data/site";
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+
+const tiles = [
+  { src: "/images/specialty-coffee.webp", alt: "Café de especialidad recién preparado en TR3C3" },
+  { src: "/images/brunch-table.webp", alt: "Mesa de brunch mediterráneo en TR3C3" },
+  { src: "/images/drinks/iced-latte.webp", alt: "Iced latte de TR3C3 Coffee & Brunch" },
+  { src: "/images/croissant-coffee.webp", alt: "Croissant y café en TR3C3" },
+  { src: "/images/drinks/matcha-orange.webp", alt: "Matcha con naranja de TR3C3" },
+  { src: "/images/interior-cafe.webp", alt: "Interior cálido de TR3C3 en Miami Platja" },
+  { src: "/images/drinks/iced-caramel-macchiato.webp", alt: "Iced caramel macchiato de TR3C3" },
+  { src: "/images/kitchen-evening.webp", alt: "Cocina de TR3C3 al atardecer" },
+  { src: "/images/tr3c3-team.webp", alt: "El equipo de TR3C3 Coffee & Brunch" },
+  { src: "/images/hero-tr3c3-coffee-brunch.webp", alt: "Brunch y café de TR3C3 en Miami Platja" },
+];
+
+const labels: Record<Language, { kicker: string; title: string; lead: string }> = {
+  es: { kicker: "Síguenos en redes", title: "Miami Platja sabe a café", lead: "Cada plato, cada latte y cada rincón. Así se vive TR3C3 día a día. Síguenos y no te pierdas nada." },
+  ca: { kicker: "Segueix-nos a les xarxes", title: "Miami Platja sap a cafè", lead: "Cada plat, cada latte i cada racó. Així es viu TR3C3 dia a dia. Segueix-nos i no et perdis res." },
+  en: { kicker: "Follow us", title: "Miami Platja tastes of coffee", lead: "Every plate, every latte and every corner. This is TR3C3, day by day. Follow us and don't miss a thing." },
+  fr: { kicker: "Suivez‑nous", title: "Miami Platja a un goût de café", lead: "Chaque assiette, chaque latte et chaque recoin. TR3C3 au quotidien. Suivez‑nous pour ne rien manquer." },
+  de: { kicker: "Folge uns", title: "Miami Platja schmeckt nach Kaffee", lead: "Jeder Teller, jeder Latte, jede Ecke. So lebt TR3C3, Tag für Tag. Folge uns und verpasse nichts." },
+  zh: { kicker: "关注我们", title: "Miami Platja 满是咖啡香", lead: "每一道餐点、每一杯拿铁、每一个角落，这就是日常的 TR3C3。关注我们，精彩不错过。" },
+  nl: { kicker: "Volg ons", title: "Miami Platja smaakt naar koffie", lead: "Elk bord, elke latte en elk hoekje. Zo leeft TR3C3, dag na dag. Volg ons en mis niets." },
+  it: { kicker: "Seguici", title: "Miami Platja sa di caffè", lead: "Ogni piatto, ogni latte e ogni angolo. TR3C3, giorno dopo giorno. Seguici e non perderti nulla." },
+};
+const l = labels[lang] ?? labels.es;
+const handle = INSTAGRAM_HANDLE ?? "@tr3c3";
+---
+<section class="tr3c3-gallery reveal" data-reveal aria-label={l.title}>
+  <span class="tr3c3-gallery__brush tr3c3-gallery__brush--one" aria-hidden="true"></span>
+  <span class="tr3c3-gallery__brush tr3c3-gallery__brush--two" aria-hidden="true"></span>
+  <div class="tr-shell">
+    <div class="tr3c3-gallery__head">
+      <div>
+        <p class="editorial-kicker">{l.kicker}</p>
+        <h2>{l.title}</h2>
+        <p class="tr3c3-gallery__lead">{l.lead}</p>
+      </div>
+      <div class="tr3c3-gallery__social">
+        {INSTAGRAM_URL && (
+          <a class="tr3c3-gallery__handle" href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer" aria-label={`Instagram ${handle}`}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
+              <circle cx="12" cy="12" r="4.2" />
+              <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
+            </svg>
+            <span>{handle}</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+
+  <div class="tr3c3-gallery__rail">
+    <div class="tr3c3-gallery__track">
+      {[...tiles, ...tiles].map((tile, index) => {
+        const clone = index >= tiles.length;
+        const inner = (
+          <Fragment>
+            <img src={tile.src} alt={clone ? "" : tile.alt} width="640" height="800" loading="lazy" decoding="async" />
+            <span class="tr3c3-gallery__veil" aria-hidden="true"></span>
+            <span class="tr3c3-gallery__tag" aria-hidden="true">{handle}</span>
+          </Fragment>
+        );
+        const ariaHidden = clone ? "true" : undefined;
+        const tabindex = clone ? -1 : undefined;
+        return INSTAGRAM_URL ? (
+          <a class="tr3c3-gallery__tile" href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer" aria-hidden={ariaHidden} tabindex={tabindex}>{inner}</a>
+        ) : (
+          <figure class="tr3c3-gallery__tile" aria-hidden={ariaHidden}>{inner}</figure>
+        );
+      })}
+    </div>
+  </div>
+</section>

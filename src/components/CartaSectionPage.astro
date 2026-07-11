@@ -1,0 +1,72 @@
+﻿---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InternalHero from "./InternalHero.astro";
+import WineMenuSection from "./WineMenuSection.astro";
+import { getTranslation, languages, localizedPath, type Language } from "../i18n/config";
+import type { CartaSection } from "../data/cartas";
+interface Props { lang: Language; section: CartaSection }
+const { lang, section } = Astro.props;
+const t = getTranslation(lang);
+const cartaPath = localizedPath(lang, "menu");
+const sectionLanguagePaths = Object.fromEntries(
+  languages.map((code) => [code, `${localizedPath(code, "menu")}${section.id}/`])
+) as Record<Language, string>;
+const wineSectionCopy: Record<Language, { title: string; lead: string }> = {
+  es: { title: "Vinos", lead: "Una selección pensada para acompañar brunch, sobremesas y noches con carácter." },
+  ca: { title: "Vins", lead: "Una selecció pensada per acompanyar brunch, sobretaules i nits amb caràcter." },
+  en: { title: "Wines", lead: "A selection designed for brunch, lingering tables and evenings with character." },
+  fr: { title: "Vins", lead: "Une sélection pensée pour accompagner brunch, longues tables et soirées de caractère." },
+  de: { title: "Weine", lead: "Eine Auswahl für Brunch, lange Tischmomente und Abende mit Charakter." },
+  zh: { title: "è‘¡è„é…’", lead: "ä¸ºæ—©åˆé¤ã€æ‚ é•¿é¤å™å’Œæœ‰æ€§æ ¼çš„å¤œæ™šç²¾é€‰è€Œæˆã€‚" },
+  nl: { title: "Wijnen", lead: "Een selectie voor brunch, lange tafelmomenten en avonden met karakter." },
+  it: { title: "Vini", lead: "Una selezione pensata per accompagnare brunch, tavolate lente e serate di carattere." },
+};
+const localizedSection = section.id === "vinos" ? wineSectionCopy[lang] : { title: section.title, lead: section.lead };
+const itemBadges = ["Signature", "Fresh", "Brunch Favorite", "Speciality"];
+---
+
+<BaseLayout
+  title={`${localizedSection.title} · ${t.menu.title}`}
+  description={localizedSection.lead}
+  lang={lang}
+  page="menu"
+  canonicalPath={`${cartaPath}${section.id}/`}
+  languagePaths={sectionLanguagePaths}
+  image={section.image}
+>
+  {section.id !== "vinos" && (
+    <InternalHero
+      eyebrow={section.kicker}
+      title={section.title}
+      lead={section.lead}
+      image={section.image}
+      alt={section.alt}
+      variant="menu"
+    />
+  )}
+
+  {section.id === "vinos" ? (
+    <WineMenuSection lang={lang} backLabel={t.menu.title} />
+  ) : (
+    <section id="contenido" class="carta-section">
+      <div class="tr-shell">
+        <a class="carta-section__back" href={cartaPath}><span aria-hidden="true">&#8592;</span>{t.menu.title}</a>
+        <ol class="carta-section__list">
+          {section.items.map((item, index) => (
+            <li class="carta-section__item">
+              <span class="carta-section__num">{String(index + 1).padStart(2, "0")}</span>
+              <div class="carta-section__text">
+                <span class="carta-section__item-tag">{itemBadges[index % itemBadges.length]}</span>
+                <h2>{item.name}</h2>
+                <p>{item.description}</p>
+              </div>
+              <strong class="carta-section__price">{item.price}</strong>
+            </li>
+          ))}
+        </ol>
+        <p class="carta-section__note">{t.menu.note}</p>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+

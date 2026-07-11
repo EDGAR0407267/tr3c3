@@ -1,0 +1,58 @@
+export const seoPages = {
+  "mejores-cafeterias-miami-platja": {
+    title: "Mejores cafeterías en Miami Platja | TR3C3",
+    description: "¿Buscas la mejor cafetería de Miami Platja? Descubre TR3C3: café de especialidad, brunch mediterráneo y un ambiente premium al que querrás volver.",
+    h1: "La cafetería de Miami Platja que estabas buscando",
+    intro: "Elegir dónde tomar café en Miami Platja ya no consiste solo en encontrar una terraza libre. Importa el grano, cómo se prepara, qué puedes comer y, sobre todo, cómo te hace sentir el lugar. En TR3C3 lo tenemos claro: queremos ser tu sitio favorito.",
+    heading: "TR3C3: café de especialidad, brunch y forma mediterránea de disfrutar el día",
+    body: "TR3C3 nace con una ambición clara: convertirse en una de las cafeterías de referencia en Miami Platja. Unimos café de especialidad, brunch cuidado, producto fresco y una atmósfera pensada para quedarse. No es un café rápido más: es una experiencia completa para quienes buscan algo especial cerca del mar.",
+    detail: "Su estética cálida, el servicio cercano y una carta que va del espresso al matcha, de los desayunos a los platos salados, construyen una experiencia que enamora a residentes y visitantes de toda la Costa Daurada. Ven una vez y entenderás por qué se vuelve.",
+  },
+  "mejor-cafe-especialidad-miami-platja": {
+    title: "Café de especialidad en Miami Platja | TR3C3",
+    description: "El mejor café de especialidad de Miami Platja: espresso, flat white, V60 y bebidas frías preparados con mimo en un ambiente mediterráneo. Ven a probarlo.",
+    h1: "Café de especialidad en Miami Platja, taza a taza",
+    intro: "Un gran café empieza con un grano cuidado, pero depende también de la molienda, el agua, la extracción y las manos que lo preparan. En TR3C3 cuidamos cada uno de esos pasos para servirte una taza que recordarás.",
+    heading: "Una propuesta para disfrutar el origen y el ritual del buen café",
+    body: "En TR3C3 el café de especialidad es el corazón de la experiencia. Encontrarás clásicos como espresso y flat white, filtrados como el V60 y bebidas frías que mantienen todo el carácter del café sin complicaciones. Cada taza, preparada con criterio y pasión.",
+    detail: "Una propuesta para quien ya ama el specialty coffee y para quien quiere descubrir una taza más limpia, equilibrada y honesta durante su estancia en Miami Platja. Tu próximo café favorito te está esperando.",
+  },
+  "brunch-miami-platja": {
+    title: "Brunch en Miami Platja | TR3C3",
+    description: "El mejor brunch de Miami Platja: tostadas, huevos, opciones dulces y café de especialidad en un espacio cuidado frente a la Costa Daurada. Reserva tu mañana.",
+    h1: "Brunch en Miami Platja para disfrutar sin prisa",
+    intro: "El brunch sabe mejor cuando no te obliga a elegir entre desayunar tarde o comer pronto. En TR3C3 reunimos los dos momentos en una carta fresca, apetecible y pensada para alargar la mañana.",
+    heading: "Tostadas, huevos, dulce y café bien hecho",
+    body: "Nuestro brunch combina tostadas, huevos, bowls, french toast y piezas dulces con café de especialidad, matcha y bebidas frías. Platos reconocibles, cuidados y pensados para compartir mesa, conversación y tiempo. Justo lo que pide un buen fin de semana.",
+    detail: "La ubicación en Miami Platja y el ambiente mediterráneo convierten el brunch en el plan perfecto para una mañana de vacaciones, un encuentro de finde o un desayuno especial cualquier día. Ven a descubrir tu nuevo ritual.",
+  },
+  "cafeteria-premium-miami-platja": {
+    title: "Cafetería premium en Miami Platja | TR3C3",
+    description: "Una cafetería premium, moderna y cuidada en Miami Platja: café de especialidad, brunch y diseño mediterráneo. La experiencia que buscabas en la Costa Daurada.",
+    h1: "Una cafetería premium, cercana y mediterránea en Miami Platja",
+    intro: "Premium no significa distante. Para TR3C3 significa cuidar el producto, el espacio, la música, la luz y la forma de recibir a cada persona. Lujo cercano, sin etiquetas.",
+    heading: "Diseño con intención y una experiencia que se nota",
+    body: "TR3C3 combina materiales cálidos, tonos terracota, crema y madera con una carta contemporánea. Queremos que cada visita resulte cómoda, bonita y genuina, tanto si vienes por un espresso rápido como si decides alargar el brunch toda la mañana.",
+    detail: "Una cafetería pensada para residentes, turistas y todos los que buscan un espacio con alma en Miami Platja, Mont-roig del Camp y la Costa Daurada. Ven a sentir la diferencia.",
+  },
+  "desayunos-miami-platja": {
+    title: "Desayunos en Miami Platja | TR3C3",
+    description: "Desayunos en Miami Platja para empezar el día a lo grande: café de especialidad, tostadas, bollería y opciones dulces y saladas. Te esperamos en TR3C3.",
+    h1: "Desayunos en Miami Platja para empezar bien el día",
+    intro: "Hay mañanas que piden algo rápido y otras que merecen una mesa tranquila. La carta de TR3C3 está pensada para las dos, sin renunciar nunca a la calidad.",
+    heading: "Del primer espresso a un desayuno completo",
+    body: "Empieza con café de especialidad y bollería recién hecha, elige una tostada salada o convierte la mañana en un brunch completo. Opciones claras, producto fresco y una presentación cuidada que entra por los ojos y conquista al primer bocado.",
+    detail: "TR3C3 quiere ser ese lugar de Miami Platja al que vuelves por la calidad del desayuno, pero también por la calma, la atención y el ambiente. El mejor plan para empezar el día.",
+  },
+  "donde-tomar-cafe-miami-platja": {
+    title: "Dónde tomar café en Miami Platja | TR3C3",
+    description: "¿Dónde tomar el mejor café en Miami Platja? Descubre TR3C3: specialty coffee, brunch y ambiente mediterráneo. Tu nuevo rincón favorito de la Costa Daurada.",
+    h1: "Dónde tomar un buen café en Miami Platja",
+    intro: "Si buscas café con carácter, un espacio cuidado y algo rico para acompañarlo, TR3C3 reúne las tres cosas en una misma experiencia. Y repetir es solo cuestión de tiempo.",
+    heading: "Un café rápido si tienes prisa; un pequeño ritual si tienes tiempo",
+    body: "La carta incluye espresso, flat white, filtrados, cold brew y combinaciones con matcha y cítricos. Ven solo por la taza o acompáñala con dulce, tostadas y platos de brunch. Tú eliges cómo disfrutarlo.",
+    detail: "En pleno corazón de Miami Platja, TR3C3 es el punto de encuentro tranquilo para locales y para visitantes de Hospitalet de l’Infant, Cambrils y toda la Costa Daurada. Tu próximo café favorito empieza aquí.",
+  },
+} as const;
+
+export type SeoSlug = keyof typeof seoPages;

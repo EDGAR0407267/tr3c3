@@ -1,0 +1,23 @@
+---
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content="0;url=/es/" />
+    <title>TR3C3</title>
+    <script is:inline>
+      const supported = ["es", "ca", "en", "fr", "de", "zh", "nl", "it"];
+      const saved = window.localStorage.getItem("tr3c3-language");
+      const language = saved && supported.includes(saved) ? saved : "es";
+      window.location.replace("/" + language + "/");
+    </script>
+  </head>
+  <body>
+    <a href="/es/">TR3C3</a>
+  </body>
+</html>
+

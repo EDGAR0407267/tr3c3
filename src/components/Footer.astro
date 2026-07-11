@@ -1,0 +1,48 @@
+﻿---
+import { getTranslation, localizedPath, type Language } from "../i18n/config";
+import { BUSINESS_ADDRESS, BUSINESS_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL, LOCAL_GUIDES, TIKTOK_URL } from "../data/site";
+import { GOOGLE_MAPS_URL, HOURS_SUMMARY } from "../data/location";
+import BrandLogo from "./BrandLogo.astro";
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const t = getTranslation(lang);
+const year = new Date().getFullYear();
+const footerVisit = lang === "es"
+  ? "Ven por el café. Quédate por el brunch, la luz y la sobremesa."
+  : "Come for coffee. Stay for brunch, light and lingering tables.";
+---
+
+<footer class="tr-footer">
+  <span class="tr-footer__stamp" aria-hidden="true">Miami Platja</span>
+  <div class="tr-shell tr-footer__grid">
+    <div class="tr-footer__brand-block">
+      <a class="tr-logo tr-logo--light tr-footer__logo" href={localizedPath(lang)} aria-label={`${BUSINESS_NAME}, inicio`}><BrandLogo variant="primary" tone="light" size="lg" /></a>
+      <p class="tr-footer__line">{t.footer.line}</p>
+      <p class="tr-footer__visit">{footerVisit}</p>
+      <div class="tr-footer__actions">
+        <a class="tr-button tr-button--light" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}</a>
+        <a class="tr-button tr-button--ghost" href={localizedPath(lang, "menu")}>{t.home.menuCta}</a>
+      </div>
+    </div>
+
+    <div class="tr-footer__postcard">
+      <h2>TR3C3</h2>
+      <address class="tr-footer__address">
+        {BUSINESS_ADDRESS.streetAddress}<br />
+        {BUSINESS_ADDRESS.postalCode} {BUSINESS_ADDRESS.addressLocality}, {BUSINESS_ADDRESS.addressRegion}<br />
+        {HOURS_SUMMARY}
+      </address>
+      {(INSTAGRAM_URL || TIKTOK_URL) && (
+        <div class="tr-footer__socials" aria-label="TR3C3 social links">
+          {INSTAGRAM_URL && <a href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer">Instagram {INSTAGRAM_HANDLE}</a>}
+          {TIKTOK_URL && <a href={TIKTOK_URL} target="_blank" rel="me noopener noreferrer">TikTok</a>}
+        </div>
+      )}
+    </div>
+
+    <div class="tr-footer__links"><h2>{t.footer.explore}</h2><a href={localizedPath(lang)}>{t.nav.home}</a><a href={localizedPath(lang, "menu")}>{t.nav.menu}</a><a href={localizedPath(lang, "contact")}>{t.nav.contact}</a></div>
+    <div class="tr-footer__links"><h2>Contacto</h2><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a><a href={localizedPath(lang, "contact")}>{t.nav.contact}</a></div>
+    <div class="tr-footer__links tr-footer__guides"><h2>{t.footer.guides}</h2>{LOCAL_GUIDES.map((guide) => <a href={guide.href}>{guide.label}</a>)}</div>
+  </div>
+  <div class="tr-shell tr-footer__bottom"><span>© {year} {BUSINESS_NAME} · {t.footer.rights}</span><span>Speciality Coffee &amp; Brunch · Miami Platja</span></div>
+</footer>

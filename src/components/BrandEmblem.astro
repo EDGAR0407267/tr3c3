@@ -1,0 +1,65 @@
+---
+interface Props {
+  class?: string;
+  title?: string;
+}
+const { class: className = "", title = "TR3C3 Coffee & Brunch Miami Platja" } = Astro.props;
+const topId = `emblem-top-${Math.random().toString(36).slice(2, 8)}`;
+const bottomId = `emblem-bottom-${Math.random().toString(36).slice(2, 8)}`;
+---
+<svg
+  class={`brand-emblem ${className}`.trim()}
+  viewBox="0 0 100 100"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label={title}
+>
+  <title>{title}</title>
+  <defs>
+    <!-- upper arc (left -> right): keeps top text upright -->
+    <path id={topId} d="M 11 50 A 39 39 0 0 1 89 50" fill="none" />
+    <!-- lower arc (left -> right, concave up): keeps bottom text upright -->
+    <path id={bottomId} d="M 13.5 50 A 36.5 36.5 0 0 0 86.5 50" fill="none" />
+  </defs>
+
+  <circle cx="50" cy="50" r="47" fill="none" stroke="#BC5230" stroke-width="1.3" />
+  <circle cx="50" cy="50" r="43" fill="none" stroke="#BC5230" stroke-width="0.6" stroke-opacity="0.6" />
+
+  <circle cx="11" cy="50" r="1.05" fill="#BC5230" />
+  <circle cx="89" cy="50" r="1.05" fill="#BC5230" />
+
+  <text
+    class="brand-emblem__center"
+    x="50"
+    y="50"
+    text-anchor="middle"
+    dominant-baseline="central"
+    fill="#BC5230"
+    font-family="Jost, 'Inter', sans-serif"
+    font-weight="600"
+    font-size="33"
+    letter-spacing="0.5"
+  >13</text>
+
+  <text
+    class="brand-emblem__arc"
+    fill="#BC5230"
+    font-family="Jost, 'Inter', sans-serif"
+    font-weight="500"
+    font-size="8.2"
+    letter-spacing="2.2"
+  >
+    <textPath href={`#${topId}`} startOffset="50%" text-anchor="middle">COFFEE · BRUNCH</textPath>
+  </text>
+
+  <text
+    class="brand-emblem__arc"
+    fill="#BC5230"
+    font-family="Jost, 'Inter', sans-serif"
+    font-weight="500"
+    font-size="7.4"
+    letter-spacing="2.6"
+  >
+    <textPath href={`#${bottomId}`} startOffset="50%" text-anchor="middle">MIAMI PLATJA</textPath>
+  </text>
+</svg>

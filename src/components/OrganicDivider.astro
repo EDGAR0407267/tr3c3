@@ -1,0 +1,47 @@
+---
+interface Props {
+  tone?: "cream" | "paper" | "foam" | "sand" | "espresso" | "cacao" | "clay";
+  variant?: "shore" | "slow" | "ribbon" | "terrace";
+  flip?: boolean;
+  className?: string;
+}
+
+const { tone = "paper", variant = "shore", flip = false, className = "" } = Astro.props;
+
+const toneColor = {
+  cream: "var(--cream)",
+  paper: "var(--paper)",
+  foam: "var(--off-white)",
+  sand: "var(--sand)",
+  espresso: "var(--espresso)",
+  cacao: "var(--cacao)",
+  clay: "var(--clay)",
+}[tone];
+
+const accentColor = tone === "espresso" || tone === "cacao"
+  ? "rgb(247 241 232 / .28)"
+  : "rgb(150 61 30 / .2)";
+
+const paths = {
+  shore: "M0 126 C146 62 272 151 435 92 C612 27 744 129 904 78 C1084 20 1254 50 1440 112 L1440 190 L0 190 Z",
+  slow: "M0 104 C192 152 286 38 476 70 C648 99 724 151 914 106 C1086 65 1216 10 1440 58 L1440 190 L0 190 Z",
+  ribbon: "M0 132 C178 86 336 88 492 124 C682 168 794 48 984 78 C1164 106 1264 154 1440 96 L1440 190 L0 190 Z",
+  terrace: "M0 92 C144 78 212 136 356 118 C516 98 564 34 746 64 C922 93 1002 151 1178 121 C1294 102 1360 62 1440 74 L1440 190 L0 190 Z",
+};
+---
+
+<div
+  class:list={["organic-divider", `organic-divider--${variant}`, flip && "organic-divider--flip", className]}
+  style={`--organic-fill:${toneColor}; --organic-accent:${accentColor};`}
+  aria-hidden="true"
+>
+  <svg viewBox="0 0 1440 190" preserveAspectRatio="none" focusable="false">
+    <path class="organic-divider__shade" d={paths[variant]}></path>
+    <path class="organic-divider__fill" d={paths[variant]}></path>
+    <path
+      class="organic-divider__line"
+      d="M0 116 C148 76 284 142 438 98 C610 49 748 123 904 88 C1082 48 1258 58 1440 100"
+    ></path>
+  </svg>
+  <span class="organic-divider__grain"></span>
+</div>

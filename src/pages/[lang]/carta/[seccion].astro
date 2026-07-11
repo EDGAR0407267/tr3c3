@@ -1,0 +1,18 @@
+---
+import CartaSectionPage from "../../../components/CartaSectionPage.astro";
+import { languages, type Language } from "../../../i18n/config";
+import { cartaSections } from "../../../data/cartas";
+
+export function getStaticPaths() {
+  return languages.flatMap((lang) =>
+    cartaSections.map((section) => ({
+      params: { lang, seccion: section.id },
+      props: { section },
+    })),
+  );
+}
+
+const lang = Astro.params.lang as Language;
+const { section } = Astro.props;
+---
+<CartaSectionPage lang={lang} section={section} />

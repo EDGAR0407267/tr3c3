@@ -1,0 +1,58 @@
+﻿---
+import { getTranslation, languages, localizedPath, type Language, type PageKey } from "../i18n/config";
+import BrandLogo from "./BrandLogo.astro";
+import LanguageMenu from "./LanguageMenu.astro";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL, TIKTOK_URL } from "../data/site";
+interface Props { lang: Language; page?: PageKey; floating?: boolean; languagePaths?: Partial<Record<Language, string>> }
+const { lang, page = "home", floating = false, languagePaths } = Astro.props;
+const t = getTranslation(lang);
+const home = localizedPath(lang);
+const hrefForLanguage = (code: Language) => languagePaths?.[code] ?? localizedPath(code, page);
+const navItems = [
+  { href: home, label: t.nav.home, active: page === "home" },
+  { href: localizedPath(lang, "menu"), label: t.nav.menu, active: page === "menu" },
+  { href: localizedPath(lang, "contact"), label: t.nav.contact, active: page === "contact" },
+];
+---
+
+<header class:list={["tr-header", { "tr-header--floating": floating }]}>
+  <div class="tr-shell tr-header__inner">
+    <a href={home} class="tr-logo" aria-label="TR3C3 Coffee & Brunch, home"><BrandLogo variant="horizontal" tone="color" size="sm" eager /></a>
+    <nav class="tr-nav" aria-label="Primary navigation">
+      {navItems.map((item) => <a href={item.href} aria-current={item.active ? "page" : undefined}>{item.label}</a>)}
+    </nav>
+    <div class="tr-header__actions">
+      {INSTAGRAM_URL && (
+        <a class="tr-header-social" href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer" aria-label={`Instagram ${INSTAGRAM_HANDLE ?? "TR3C3"}`}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
+            <circle cx="12" cy="12" r="4.2" />
+            <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
+          </svg>
+        </a>
+      )}
+      <LanguageMenu lang={lang} page={page} tone="dark" paths={languagePaths} />
+      <button class="menu-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label={t.nav.open} data-menu-toggle>
+        <span data-menu-line="top"></span><span data-menu-line="bottom"></span>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="mobile-menu-panel tr-mobile-menu" aria-hidden="true" inert data-mobile-menu>
+    <div class="mobile-menu-panel__brand">
+      <BrandLogo variant="primary" tone="color" size="lg" />
+      <span>Speciality Coffee &amp; Brunch</span>
+    </div>
+    <nav aria-label="Mobile navigation">
+      {navItems.map((item) => <a href={item.href} aria-current={item.active ? "page" : undefined} data-mobile-link>{item.label}</a>)}
+    </nav>
+    <div class="mobile-language-list">
+      {languages.map((code) => <a href={hrefForLanguage(code)} lang={code} aria-current={code === lang ? "true" : undefined} data-language-link data-language={code}>{code.toUpperCase()}</a>)}
+    </div>
+    {(INSTAGRAM_URL || TIKTOK_URL) && (
+      <div class="mobile-menu-panel__socials" aria-label="TR3C3 social links">
+        {INSTAGRAM_URL && <a href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer">Instagram {INSTAGRAM_HANDLE}</a>}
+        {TIKTOK_URL && <a href={TIKTOK_URL} target="_blank" rel="me noopener noreferrer">TikTok</a>}
+      </div>
+    )}
+  </div>
+</header>
