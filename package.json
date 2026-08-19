@@ -7,7 +7,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "test:seo": "node tools/seo-audit.mjs",
+    "test:links": "node tools/link-audit.mjs",
+    "test:audit": "node tools/full-site-audit.mjs",
+    "validate": "npm run check && npm run build && npm run test:seo && npm run test:links"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.4.1",

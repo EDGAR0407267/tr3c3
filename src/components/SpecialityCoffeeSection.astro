@@ -1,0 +1,47 @@
+---
+import { homeExperienceCopy } from "../data/home-experience";
+import { localizedPath, type Language } from "../i18n/config";
+import ContextualCta from "./ContextualCta.astro";
+import Img from "./Img.astro";
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const copy = homeExperienceCopy[lang].coffee;
+const coffeePath = `${localizedPath(lang, "menu")}cafes-bebidas-cocteles/`;
+---
+
+<section id="speciality-coffee" class="home-ritual-section reveal" data-reveal aria-labelledby="home-ritual-title">
+  <span class="home-ritual-section__wash home-ritual-section__wash--one" aria-hidden="true"></span>
+  <span class="home-ritual-section__wash home-ritual-section__wash--two" aria-hidden="true"></span>
+  <div class="tr-shell home-ritual-section__grid">
+    <div class="home-ritual-section__copy">
+      <p class="editorial-kicker">{copy.kicker}</p>
+      <h2 id="home-ritual-title">{copy.title}</h2>
+      <p>{copy.lead}</p>
+      <p class="home-ritual-section__difference">{copy.difference}</p>
+      <blockquote>{copy.quote}</blockquote>
+      <p class="home-ritual-section__craft">{copy.craftLine}</p>
+      <ContextualCta className="home-ritual-section__cta" href={coffeePath} label={copy.cta} ariaLabel={copy.cta} tone="copper" />
+    </div>
+    <div class="home-ritual-section__visual" aria-label={copy.kicker}>
+      <figure class="home-ritual-photo home-ritual-photo--coffee">
+        <Img src="/images/specialty-coffee.webp" alt={copy.coffeeAlt} width={1200} height={1400} variants={[320, 480, 560, 640, 828, 1080]} sizes="(max-width: 900px) 48vw, 20vw" />
+        <figcaption class="sr-only">{copy.coffeeLabel}</figcaption>
+      </figure>
+      <figure class="home-ritual-photo home-ritual-photo--brunch">
+        <Img src="/images/carousel-cafe-latte-art.webp" alt={copy.milkAlt} width={675} height={900} variants={[320, 480, 560, 640]} sizes="(max-width: 900px) 72vw, 38vw" />
+        <figcaption>{copy.milkLabel}</figcaption>
+      </figure>
+      <span class="home-ritual-photo__floating-label" aria-hidden="true">{copy.coffeeLabel}</span>
+    </div>
+  </div>
+
+  <ol class="tr-shell coffee-principles" aria-label={copy.title}>
+    {copy.principles.map((principle, index) => (
+      <li class="coffee-principle reveal" data-reveal style={`--principle-delay:${index * 70}ms`}>
+        <span aria-hidden="true">0{index + 1}</span>
+        <div><h3>{principle.title}</h3><p>{principle.text}</p></div>
+      </li>
+    ))}
+  </ol>
+</section>

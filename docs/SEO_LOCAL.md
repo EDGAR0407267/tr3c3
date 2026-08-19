@@ -1,46 +1,49 @@
 # SEO local — TR3C3 Coffee & Brunch
 
-## Implementación realizada
+Documento operativo. La auditoría completa y las evidencias están en `SEO_TECHNICAL_REPORT.md`.
 
-- Home `/es/` con un único H1 visible y local, title, description, canonical, Open Graph, Twitter Cards y preload de la imagen principal.
-- Entidad local centralizada en `src/data/site.ts` para evitar discrepancias de nombre, dirección, horarios y enlaces.
-- Schema global con `LocalBusiness`, `CafeOrCoffeeShop`, `Restaurant`, `WebSite` y `WebPage`.
-- Seis landings locales con contenido propio, un único H1, canonical, breadcrumbs, `BreadcrumbList`, `FAQPage`, `Article`, CTA e interlinking.
-- Footer con NAP visible y seis enlaces discretos de “Guías locales”.
-- Sitemap filtrado para excluir raíz noindex y URLs redirigidas.
-- Redirecciones 301 para evitar canibalización desde `/brunch-miami-platja/` y `/mejor-cafe-especialidad-miami-platja/`.
-- Robots, favicon, Apple Touch Icon, alt text, lazy loading y renderizado estático revisados.
+## Fuente única del negocio
 
-## Páginas y metadatos
+Todos los componentes y el JSON-LD deben obtener los datos desde `src/config/business.ts`.
 
-| URL | Title | Meta description |
-| --- | --- | --- |
-| `/mejor-brunch-miami-platja/` | Brunch en Miami Platja con café de especialidad \| TR3C3 | Descubre TR3C3 Coffee & Brunch para disfrutar de brunch, desayunos cuidados y café de especialidad en un ambiente premium de Miami Platja. |
-| `/mejor-cafeteria-especialidad-miami-platja/` | Cafetería de especialidad en Miami Platja \| TR3C3 | Café de especialidad en Miami Platja: espresso, filtrados y bebidas cuidadas en TR3C3 Coffee & Brunch, una cafetería moderna en la Costa Daurada. |
-| `/mejor-restaurante-miami-platja/` | Restaurante en Miami Platja: café, brunch y cocina \| TR3C3 | TR3C3 es una propuesta gastronómica moderna en Miami Platja para desayunar, tomar brunch, comer, merendar o disfrutar de una cena informal. |
-| `/brunch-tarragona/` | Brunch en Tarragona y Costa Daurada \| TR3C3 Miami Platja | Descubre TR3C3 en Miami Platja, un destino de brunch y café de especialidad en la provincia de Tarragona y la Costa Daurada. |
-| `/cafeteria-especialidad-tarragona/` | Cafetería de especialidad en Tarragona \| TR3C3 Miami Platja | TR3C3 Coffee & Brunch es una cafetería de especialidad en Miami Platja, provincia de Tarragona, con espresso, filtrados, brunch y bebidas frías. |
-| `/restaurante-miami-platja-costa-daurada/` | Dónde comer en Miami Platja y Costa Daurada \| TR3C3 | Descubre TR3C3 para comer en Miami Platja: café de especialidad, brunch y cocina mediterránea en una parada gastronómica de la Costa Daurada. |
+- Marca visible: TR3C3.
+- Nombre usado por la web: TR3C3 Coffee & Brunch.
+- Nombre alternativo observado en Google Maps: TRECE Brunch &Speciality Coffee.
+- Dirección en el proyecto: Avinguda de Barcelona, 160, 43892 Miami Platja, Tarragona.
+- Municipio: Mont-roig del Camp.
+- Teléfono: +34 877 91 52 61.
+- Correo: hola@tr3c3.com.
+- Horario: lunes a domingo, 09:00–00:00.
+- Coordenadas: 41.0058021, 0.9350192.
+- Google Maps: <https://maps.app.goo.gl/6R71tUa5TnFQnZVw5>
+- Instagram: <https://www.instagram.com/trecebrunch/>.
+- Carta canónica: <https://www.tr3c3.com/es/carta/>.
 
-## Datos que deben confirmarse antes de publicar
+Estos datos proceden del código y del contenido visible. Deben confirmarse con el responsable y con Google Business Profile antes de publicar; no añadir rango de precios, reservas, servicios ni horarios especiales sin fuente oficial.
 
-1. Nombre oficial exacto de la ficha: `TR3C3 Coffee & Brunch` frente a la variante `TR3C3 Coffee & Brunch`.
-2. Dominio definitivo. El proyecto sigue configurado en `https://www.tr3c3.com`.
-3. Email definitivo. Actualmente se conserva `hola@tr3c3.com`.
-4. Teléfono y WhatsApp.
-5. URLs reales de Instagram y TikTok.
-6. Dirección exacta: el proyecto usa `Avinguda de Barcelona, 160, 43892 Miami Platja`.
-7. Horario: se ha configurado lun–vie 09:00–23:00 y sáb–dom 09:00–16:00 / 20:00–23:00.
-8. Sistema real de reservas y su URL.
-9. Fotografías reales del local, equipo, platos y café para sustituir imágenes de concepto.
+## Arquitectura local
 
-## Google Business Profile
+Páginas editoriales que se mantienen indexables:
 
-- Usar exactamente el mismo nombre, dirección, teléfono y horario que en `src/data/site.ts`.
-- Enlazar la home o la landing más relevante desde la ficha.
-- Añadir carta, categoría principal y categorías secundarias correctas.
-- Subir fotografías reales y recientes del exterior, interior, barra, equipo, café y platos.
-- Solicitar reseñas honestas tras la visita y responderlas con naturalidad.
-- Publicar novedades, cambios de horario y propuestas de temporada.
-- Añadir parámetros UTM al enlace web de la ficha para medir tráfico local.
-- Validar sitemap y páginas en Google Search Console tras publicar.
+- `/mejor-brunch-miami-platja/`
+- `/mejor-cafeteria-especialidad-miami-platja/`
+- `/mejor-restaurante-miami-platja/`
+- `/brunch-tarragona/`
+- `/cafeteria-especialidad-tarragona/`
+- `/restaurante-miami-platja-costa-daurada/`
+
+Consolidaciones permanentes:
+
+- `/desayunos-miami-platja/` → `/mejor-brunch-miami-platja/`
+- `/mejores-cafeterias-miami-platja/` → `/mejor-cafeteria-especialidad-miami-platja/`
+- `/cafeteria-premium-miami-platja/` → `/mejor-cafeteria-especialidad-miami-platja/`
+- `/donde-tomar-cafe-miami-platja/` → `/mejor-cafeteria-especialidad-miami-platja/`
+
+## Publicación y seguimiento
+
+1. Unificar TR3C3/TRECE en Google Business Profile y directorios.
+2. Mantener NAP y horarios idénticos en web, GBP, Bing Places y Apple Business Connect.
+3. Enviar `sitemap-index.xml` a Search Console.
+4. Añadir a GBP la carta canónica y reservas solo si existe un sistema real.
+5. Usar UTM en el enlace configurado desde GBP, no en la navegación interna.
+6. Revalidar LocalBusiness, canonicals, hreflang y 301 después de cada despliegue.

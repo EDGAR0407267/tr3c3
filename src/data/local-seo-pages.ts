@@ -51,7 +51,7 @@ export const localSeoPages: Record<LocalSeoSlug, LocalSeoPage> = {
       ]},
     ],
     faq: [
-      { question: "¿Dónde tomar el mejor brunch en Miami Platja?", answer: "TR3C3 Coffee & Brunch está en Avinguda de Los Ángeles, 13, en Miami Platja. Ofrece café de especialidad, desayunos y brunch en un espacio de inspiración mediterránea pensado para disfrutar sin prisa." },
+      { question: "¿Dónde tomar el mejor brunch en Miami Platja?", answer: "TR3C3 Coffee & Brunch está en Avinguda de Barcelona, 160, en Miami Platja. Ofrece café de especialidad, desayunos y brunch en un espacio de inspiración mediterránea pensado para disfrutar sin prisa." },
       { question: "¿El brunch incluye opciones dulces y saladas?", answer: "Sí. La carta reúne categorías dulces y saladas, café, matcha y bebidas frías. La disponibilidad concreta puede cambiar, así que te recomendamos consultar la carta actual antes de tu visita." },
       { question: "¿Se puede ir solo a tomar café?", answer: "Claro. La experiencia también está pensada para una visita breve: espresso, bebidas con leche, filtrados u opciones frías que puedes disfrutar sin pedir un brunch completo." },
       { question: "¿TR3C3 está cerca de la playa?", answer: "TR3C3 se encuentra en Miami Platja, dentro del entorno costero de Mont-roig del Camp y la Costa Daurada. El enlace de ubicación te permite calcular la ruta exacta." },
@@ -91,7 +91,7 @@ export const localSeoPages: Record<LocalSeoSlug, LocalSeoPage> = {
       { question: "¿Hace falta saber de café para disfrutarlo?", answer: "Para nada. La carta está pensada tanto para aficionados al specialty coffee como para quien quiere descubrir una taza equilibrada y recibir una recomendación sencilla." },
       { question: "¿Hay métodos de café filtrado?", answer: "Sí, contemplamos métodos como V60 y otras preparaciones según disponibilidad. Consulta la carta actual o pregunta al equipo por el café del momento." },
       { question: "¿Hay bebidas de café frías?", answer: "Sí, la carta incluye una línea de bebidas frías y combinaciones de temporada perfectas para el clima de Miami Platja." },
-      { question: "¿Dónde está esta cafetería de especialidad?", answer: "TR3C3 está en Avinguda de Los Ángeles, 13, 43892 Miami Platja, Tarragona. Desde la web puedes abrir la ruta exacta en Google Maps." },
+      { question: "¿Dónde está esta cafetería de especialidad?", answer: "TR3C3 está en Avinguda de Barcelona, 160, 43892 Miami Platja, Tarragona. Desde la web puedes abrir la ruta exacta en Google Maps." },
     ],
     related: ["mejor-brunch-miami-platja", "cafeteria-especialidad-tarragona", "restaurante-miami-platja-costa-daurada"],
     ctaTitle: "Descubre tu próxima taza favorita en Miami Platja.",
@@ -126,7 +126,7 @@ export const localSeoPages: Record<LocalSeoSlug, LocalSeoPage> = {
       { question: "¿TR3C3 es cafetería o restaurante?", answer: "Es las dos cosas. TR3C3 combina café de especialidad, brunch y cocina mediterránea. La propuesta cambia a lo largo del día para que puedas desayunar, comer, merendar o disfrutar de una cena informal según horario y disponibilidad." },
       { question: "¿Se puede comer en TR3C3?", answer: "Sí. La carta incluye categorías saladas, entrantes y platos principales además de desayunos, brunch y bebidas. Consulta la carta actual para confirmar la oferta disponible." },
       { question: "¿Hay opciones para compartir?", answer: "Sí, la propuesta incluye platos y entrantes pensados para compartir. La selección concreta puede variar por temporada y disponibilidad de producto." },
-      { question: "¿Dónde está TR3C3 en Miami Platja?", answer: "El local está en Avinguda de Los Ángeles, 13, 43892 Miami Platja, dentro del municipio de Mont-roig del Camp." },
+      { question: "¿Dónde está TR3C3 en Miami Platja?", answer: "El local está en Avinguda de Barcelona, 160, 43892 Miami Platja, dentro del municipio de Mont-roig del Camp." },
       { question: "¿Cuál es el horario del restaurante?", answer: "El horario de trabajo publicado es de lunes a domingo de 09:00 a 00:00 seguido. Conviene confirmarlo para festivos o fechas especiales." },
     ],
     related: ["restaurante-miami-platja-costa-daurada", "mejor-brunch-miami-platja", "mejor-cafeteria-especialidad-miami-platja"],
@@ -161,7 +161,7 @@ export const localSeoPages: Record<LocalSeoSlug, LocalSeoPage> = {
     faq: [
       { question: "¿TR3C3 está en Tarragona ciudad?", answer: "No. TR3C3 está en Miami Platja, municipio de Mont-roig del Camp, dentro de la provincia de Tarragona y la Costa Daurada." },
       { question: "¿Merece la pena desplazarse para tomar brunch?", answer: "TR3C3 está pensado como una experiencia de café, brunch y ambiente mediterráneo. Si encaja con tu ruta por la Costa Daurada, será una de las mejores paradas de tu mañana o escapada costera." },
-      { question: "¿Qué distancia hay desde Tarragona?", answer: "La distancia y el tiempo dependen del punto de salida y del tráfico. Te recomendamos abrir el enlace de Google Maps para calcular la ruta actualizada hasta Avinguda de Los Ángeles, 13, Miami Platja." },
+      { question: "¿Qué distancia hay desde Tarragona?", answer: "La distancia y el tiempo dependen del punto de salida y del tráfico. Te recomendamos abrir el enlace de Google Maps para calcular la ruta actualizada hasta Avinguda de Barcelona, 160, Miami Platja." },
       { question: "¿Hay café de especialidad en el brunch?", answer: "Sí. El café de especialidad es uno de los ejes de TR3C3 y acompaña a la perfección las opciones dulces y saladas de la carta." },
       { question: "¿Está abierto los fines de semana?", answer: "Sí. El horario de trabajo es de lunes a domingo de 09:00 a 00:00 seguido, también los fines de semana. Confirma siempre posibles cambios en festivos o temporada." },
     ],
@@ -195,7 +195,7 @@ export const localSeoPages: Record<LocalSeoSlug, LocalSeoPage> = {
       ]},
     ],
     faq: [
-      { question: "¿Dónde está TR3C3 Coffee & Brunch?", answer: "TR3C3 está en Avinguda de Los Ángeles, 13, 43892 Miami Platja, dentro del municipio de Mont-roig del Camp y la provincia de Tarragona." },
+      { question: "¿Dónde está TR3C3 Coffee & Brunch?", answer: "TR3C3 está en Avinguda de Barcelona, 160, 43892 Miami Platja, dentro del municipio de Mont-roig del Camp y la provincia de Tarragona." },
       { question: "¿TR3C3 es una cafetería de Tarragona ciudad?", answer: "No. Está en Miami Platja. La página se dirige a búsquedas provinciales y de Costa Daurada, indicando siempre la ubicación real para evitar confusiones." },
       { question: "¿Qué métodos de café ofrece?", answer: "La propuesta incluye espresso, bebidas con leche, filtrados y preparaciones frías. La selección concreta puede variar según carta, grano y temporada." },
       { question: "¿Se puede comer además de tomar café?", answer: "Sí. TR3C3 combina café de especialidad con desayunos, brunch y cocina mediterránea, así que la visita se adapta a distintos momentos del día." },
@@ -226,12 +226,12 @@ export const localSeoPages: Record<LocalSeoSlug, LocalSeoPage> = {
         "Si te alojas en Cambrils o recorres la provincia de Tarragona, calcula el trayecto según tráfico y temporada. TR3C3 no pretende estar en todos esos municipios: es un destino concreto en Miami Platja que puede resultarte muy relevante. La precisión geográfica es parte de una recomendación local útil y creíble, y nosotros la cuidamos."
       ]},
       { eyebrow: "Consejos prácticos", title: "Cómo preparar tu visita en vacaciones o temporada alta", paragraphs: [
-        "En verano, fines de semana y festivos, los tiempos de carretera y la ocupación cambian. Comprueba el horario, abre la ruta en Google Maps y contacta antes si vienes con grupo. La dirección es Avinguda de Los Ángeles, 13, en Miami Platja. Tenerla guardada te evita depender de búsquedas rápidas cuando ya estás en movimiento.",
+        "En verano, fines de semana y festivos, los tiempos de carretera y la ocupación cambian. Comprueba el horario, abre la ruta en Google Maps y contacta antes si vienes con grupo. La dirección es Avinguda de Barcelona, 160, en Miami Platja. Tenerla guardada te evita depender de búsquedas rápidas cuando ya estás en movimiento.",
         "Después de la visita, una reseña honesta ayuda a otros viajeros a decidir dónde comer en Miami Platja. Son especialmente útiles los comentarios que describen qué se pidió, cómo fue el servicio y en qué momento del día se visitó el local. Queremos crecer con recomendaciones reales, no con promesas grandilocuentes. Esa reputación local es la base más sólida para ser una referencia de la Costa Daurada."
       ]},
     ],
     faq: [
-      { question: "¿Dónde comer en Miami Platja cerca de una ruta por la Costa Daurada?", answer: "TR3C3 está en Avinguda de Los Ángeles, 13, Miami Platja. Su propuesta combina café, brunch y cocina mediterránea, así que encaja en distintos momentos de una ruta costera." },
+      { question: "¿Dónde comer en Miami Platja cerca de una ruta por la Costa Daurada?", answer: "TR3C3 está en Avinguda de Barcelona, 160, Miami Platja. Su propuesta combina café, brunch y cocina mediterránea, así que encaja en distintos momentos de una ruta costera." },
       { question: "¿TR3C3 sirve comidas además de brunch?", answer: "Sí. La carta contempla entrantes, platos salados y opciones para compartir, además de desayunos y brunch. Revisa la oferta actual antes de venir." },
       { question: "¿Es un sitio adecuado para turistas y familias?", answer: "Totalmente. La propuesta es flexible y está pensada para residentes y visitantes. Para grupos grandes, familias o necesidades concretas, conviene contactar previamente con el local." },
       { question: "¿Está cerca de Hospitalet de l’Infant?", answer: "TR3C3 se encuentra en Miami Platja, en el entorno de Mont-roig del Camp y Hospitalet de l’Infant. La distancia exacta depende del punto de salida; consúltala en Google Maps." },

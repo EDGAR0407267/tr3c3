@@ -4,6 +4,7 @@ import InternalHero from "./InternalHero.astro";
 import Img from "./Img.astro";
 import { seoPages, type SeoSlug } from "../data/seo-pages";
 import { GOOGLE_MAPS_URL } from "../data/location";
+import { BUSINESS_ADDRESS, BUSINESS_FULL_ADDRESS } from "../data/site";
 interface Props { slug: SeoSlug }
 const { slug } = Astro.props;
 const page = seoPages[slug];
@@ -14,13 +15,13 @@ const heroImage = slug.includes("brunch") ? "/images/brunch-table.webp"
 const faq = [
   { question: "¿Qué tipo de café sirve TR3C3?", answer: "Café de especialidad preparado con mimo: espresso, bebidas con leche, filtrados como el V60 y opciones frías. Una carta para disfrutar sin complicaciones en Miami Platja." },
   { question: "¿Hay opciones para desayunar o tomar brunch?", answer: "Sí. La carta reúne opciones dulces y saladas, tostadas, huevos, platos para compartir y bebidas para acompañar el mejor desayuno o brunch de la zona." },
-  { question: "¿Dónde está TR3C3?", answer: "TR3C3 está en Avinguda de Los Ángeles, 13, 43892 Miami Platja, Tarragona. Abre la ubicación exacta en Google Maps desde esta página y ven a conocernos." },
+  { question: "¿Dónde está TR3C3?", answer: `TR3C3 está en ${BUSINESS_FULL_ADDRESS}. Abre la ubicación exacta en Google Maps desde esta página y ven a conocernos.` },
 ];
 const related = (Object.entries(seoPages) as Array<[SeoSlug, typeof page]>).filter(([key]) => key !== slug);
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
-    { "@type": "Article", headline: page.h1, description: page.description, image: heroImage, about: { "@type": "CafeOrCoffeeShop", name: "TR3C3", address: { "@type": "PostalAddress", streetAddress: "Avinguda de Los Ángeles, 13", postalCode: "43892", addressLocality: "Miami Platja", addressRegion: "Tarragona", addressCountry: "ES" } }, inLanguage: "es" },
+    { "@type": "Article", headline: page.h1, description: page.description, image: heroImage, about: { "@type": "CafeOrCoffeeShop", name: "TR3C3", address: { "@type": "PostalAddress", ...BUSINESS_ADDRESS } }, inLanguage: "es" },
     { "@type": "FAQPage", mainEntity: faq.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })) },
   ],
 };

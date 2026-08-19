@@ -1,5 +1,8 @@
-﻿---
+---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import DeferredStyles from "./DeferredStyles.astro";
+import homeDeferredStylesHref from "../styles/home-deferred.css?url";
+import homeExperienceStylesHref from "../styles/home-experience.css?url";
 import CoffeeMachineSection from "./CoffeeMachineSection.astro";
 import HeroCover from "./HeroCover.astro";
 import ReviewsSection from "./ReviewsSection.astro";
@@ -8,21 +11,23 @@ import LocationHoursSection from "./LocationHoursSection.astro";
 import OrganicDivider from "./OrganicDivider.astro";
 import ScrollImageCollage from "./ScrollImageCollage.astro";
 import Img from "./Img.astro";
+import SpecialityCoffeeSection from "./SpecialityCoffeeSection.astro";
+import AllDayExperience from "./AllDayExperience.astro";
 import { GOOGLE_MAPS_URL } from "../data/location";
 import { SITE_URL } from "../data/site";
 import { cartaSections } from "../data/cartas";
+import { homeExperienceCopy } from "../data/home-experience";
+import { getFoodMenu, localize } from "../data/food-menus";
+import { cartaPortalCopy, localizeCarta } from "../data/carta-portal";
 import { getTranslation, localizedPath, type Language } from "../i18n/config";
+import { getPageSeo } from "../config/seo";
 
 interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = getTranslation(lang);
 const menuPath = localizedPath(lang, "menu");
-const title = lang === "es"
-  ? "TR3C3 Coffee & Brunch | Speciality Coffee & Brunch en Miami Platja"
-  : t.home.title;
-const description = lang === "es"
-  ? "Descubre TR3C3 Coffee & Brunch en Miami Platja: café de especialidad, brunch, cocina cuidada y ambiente premium cerca del mar en Tarragona."
-  : t.home.description;
+const seo = getPageSeo(lang, "home");
+const experience = homeExperienceCopy[lang];
 const canonicalHome = new URL(localizedPath(lang), SITE_URL).toString();
 const visitSectionSchema = {
   "@context": "https://schema.org",
@@ -33,106 +38,81 @@ const visitSectionSchema = {
   about: { "@id": new URL("/#local-business", SITE_URL).toString() },
 };
 
-const homeEditorial = lang === "es" ? {
-  ritualKicker: "Coffee ritual / Brunch mediterráneo",
-  ritualTitle: "Una mañana que se alarga sin pedir permiso.",
-  ritualLead: "Café de especialidad, cocina fresca y una mesa pensada para quedarse. TR3C3 vive entre la precisión del espresso y el placer mediterráneo de compartir sin prisa.",
-  ritualQuote: "Del primer sorbo al último plato, todo respira calma, oficio y luz de Costa Daurada.",
-  coffeeLabel: "Speciality Coffee",
-  brunchLabel: "Fresh Kitchen",
-  menuKicker: "Carta editorial",
-  menuTitle: "Antojos con textura, luz y carácter.",
-  menuLead: "Cafés, brunch, vinos y cócteles seleccionados como una pequeña revista gastronómica: fácil de explorar, difícil de olvidar.",
-  menuCta: "Descubrir la carta",
-  essenceKicker: "Nuestra Esencia",
-  essenceTitle: "Café bien hecho, brunch sin prisa y trato cercano.",
-  essenceLead: "Una cafetería de especialidad con alma mediterránea: producto fresco, estética moderna y ese punto cálido que hace que apetezca volver.",
-  essenceCta: "Descubrir TR3C3",
-} : {
-  ritualKicker: "Coffee ritual / Mediterranean brunch",
-  ritualTitle: "A morning made to linger.",
-  ritualLead: "Specialty coffee, fresh cooking and a table designed for staying a little longer. TR3C3 lives between espresso precision and Mediterranean ease.",
-  ritualQuote: "From first sip to last plate, everything carries craft, calm and Costa Daurada light.",
-  coffeeLabel: "Speciality Coffee",
-  brunchLabel: "Fresh Kitchen",
-  menuKicker: "Editorial menu",
-  menuTitle: "Cravings with texture, light and character.",
-  menuLead: "Coffee, brunch, wines and cocktails arranged like a small gastronomic magazine: easy to explore, hard to forget.",
-  menuCta: "Discover the menu",
-  essenceKicker: "Our Essence",
-  essenceTitle: "Good coffee, slow brunch and warm service.",
-  essenceLead: "A specialty coffee shop with Mediterranean soul: fresh produce, modern aesthetics and the kind of warmth that makes you return.",
-  essenceCta: "Discover TR3C3",
+const cardCta: Record<Language, { menu: string; wine: string }> = {
+  es: { menu: "Ver carta", wine: "Ver carta de vinos" },
+  ca: { menu: "Veure carta", wine: "Veure carta de vins" },
+  en: { menu: "View menu", wine: "View wine list" },
+  fr: { menu: "Voir la carte", wine: "Voir la carte des vins" },
+  de: { menu: "Karte ansehen", wine: "Weinkarte ansehen" },
+  zh: { menu: "查看菜单", wine: "查看酒单" },
+  nl: { menu: "Bekijk menu", wine: "Bekijk wijnkaart" },
+  it: { menu: "Vedi il menu", wine: "Vedi la carta dei vini" },
 };
 
-const featuredIds = ["cafes", "entrantes", "cocteles", "vinos"];
+const featuredIds = ["cafes-bebidas-cocteles", "desayunos-brunch", "comida-cena", "vinos"];
 const cardBadges: Record<string, string> = {
-  cafes: "Speciality",
-  entrantes: "Brunch Favorite",
-  cocteles: "Signature",
+  "cafes-bebidas-cocteles": "Speciality",
+  "desayunos-brunch": "Brunch Favorite",
+  "comida-cena": "Mediterranean Nights",
   vinos: "Mediterranean Cellar",
 };
 const featuredSections = featuredIds
   .map((id) => cartaSections.find((section) => section.id === id))
-  .filter((section): section is (typeof cartaSections)[number] => Boolean(section));
+  .filter((section): section is (typeof cartaSections)[number] => Boolean(section))
+  .map((section) => {
+    const foodMenu = getFoodMenu(section.id);
+    if (foodMenu) return {
+      ...section,
+      title: localize(foodMenu.title, lang),
+      lead: localize(foodMenu.lead, lang),
+      alt: localize(foodMenu.alt, lang),
+    };
+    if (section.id === "vinos") return {
+      ...section,
+      title: localizeCarta(cartaPortalCopy.wineCard.title, lang),
+      lead: localizeCarta(cartaPortalCopy.wineCard.lead, lang),
+      alt: localizeCarta(cartaPortalCopy.wineCard.alt, lang),
+    };
+    return section;
+  });
 ---
 
 <BaseLayout
-  title={title}
-  description={description}
+  title={seo.title}
+  description={seo.description}
   lang={lang}
   page="home"
   canonicalPath={localizedPath(lang)}
   image="/images/hero-tr3c3-coffee-brunch.webp"
-  imageAlt="Café de especialidad y brunch mediterráneo en TR3C3 Coffee & Brunch en Miami Platja"
+  imageAlt="Café de especialidad, desayunos, brunch y cena mediterránea en TR3C3 Miami Platja"
   schema={visitSectionSchema}
   preloadImage
-  preloadImageSrcset="/images/hero-tr3c3-coffee-brunch-640.webp 640w, /images/hero-tr3c3-coffee-brunch-1080.webp 1080w, /images/hero-tr3c3-coffee-brunch.webp 1600w"
+  preloadImageHref="/images/hero-tr3c3-coffee-brunch.avif"
+  preloadImageType="image/avif"
+  preloadImageSrcset="/images/hero-tr3c3-coffee-brunch-480.avif 480w, /images/hero-tr3c3-coffee-brunch-640.avif 640w, /images/hero-tr3c3-coffee-brunch-828.avif 828w, /images/hero-tr3c3-coffee-brunch-1080.avif 1080w, /images/hero-tr3c3-coffee-brunch.avif 1600w"
   preloadImageSizes="100vw"
   floatingHeader
 >
+  <DeferredStyles href={homeDeferredStylesHref} />
+  <DeferredStyles href={homeExperienceStylesHref} />
   <HeroCover lang={lang} />
 
-  <section class="home-ritual-section reveal" data-reveal aria-labelledby="home-ritual-title">
-    <span class="home-ritual-section__wash home-ritual-section__wash--one" aria-hidden="true"></span>
-    <span class="home-ritual-section__wash home-ritual-section__wash--two" aria-hidden="true"></span>
-    <div class="tr-shell home-ritual-section__grid">
-      <div class="home-ritual-section__copy">
-        <p class="editorial-kicker">{homeEditorial.ritualKicker}</p>
-        <h2 id="home-ritual-title">{homeEditorial.ritualTitle}</h2>
-        <p>{homeEditorial.ritualLead}</p>
-        <blockquote>{homeEditorial.ritualQuote}</blockquote>
-        <div class="home-ritual-section__actions">
-          <a class="tr-button tr-button--primary" href={menuPath}>{t.home.menuCta}</a>
-          <a class="tr-button tr-button--secondary" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}</a>
-        </div>
-      </div>
-      <div class="home-ritual-section__visual" aria-label="TR3C3 Speciality Coffee and Brunch">
-        <figure class="home-ritual-photo home-ritual-photo--coffee">
-          <Img src="/images/specialty-coffee.webp" alt="Café de especialidad preparado en TR3C3" width={1200} height={1400} sizes="(max-width: 900px) 78vw, 30vw" />
-          <figcaption>{homeEditorial.coffeeLabel}</figcaption>
-        </figure>
-        <figure class="home-ritual-photo home-ritual-photo--brunch">
-          <Img src="/images/brunch-table.webp" alt="Mesa de brunch mediterráneo en TR3C3" width={1400} height={1000} sizes="(max-width: 900px) 82vw, 38vw" />
-          <figcaption>{homeEditorial.brunchLabel}</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
+  <SpecialityCoffeeSection lang={lang} />
 
   <OrganicDivider tone="paper" variant="shore" className="home-divider home-divider--machine" />
   <CoffeeMachineSection lang={lang} />
+  <AllDayExperience lang={lang} />
 
   <section class="home-menu-editorial reveal" data-reveal aria-labelledby="home-menu-title">
     <span class="home-menu-editorial__spoon" aria-hidden="true"></span>
     <div class="tr-shell home-menu-editorial__head">
       <div>
-        <p class="editorial-kicker">{homeEditorial.menuKicker}</p>
-        <h2 id="home-menu-title">{homeEditorial.menuTitle}</h2>
+        <p class="editorial-kicker">{experience.menu.kicker}</p>
+        <h2 id="home-menu-title">{experience.menu.title}</h2>
       </div>
       <div>
-        <p>{homeEditorial.menuLead}</p>
-        <a class="tr-button tr-button--secondary" href={menuPath}>{homeEditorial.menuCta}</a>
+        <p>{experience.menu.lead}</p>
+        <a class="tr-button tr-button--secondary" href={menuPath}>{experience.menu.cta}</a>
       </div>
     </div>
     <div class="tr-shell home-menu-editorial__grid">
@@ -146,7 +126,7 @@ const featuredSections = featuredIds
             <span class="home-menu-card__index">{String(index + 1).padStart(2, "0")}</span>
             <h3>{section.title}</h3>
             <p>{section.lead}</p>
-            <span class="home-menu-card__cta">Ver carta <span aria-hidden="true">↗</span></span>
+            <span class="home-menu-card__cta">{section.id === "vinos" ? cardCta[lang].wine : cardCta[lang].menu} <span aria-hidden="true">↗</span></span>
           </div>
         </a>
       ))}

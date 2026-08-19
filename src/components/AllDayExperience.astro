@@ -1,0 +1,95 @@
+---
+import { OPENING_HOURS, SERVICE_HOURS } from "../config/business";
+import { homeExperienceCopy } from "../data/home-experience";
+import { localizedPath, type Language } from "../i18n/config";
+import ContextualCta from "./ContextualCta.astro";
+import Img from "./Img.astro";
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const copy = homeExperienceCopy[lang].day;
+const menuPath = localizedPath(lang, "menu");
+const [breakfastMorning, brunchAfternoon] = SERVICE_HOURS.breakfastBrunch;
+const [, dinnerEvening] = SERVICE_HOURS.lunchDinner;
+const venueHours = OPENING_HOURS[0];
+const ranges = {
+  breakfast: `${breakfastMorning.opens}–${breakfastMorning.closes}`,
+  brunch: `${breakfastMorning.opens}–${breakfastMorning.closes} · ${brunchAfternoon.opens}–${brunchAfternoon.closes}`,
+  dinner: `${dinnerEvening.opens}–${dinnerEvening.closes}`,
+  venue: `${venueHours.opens}–${venueHours.closes}`,
+};
+const momentImages = [
+  { src: "/images/croissant-coffee.webp", width: 1400, height: 900, href: `${menuPath}desayunos-brunch/` },
+  { src: "/images/brunch-table.webp", width: 1400, height: 1000, href: `${menuPath}desayunos-brunch/` },
+  { src: "/images/kitchen-evening.webp", width: 1200, height: 900, href: `${menuPath}comida-cena/` },
+] as const;
+---
+
+<section id="all-day" class="all-day-experience" aria-labelledby="all-day-title">
+  <span class="all-day-experience__sun" aria-hidden="true"></span>
+  <span class="all-day-experience__horizon" aria-hidden="true"></span>
+
+  <div class="tr-shell all-day-experience__head reveal" data-reveal>
+    <div>
+      <p class="editorial-kicker">{copy.kicker}</p>
+      <h2 id="all-day-title">{copy.title}</h2>
+    </div>
+    <p>{copy.lead}</p>
+  </div>
+
+  <aside
+    class="service-status tr-shell reveal"
+    data-reveal
+    data-service-status
+    data-breakfast-now={copy.breakfastNow}
+    data-midday-now={copy.middayNow}
+    data-brunch-now={copy.brunchNow}
+    data-dinner-now={copy.dinnerNow}
+    data-kitchen-closed={copy.kitchenClosed}
+    data-closed-before={copy.closedBefore}
+    data-closed-after={copy.closedAfter}
+    data-breakfast-start={breakfastMorning.opens}
+    data-breakfast-end={breakfastMorning.closes}
+    data-midday-end={SERVICE_HOURS.lunchDinner[0].closes}
+    data-brunch-end={brunchAfternoon.closes}
+    data-dinner-end={dinnerEvening.closes}
+    data-venue-end={venueHours.closes}
+    aria-labelledby="service-status-title"
+  >
+    <div class="service-status__message">
+      <span class="service-status__pulse" aria-hidden="true"></span>
+      <div>
+        <p id="service-status-title">{copy.statusLabel}</p>
+        <strong data-service-status-message role="status" aria-live="polite">{copy.venueHoursLabel}: {ranges.venue}</strong>
+      </div>
+    </div>
+    <ul class="service-status__services" aria-label={copy.statusLabel}>
+      <li data-service-pill="breakfast"><span>{copy.breakfastService}</span><time datetime={breakfastMorning.opens}>{ranges.breakfast}</time></li>
+      <li data-service-pill="brunch"><span>{copy.brunchService}</span><time datetime={breakfastMorning.opens}>{ranges.brunch}</time></li>
+      <li data-service-pill="dinner"><span>{copy.dinnerService}</span><time datetime={dinnerEvening.opens}>{ranges.dinner}</time></li>
+    </ul>
+    <p class="service-status__venue-hours"><span>{copy.venueHoursLabel}</span><time datetime={venueHours.opens}>{ranges.venue}</time></p>
+  </aside>
+
+  <div class="tr-shell all-day-experience__timeline">
+    {copy.moments.map((moment, index) => {
+      const media = momentImages[index];
+      return (
+        <article class:list={["day-moment", `day-moment--${index + 1}`, "reveal"]} data-reveal>
+          <figure class="day-moment__media">
+            <Img src={media.src} alt={moment.alt} width={media.width} height={media.height} sizes="(max-width: 760px) 92vw, (max-width: 1080px) 45vw, 31vw" />
+            <span class="day-moment__number" aria-hidden="true">0{index + 1}</span>
+          </figure>
+          <div class="day-moment__copy">
+            <p class="day-moment__label">{moment.label}</p>
+            <h3>{moment.title}</h3>
+            <p>{moment.text}</p>
+            <ContextualCta href={media.href} label={moment.cta} ariaLabel={moment.cta} tone={index === 2 ? "light" : "copper"} />
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</section>
+
+<script>import "../scripts/service-status.ts";</script>

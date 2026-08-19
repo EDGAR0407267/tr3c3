@@ -1,8 +1,35 @@
-node_modules
-dist
-.astro
-.vercel
-.netlify
+# Dependencies and generated output
+node_modules/
+dist/
+.astro/
+.vercel/
+.netlify/
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs, caches and local tooling
 *.log
+.playwright-cli/
+output/
+.claude/
+.vscode/
+.idea/
+
+# Local audits and deployment bundles
+HOSTALIA_UPLOAD/
+LIGHTHOUSE_*.json
+SEO_*.json
+tr3c3-*.json
+PERFORMANCE_*.md
+SEO_AUDIT_*.md
+SEO_TECHNICAL_REPORT.md
+*.zip
+
+# Operating-system files
 .DS_Store
 Thumbs.db

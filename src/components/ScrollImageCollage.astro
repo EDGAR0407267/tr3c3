@@ -1,4 +1,6 @@
 ---
+import DeferredStyles from "./DeferredStyles.astro";
+import scrollCollageStylesHref from "../styles/scroll-collage.css?url";
 import { type Language } from "../i18n/config";
 
 interface Props { lang: Language }
@@ -14,11 +16,28 @@ const copy = lang === "es" ? {
   lead: "The best specialty coffee and Mediterranean brunch in Miami Platja, in a menu you'll fall for at first sight.",
 };
 
+const carouselSourceWidths: Record<string, number> = {
+  "/images/carousel-cafes-latte-cappuccino.webp": 1200,
+  "/images/carousel-cafe-latte-art.webp": 675,
+  "/images/carousel-tostadas-salmon.webp": 900,
+  "/images/carousel-cocteles.webp": 900,
+  "/images/carousel-cheesecake.webp": 900,
+  "/images/carousel-brioche-tartar.webp": 900,
+  "/images/carousel-torrija-helado.webp": 900,
+};
+const responsiveSrcset = (src: string, ext = ".webp") => {
+  const sourceWidth = carouselSourceWidths[src] ?? 900;
+  const base = src.replace(/\.webp$/, "");
+  const variants = [320, 480, 560, 640, 828]
+    .filter((width) => width < sourceWidth)
+    .map((width) => base + "-" + width + ext + " " + width + "w");
+  return [...variants, base + ext + " " + sourceWidth + "w"].join(", ");
+};
 const images = [
   {
     className: "scroll-collage__item--main",
-    src: "/images/interior-cafe.webp",
-    alt: "Interior cálido de TR3C3 con ambiente mediterráneo",
+    src: "/images/carousel-cafes-latte-cappuccino.webp",
+    alt: "Dos cafés de especialidad con arte latte sobre una tabla de madera en TR3C3",
     width: "clamp(22rem, 48vw, 48rem)",
     ratio: "4 / 3",
     radius: "2.7rem 2.7rem 1.55rem 2.2rem",
@@ -28,8 +47,8 @@ const images = [
   },
   {
     className: "scroll-collage__item--left",
-    src: "/images/specialty-coffee.webp",
-    alt: "Café de especialidad preparado en TR3C3",
+    src: "/images/carousel-cafe-latte-art.webp",
+    alt: "Café con arte latte servido en bandeja de madera en TR3C3",
     width: "clamp(12rem, 19vw, 19rem)",
     ratio: "3 / 4",
     radius: "2.2rem 1.35rem 2.4rem 1.8rem",
@@ -39,8 +58,8 @@ const images = [
   },
   {
     className: "scroll-collage__item--right",
-    src: "/images/brunch-table.webp",
-    alt: "Mesa de brunch mediterráneo en TR3C3",
+    src: "/images/carousel-tostadas-salmon.webp",
+    alt: "Tostada de salmón ahumado y aguacate en TR3C3",
     width: "clamp(14rem, 23vw, 24rem)",
     ratio: "5 / 4",
     radius: "1.7rem 2.7rem 1.9rem 2.35rem",
@@ -50,8 +69,8 @@ const images = [
   },
   {
     className: "scroll-collage__item--drink",
-    src: "/images/drinks/matcha-orange.webp",
-    alt: "Matcha con naranja servido en TR3C3",
+    src: "/images/carousel-cocteles.webp",
+    alt: "Cócteles con lima y hielo en la terraza de TR3C3",
     width: "clamp(9rem, 15vw, 15rem)",
     ratio: "3 / 4",
     radius: "1.55rem 2rem 1.35rem 2.25rem",
@@ -61,8 +80,8 @@ const images = [
   },
   {
     className: "scroll-collage__item--pastry scroll-collage__item--desktop-only",
-    src: "/images/croissant-coffee.webp",
-    alt: "Croissant y café sobre mesa clara en TR3C3",
+    src: "/images/carousel-cheesecake.webp",
+    alt: "Tarta de queso cremosa con flores comestibles en TR3C3",
     width: "clamp(11rem, 17vw, 17rem)",
     ratio: "4 / 5",
     radius: "2.4rem 1.65rem 2rem 1.3rem",
@@ -72,8 +91,8 @@ const images = [
   },
   {
     className: "scroll-collage__item--evening scroll-collage__item--desktop-only",
-    src: "/images/kitchen-evening.webp",
-    alt: "Ambiente de tarde y cocina cuidada en TR3C3",
+    src: "/images/carousel-brioche-tartar.webp",
+    alt: "Brioche con tartar de ternera y micromezclum en TR3C3",
     width: "clamp(13rem, 20vw, 21rem)",
     ratio: "16 / 11",
     radius: "1.4rem 2.25rem 2rem 1.8rem",
@@ -83,8 +102,8 @@ const images = [
   },
   {
     className: "scroll-collage__item--cold",
-    src: "/images/drinks/iced-latte.webp",
-    alt: "Iced latte de TR3C3 sobre fondo cálido",
+    src: "/images/carousel-torrija-helado.webp",
+    alt: "Torrija con helado, chocolate y frutos secos en TR3C3",
     width: "clamp(9rem, 14vw, 14rem)",
     ratio: "3 / 4",
     radius: "2rem 1.4rem 2.25rem 1.55rem",
@@ -95,6 +114,7 @@ const images = [
 ];
 ---
 
+<DeferredStyles href={scrollCollageStylesHref} />
 <section id="menu-specials" class="scroll-collage" data-scroll-collage aria-labelledby="scroll-collage-title">
   <div class="scroll-collage__sticky">
     <span class="scroll-collage__grain" aria-hidden="true"></span>
@@ -123,14 +143,23 @@ const images = [
           data-r2={image.r2}
           data-o2={image.o2}
         >
-          <img
-            src={image.src}
-            alt={image.alt}
-            width={index === 0 ? "1200" : "800"}
-            height={index === 0 ? "900" : "1000"}
-            loading={index === 0 ? "eager" : "lazy"}
-            decoding="async"
-          />
+          <picture class="pic">
+            <source
+              type="image/avif"
+              srcset={responsiveSrcset(image.src, ".avif")}
+              sizes={index === 0 ? "(max-width: 720px) 92vw, min(48vw, 48rem)" : "(max-width: 720px) 58vw, 24rem"}
+            />
+            <img
+              src={image.src}
+              srcset={responsiveSrcset(image.src)}
+              sizes={index === 0 ? "(max-width: 720px) 92vw, min(48vw, 48rem)" : "(max-width: 720px) 58vw, 24rem"}
+              alt={image.alt}
+              width={index === 0 ? "1200" : "800"}
+              height={index === 0 ? "900" : "1000"}
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
         </figure>
       ))}
     </div>
@@ -173,6 +202,7 @@ const images = [
 
     const states = sections.map((section) => ({
       section,
+      active: false,
       current: -1,
       items: [...section.querySelectorAll<HTMLElement>("[data-collage-item]")].map((node): CollageItem => ({
         node,
@@ -188,12 +218,12 @@ const images = [
       const t = ease(first ? progress / split : (progress - split) / (1 - split));
       const from = first ? "0" : "1";
       const to = first ? "1" : "2";
+      const value = (key: "x" | "y" | "s" | "r" | "o") =>
+        lerp(item[`${key}${from}` as keyof CollageItem] as number, item[`${key}${to}` as keyof CollageItem] as number, t);
 
-      item.node.style.setProperty("--tx", lerp(item[`x${from}` as keyof CollageItem] as number, item[`x${to}` as keyof CollageItem] as number, t).toFixed(3));
-      item.node.style.setProperty("--ty", lerp(item[`y${from}` as keyof CollageItem] as number, item[`y${to}` as keyof CollageItem] as number, t).toFixed(3));
-      item.node.style.setProperty("--scale", lerp(item[`s${from}` as keyof CollageItem] as number, item[`s${to}` as keyof CollageItem] as number, t).toFixed(4));
-      item.node.style.setProperty("--rot", lerp(item[`r${from}` as keyof CollageItem] as number, item[`r${to}` as keyof CollageItem] as number, t).toFixed(3));
-      item.node.style.setProperty("--opacity", lerp(item[`o${from}` as keyof CollageItem] as number, item[`o${to}` as keyof CollageItem] as number, t).toFixed(4));
+      // Two style writes replace five custom-property mutations per image.
+      item.node.style.transform = `translate3d(${value("x").toFixed(3)}vw, ${value("y").toFixed(3)}vh, 0) translate3d(-50%, -50%, 0) scale(${value("s").toFixed(4)}) rotate(${value("r").toFixed(3)}deg)`;
+      item.node.style.opacity = value("o").toFixed(4);
     };
 
     if (reducedMotion.matches) {
@@ -205,34 +235,70 @@ const images = [
     }
 
     let frame = 0;
+    let pageVisible = document.visibilityState === "visible";
     const render = () => {
-      let keepGoing = false;
-
-      states.forEach((state) => {
+      frame = 0;
+      const viewportHeight = window.innerHeight;
+      // Batch every layout read before changing any styles.
+      const updates = states.filter((state) => state.active).map((state) => {
         const rect = state.section.getBoundingClientRect();
-        const distance = Math.max(1, rect.height - window.innerHeight);
-        const target = clamp(-rect.top / distance);
-        state.current = state.current < 0 ? target : lerp(state.current, target, .16);
-        if (Math.abs(target - state.current) > .001) keepGoing = true;
-
-        const progress = clamp(state.current);
-        state.section.style.setProperty("--collage-progress", progress.toFixed(4));
-        state.section.style.setProperty("--collage-outro", smoothstep(.62, .94, progress).toFixed(4));
-        state.items.forEach((item) => renderItem(item, progress));
+        return { state, target: clamp(-rect.top / Math.max(1, rect.height - viewportHeight)) };
       });
 
-      frame = keepGoing ? window.requestAnimationFrame(render) : 0;
+      updates.forEach(({ state, target }) => {
+        if (Math.abs(target - state.current) < .0005) return;
+        state.current = target;
+        state.section.style.setProperty("--collage-progress", target.toFixed(4));
+        state.section.style.setProperty("--collage-outro", smoothstep(.62, .94, target).toFixed(4));
+        state.items.forEach((item) => renderItem(item, target));
+      });
     };
 
+    const hasActiveSection = () => states.some((state) => state.active);
     const queue = () => {
-      if (!frame) frame = window.requestAnimationFrame(render);
+      if (!pageVisible || !hasActiveSection() || frame) return;
+      frame = window.requestAnimationFrame(render);
     };
+    const syncLayerState = () => states.forEach((state) => {
+      state.section.classList.toggle("is-performance-active", pageVisible && state.active);
+    });
 
     const controller = new AbortController();
+    let visibilityObserver: IntersectionObserver | undefined;
+    if ("IntersectionObserver" in window) {
+      const stateBySection = new Map(states.map((state) => [state.section, state]));
+      visibilityObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const state = stateBySection.get(entry.target as HTMLElement);
+          if (state) state.active = entry.isIntersecting;
+        });
+        syncLayerState();
+        if (!hasActiveSection() && frame) {
+          window.cancelAnimationFrame(frame);
+          frame = 0;
+        }
+        queue();
+      }, { rootMargin: "12% 0px" });
+      states.forEach((state) => visibilityObserver?.observe(state.section));
+    } else {
+      states.forEach((state) => { state.active = true; });
+      syncLayerState();
+    }
+
     window.addEventListener("scroll", queue, { passive: true, signal: controller.signal });
     window.addEventListener("resize", queue, { passive: true, signal: controller.signal });
+    document.addEventListener("visibilitychange", () => {
+      pageVisible = document.visibilityState === "visible";
+      syncLayerState();
+      if (!pageVisible && frame) {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+      }
+      queue();
+    }, { signal: controller.signal });
     document.addEventListener("astro:before-swap", () => {
       controller.abort();
+      visibilityObserver?.disconnect();
       if (frame) window.cancelAnimationFrame(frame);
     }, { once: true });
     queue();

@@ -1,80 +1,260 @@
-﻿---
+---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import InternalHero from "./InternalHero.astro";
 import Img from "./Img.astro";
-import { getTranslation, localizedPath, type Language } from "../i18n/config";
-import { cartaSections } from "../data/cartas";
+import { getTranslation, getHeroTranslation, localizedPath, type Language } from "../i18n/config";
+import { getCartaSection } from "../data/cartas";
+import { foodMenuUi, getFoodMenu, localize } from "../data/food-menus";
+import { cartaPortalCopy as portal, localizeCarta as lc } from "../data/carta-portal";
+import { GOOGLE_MAPS_URL, WEEKDAY_HOURS } from "../data/location";
+import { BUSINESS_ADDRESS, SITE_URL } from "../data/site";
+import { breadcrumbLabels, getPageSeo, languageTagByCode } from "../config/seo";
+import "../styles/carta-portal.css";
+
 interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = getTranslation(lang);
-const cardBadges: Record<string, string> = {
-  cafes: "Speciality",
-  cocteles: "Signature",
-  vinos: "Wine Ritual",
-  entrantes: "Fresh",
-  principales: "Mediterranean Brunch",
-  bolleria: "Brunch Favorite",
+const ui = foodMenuUi[lang];
+const hero = getHeroTranslation(lang);
+const cartaPath = localizedPath(lang, "menu");
+const seo = getPageSeo(lang, "menu");
+
+const heroImage = "/images/hero-tr3c3-coffee-brunch.webp";
+const heroSrcset = "/images/hero-tr3c3-coffee-brunch-480.webp 480w, /images/hero-tr3c3-coffee-brunch-640.webp 640w, /images/hero-tr3c3-coffee-brunch-828.webp 828w, /images/hero-tr3c3-coffee-brunch-1080.webp 1080w, /images/hero-tr3c3-coffee-brunch.webp 1600w";
+const heroAvifSrcset = "/images/hero-tr3c3-coffee-brunch-480.avif 480w, /images/hero-tr3c3-coffee-brunch-640.avif 640w, /images/hero-tr3c3-coffee-brunch-828.avif 828w, /images/hero-tr3c3-coffee-brunch-1080.avif 1080w, /images/hero-tr3c3-coffee-brunch.avif 1600w";
+
+// Asymmetric editorial layout: one wide flagship, then two staggered rows.
+// `size` maps to a column span in the 6-track directory grid (see global.css).
+const cardLayout: { id: string; size: "wide" | "lg" | "sm" }[] = [
+  { id: "desayunos-brunch", size: "wide" },
+  { id: "comida-cena", size: "lg" },
+  { id: "cafes-bebidas-cocteles", size: "sm" },
+  { id: "vinos", size: "sm" },
+  { id: "bebidas-especiales", size: "lg" },
+];
+
+const cards = cardLayout.map(({ id, size }) => {
+  const href = `${cartaPath}${id}/`;
+  const menu = getFoodMenu(id);
+  if (menu) {
+    return {
+      id, size, href,
+      title: localize(menu.title, lang),
+      kicker: localize(menu.kicker, lang),
+      lead: localize(menu.lead, lang),
+      image: menu.image,
+      alt: localize(menu.alt, lang),
+      schedule: menu.schedule ? localize(menu.schedule, lang) : undefined,
+    };
+  }
+  const section = getCartaSection(id)!; // vinos: not a food menu
+  return {
+    id, size, href,
+    title: lc(portal.wineCard.title, lang),
+    kicker: lc(portal.wineCard.kicker, lang),
+    lead: lc(portal.wineCard.lead, lang),
+    image: section.image,
+    alt: lc(portal.wineCard.alt, lang),
+    schedule: undefined as string | undefined,
+  };
+});
+
+const addressLine = `${BUSINESS_ADDRESS.streetAddress} · ${BUSINESS_ADDRESS.postalCode} ${BUSINESS_ADDRESS.addressLocality}`;
+const breadcrumbs = [
+  { name: breadcrumbLabels[lang].home, href: localizedPath(lang) },
+  { name: breadcrumbLabels[lang].menu, href: cartaPath },
+];
+const menuSchema = {
+  "@type": "Menu",
+  "@id": new URL(`${cartaPath}#menu`, SITE_URL).toString(),
+  name: seo.title,
+  description: seo.description,
+  url: new URL(cartaPath, SITE_URL).toString(),
+  inLanguage: languageTagByCode[lang],
+  hasMenuSection: cards.map((card) => ({
+    "@type": "MenuSection",
+    name: card.title,
+    description: card.lead,
+    url: new URL(card.href, SITE_URL).toString(),
+  })),
 };
 ---
 
-<BaseLayout title={t.menu.title} description={t.menu.description} lang={lang} page="menu" canonicalPath={localizedPath(lang, "menu")} image="/images/brunch-table.webp">
-  <InternalHero
-    eyebrow="Cafe de especialidad / Cocina mediterranea"
-    title={t.menu.intro}
-    lead={t.menu.description}
-    image="/images/brunch-table.webp"
-    alt="Mesa de brunch mediterraneo en TR3C3"
-    variant="menu"
-    primaryHref={localizedPath(lang, "contact")}
-    primaryLabel={t.home.mapCta}
-  />
-
-  <section id="contenido" class="menu-intro-editorial">
-    <div class="tr-shell">
-      <p>{t.menu.description}</p>
-      <span>{t.menu.note}</span>
-      <small class="menu-intro-editorial__seal">Speciality Coffee & Brunch · Miami Platja · Fresh Kitchen</small>
-    </div>
-  </section>
-
-  <section class="carta-cards">
-    <div class="tr-shell">
-      <div class="carta-cards__grid carta-cards__grid--editorial">
-        {cartaSections.map((section, index) => (
-          <a class:list={["carta-card", `carta-card--${section.id}`]} href={`${localizedPath(lang, "menu")}${section.id}/`}>
-            <div class="carta-card__media">
-              <img src={section.image} alt={section.alt} width="900" height="675" loading="lazy" decoding="async" />
-            </div>
-            <div class="carta-card__body">
-              <span class="carta-card__badge">{cardBadges[section.id] ?? "Fresh"}</span>
-              <span class="carta-card__index">{String(index + 1).padStart(2, "0")}</span>
-              <h2>{section.title}</h2>
-              <p>{section.lead}</p>
-              <span class="carta-card__cta">Ver carta<span aria-hidden="true">&#8599;</span></span>
-            </div>
-          </a>
-        ))}
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  lang={lang}
+  page="menu"
+  canonicalPath={cartaPath}
+  image={heroImage}
+  imageAlt={lc(portal.hero.alt, lang)}
+  preloadImage
+  preloadImageHref="/images/hero-tr3c3-coffee-brunch.avif"
+  preloadImageType="image/avif"
+  preloadImageSrcset={heroAvifSrcset}
+  preloadImageSizes="100vw"
+  schemaType="CollectionPage"
+  schema={menuSchema}
+  breadcrumbs={breadcrumbs}
+>
+  <div class="carta-portal">
+    <header class="cp-hero">
+      <picture class="cp-hero__picture">
+        <source srcset={heroAvifSrcset} sizes="100vw" type="image/avif" />
+        <img
+          class="cp-hero__image"
+          src={heroImage}
+          srcset={heroSrcset}
+          sizes="100vw"
+          alt={lc(portal.hero.alt, lang)}
+          width="1600"
+          height="900"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </picture>
+      <div class="cp-hero__veil" aria-hidden="true"></div>
+      <div class="tr-shell cp-hero__content">
+        <p class="editorial-kicker cp-hero__kicker">{lc(portal.hero.eyebrow, lang)}</p>
+        <h1>{lc(portal.hero.title, lang)}</h1>
+        <p class="cp-hero__lead">{lc(portal.hero.lead, lang)}</p>
+        <div class="cp-hero__actions">
+          <a class="tr-button tr-button--primary" href="#cartas">{lc(portal.hero.primaryCta, lang)}</a>
+          <a class="tr-button tr-button--light" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}</a>
+        </div>
       </div>
-    </div>
-  </section>
+      <a class="cp-hero__scroll" href="#cp-intro" aria-label={hero.scroll}><span aria-hidden="true"></span>{hero.scroll}</a>
+    </header>
 
-  <section class="menu-feature reveal" data-reveal>
-    <Img src="/images/croissant-coffee.webp" alt="Momento de cafe y dulce en TR3C3" width={1400} height={900} sizes="100vw" />
-    <div class="tr-shell menu-feature__content">
-      <p class="editorial-kicker">Algo frio / Algo dulce</p>
-      <h2>Una pausa hecha a tu manera.</h2>
-      <p>{t.menu.note}</p>
-    </div>
-  </section>
+    <section id="cp-intro" class="cp-intro reveal" data-reveal aria-labelledby="cp-intro-title">
+      <div class="tr-shell cp-intro__grid">
+        <div class="cp-intro__copy">
+          <p class="editorial-kicker">{lc(portal.intro.eyebrow, lang)}</p>
+          <h2 id="cp-intro-title">{lc(portal.intro.title, lang)}</h2>
+          <p class="cp-intro__text">{lc(portal.intro.text, lang)}</p>
+          <p class="cp-intro__aux">{lc(portal.intro.aux, lang)}</p>
+        </div>
+        <div class="cp-intro__visual" aria-hidden="true">
+          <span class="cp-intro__word">{lc(portal.intro.word, lang)}</span>
+          <picture class="pic">
+            <source type="image/avif" srcset="/images/specialty-coffee-480.avif 480w, /images/specialty-coffee-640.avif 640w, /images/specialty-coffee-828.avif 828w, /images/specialty-coffee-1080.avif 1080w, /images/specialty-coffee.avif 1200w" sizes="(max-width: 720px) 56vw, 24vw" />
+            <img
+              class="cp-intro__cup"
+              src="/images/specialty-coffee.webp"
+              srcset="/images/specialty-coffee-480.webp 480w, /images/specialty-coffee-640.webp 640w, /images/specialty-coffee-828.webp 828w, /images/specialty-coffee-1080.webp 1080w, /images/specialty-coffee.webp 1200w"
+              sizes="(max-width: 720px) 56vw, 24vw"
+              width="1200"
+              height="1400"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
+        </div>
+      </div>
+    </section>
 
-  <section class="editorial-final-cta reveal" data-reveal>
-    <div class="tr-shell">
-      <p class="editorial-kicker">TR3C3 / Miami Platja</p>
-      <h2>{t.home.contactTitle}</h2>
-      <div class="editorial-actions"><a class="tr-button tr-button--primary" href={localizedPath(lang, "contact")}>{t.home.mapCta}</a><a class="tr-button tr-button--secondary" href="mailto:hola@tr3c3.com">{t.home.write}</a></div>
-    </div>
-  </section>
+    <section class="cp-moments reveal" data-reveal aria-labelledby="cp-moments-title">
+      <div class="tr-shell">
+        <p class="editorial-kicker">{lc(portal.moments.eyebrow, lang)}</p>
+        <h2 id="cp-moments-title">{lc(portal.moments.title, lang)}</h2>
+        <nav class="cp-moments__rail" aria-label={lc(portal.moments.title, lang)}>
+          <ol>
+            {portal.moments.items.map((moment) => (
+              <li>
+                <a href={`#carta-${moment.target}`}>
+                  <span class="cp-moments__dot" aria-hidden="true"></span>
+                  <span class="cp-moments__time">{moment.time}</span>
+                  <span class="cp-moments__label">{lc(moment.label, lang)}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </div>
+    </section>
+
+    <section id="cartas" class="cp-directory" aria-labelledby="cp-directory-title">
+      <div class="tr-shell">
+        <div class="cp-directory__head reveal" data-reveal>
+          <p class="editorial-kicker">{lc(portal.directory.eyebrow, lang)}</p>
+          <h2 id="cp-directory-title">{lc(portal.directory.title, lang)}</h2>
+          <p class="cp-directory__lead">{lc(portal.directory.lead, lang)}</p>
+        </div>
+        <div class="cp-directory__grid" data-reveal>
+          {cards.map((card, index) => (
+            <a
+              id={`carta-${card.id}`}
+              class:list={["cp-card", `cp-card--${card.size}`]}
+              href={card.href}
+              style={`--i:${index}`}
+            >
+              <span class="cp-card__media">
+                <Img
+                  src={card.image}
+                  alt={card.alt}
+                  width={1200}
+                  height={900}
+                  sizes={card.size === "wide" ? "(max-width: 760px) 92vw, 60vw" : "(max-width: 760px) 92vw, (max-width: 1080px) 46vw, 34vw"}
+                />
+              </span>
+              <span class="cp-card__body">
+                <span class="cp-card__meta">
+                  <span class="cp-card__kicker">{card.kicker}</span>
+                  {card.schedule && (
+                    <span class="cp-card__hours">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7.5V12l3 2" /></svg>
+                      {card.schedule}
+                    </span>
+                  )}
+                </span>
+                <h3>{card.title}</h3>
+                <p>{card.lead}</p>
+                <span class="cp-card__cta">{ui.cardCta}<span class="cp-card__arrow" aria-hidden="true">&#8599;</span></span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="cp-pause reveal" data-reveal aria-labelledby="cp-pause-title">
+      <picture class="pic">
+        <source type="image/avif" srcset="/images/croissant-coffee-480.avif 480w, /images/croissant-coffee-640.avif 640w, /images/croissant-coffee-828.avif 828w, /images/croissant-coffee-1080.avif 1080w, /images/croissant-coffee.avif 1400w" sizes="100vw" />
+        <img
+          class="cp-pause__image"
+          src="/images/croissant-coffee.webp"
+          srcset="/images/croissant-coffee-480.webp 480w, /images/croissant-coffee-640.webp 640w, /images/croissant-coffee-828.webp 828w, /images/croissant-coffee-1080.webp 1080w, /images/croissant-coffee.webp 1400w"
+          sizes="100vw"
+          alt=""
+          width="1400"
+          height="900"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+      <div class="cp-pause__veil" aria-hidden="true"></div>
+      <div class="tr-shell cp-pause__content">
+        <p class="editorial-kicker">{lc(portal.pause.eyebrow, lang)}</p>
+        <h2 id="cp-pause-title">{lc(portal.pause.title, lang)}</h2>
+        <p>{lc(portal.pause.text, lang)}</p>
+      </div>
+    </section>
+
+    <section class="cp-final reveal" data-reveal aria-labelledby="cp-final-title">
+      <div class="tr-shell cp-final__inner">
+        <p class="editorial-kicker">{lc(portal.final.eyebrow, lang)}</p>
+        <h2 id="cp-final-title">{lc(portal.final.title, lang)}</h2>
+        <p class="cp-final__text">{lc(portal.final.text, lang)}</p>
+        <p class="cp-final__meta">
+          <span class="cp-final__address">{addressLine}</span>
+          <span class="cp-final__hours">{lc(portal.final.hoursLabel, lang)} · {WEEKDAY_HOURS.time}</span>
+        </p>
+        <div class="cp-final__actions">
+          <a class="tr-button tr-button--primary" href="#cartas">{lc(portal.hero.primaryCta, lang)}</a>
+          <a class="tr-button tr-button--secondary" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}</a>
+        </div>
+      </div>
+    </section>
+  </div>
 </BaseLayout>
-
-
-

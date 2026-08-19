@@ -1,10 +1,16 @@
 ---
 /**
- * Responsive <img> for the editorial photos served from /public/images.
+ * Responsive picture for the editorial photos served from /public/images.
  * Pre-generated variants live next to the original as `{name}-{w}.webp`
- * (currently 640 + 1080). The original is the largest candidate.
+ * (currently 480/640/828/1080) plus an AVIF sibling for each file
+ * (`node tools/generate-avif.mjs`). AVIF is offered first and averages
+ * ~30% lighter than WebP; browsers without AVIF fall back to the WebP <img>.
  * Only variants narrower than the declared width are referenced, so a missing
  * file can never be requested.
+ *
+ * The <picture> is display:contents (see `.pic` in global.css) so it is
+ * transparent to layout and sizing: the <img> lays out exactly as a direct
+ * child of the surrounding container, matching the previous bare <img>.
  */
 interface Props {
   src: string;
@@ -29,25 +35,31 @@ const {
   fetchpriority,
   decoding = "async",
   class: className,
-  variants = [640, 1080],
+  variants = [480, 640, 828, 1080],
 } = Astro.props;
 
 const dot = src.lastIndexOf(".");
 const base = src.slice(0, dot);
 const ext = src.slice(dot);
 const candidates = variants.filter((w) => w < width);
-const srcset = [...candidates.map((w) => `${base}-${w}${ext} ${w}w`), `${src} ${width}w`].join(", ");
+const buildSrcset = (suffix: string) =>
+  [...candidates.map((w) => `${base}-${w}${suffix} ${w}w`), `${base}${suffix} ${width}w`].join(", ");
+const webpSrcset = buildSrcset(ext);
+const avifSrcset = buildSrcset(".avif");
 ---
 
-<img
-  src={src}
-  srcset={srcset}
-  sizes={sizes}
-  alt={alt}
-  width={width}
-  height={height}
-  loading={loading}
-  decoding={decoding}
-  fetchpriority={fetchpriority}
-  class={className}
-/>
+<picture class="pic">
+  <source type="image/avif" srcset={avifSrcset} sizes={sizes} />
+  <img
+    src={src}
+    srcset={webpSrcset}
+    sizes={sizes}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+    class={className}
+  />
+</picture>

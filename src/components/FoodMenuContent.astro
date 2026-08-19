@@ -1,0 +1,100 @@
+---
+import { localizedPath, type Language } from "../i18n/config";
+import { foodMenuUi, getFoodMenu, localize } from "../data/food-menus";
+import FoodMenuNavigation from "./FoodMenuNavigation.astro";
+import "../styles/food-menu.css";
+
+interface Props { lang: Language; menuId: string }
+const { lang, menuId } = Astro.props;
+const menu = getFoodMenu(menuId);
+if (!menu) throw new Error(`Unknown food menu: ${menuId}`);
+const ui = foodMenuUi[lang];
+const visibleBadges = new Set(menu.categories.flatMap((category) => category.items.flatMap((item) => item.badges ?? [])));
+---
+
+<section id="contenido" class="food-menu-section" aria-labelledby="food-menu-title">
+  <div class="food-menu-section__wash food-menu-section__wash--one" aria-hidden="true"></div>
+  <div class="food-menu-section__wash food-menu-section__wash--two" aria-hidden="true"></div>
+  <div class="tr-shell food-menu-section__inner">
+    <a class="carta-section__back food-menu-section__back" href={localizedPath(lang, "menu")}>
+      <span aria-hidden="true">&#8592;</span>{ui.backToMenus}
+    </a>
+
+    <FoodMenuNavigation lang={lang} activeId={menu.id} />
+
+    <header class="food-menu-section__head">
+      <div>
+        <p class="editorial-kicker">{localize(menu.kicker, lang)}</p>
+        <h2 id="food-menu-title">{localize(menu.title, lang)}</h2>
+        <p>{localize(menu.lead, lang)}</p>
+      </div>
+      {menu.schedule && (
+        <p class="food-menu-section__schedule">
+          <span>{ui.scheduleLabel}</span>
+          <strong>{localize(menu.schedule, lang)}</strong>
+        </p>
+      )}
+    </header>
+
+    {visibleBadges.size > 0 && (
+      <aside class="food-menu-legend" aria-label={ui.dietaryLegend}>
+        {[...visibleBadges].map((badge) => (
+          <span class:list={["food-menu-badge", `food-menu-badge--${badge}`]}>
+            <i aria-hidden="true"></i>{ui.badges[badge]}
+          </span>
+        ))}
+      </aside>
+    )}
+
+    <div class="food-menu-categories">
+      {menu.categories.map((category, categoryIndex) => (
+        <article class="food-menu-category" style={`--category-index:${categoryIndex};`}>
+          <header>
+            <span aria-hidden="true">{String(categoryIndex + 1).padStart(2, "0")}</span>
+            <div>
+              <h2>{localize(category.title, lang)}</h2>
+              {category.note && <p>{localize(category.note, lang)}</p>}
+            </div>
+          </header>
+
+          {category.items.length > 0 && (
+            <ul class="food-menu-list">
+              {category.items.map((item) => (
+                <li>
+                  <div class="food-menu-item__main">
+                    <div class="food-menu-item__heading">
+                      <h3>{localize(item.name, lang)}</h3>
+                      {item.badges && item.badges.length > 0 && (
+                        <div class="food-menu-item__badges">
+                          {item.badges.map((badge) => (
+                            <span class:list={["food-menu-badge", `food-menu-badge--${badge}`]}>
+                              <i aria-hidden="true"></i>{ui.badges[badge]}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {item.description && <p>{localize(item.description, lang)}</p>}
+                  </div>
+                  <strong class="food-menu-item__price">{item.price}</strong>
+                </li>
+              ))}
+            </ul>
+          )}
+        </article>
+      ))}
+    </div>
+
+    {menu.notices && menu.notices.length > 0 && (
+      <aside class="food-menu-notices" aria-label={ui.detailsLabel}>
+        <h2>{ui.detailsLabel}</h2>
+        <ul>
+          {menu.notices.map((notice) => (
+            <li><span>{localize(notice.text, lang)}</span>{notice.price && <strong>{notice.price}</strong>}</li>
+          ))}
+        </ul>
+      </aside>
+    )}
+  </div>
+</section>
+

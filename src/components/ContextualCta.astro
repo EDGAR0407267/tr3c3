@@ -1,0 +1,32 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  ariaLabel?: string;
+  external?: boolean;
+  tone?: "ink" | "copper" | "light";
+  className?: string;
+}
+
+const {
+  href,
+  label,
+  ariaLabel,
+  external = false,
+  tone = "ink",
+  className,
+} = Astro.props;
+---
+
+<a
+  class:list={["contextual-cta", `contextual-cta--${tone}`, className]}
+  href={href}
+  aria-label={ariaLabel}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+>
+  <span>{label}</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M5 12h13M13 6l6 6-6 6" />
+  </svg>
+</a>

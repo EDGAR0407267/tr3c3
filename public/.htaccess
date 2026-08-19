@@ -1,9 +1,30 @@
-# TR3C3 — Apache config para hosting estático (Hostalia)
-# Solo compresión, cache y MIME. No incluye redirecciones (las gestiona Astro).
+# TR3C3 — Apache/Hostalia: canonicalización, redirecciones, compresión y caché.
 
-# ----------------------------------------------------------------------
-# Compresión
-# ----------------------------------------------------------------------
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Un único host canónico. La condición X-Forwarded-Proto evita bucles si Hostalia usa proxy HTTPS.
+  RewriteCond %{HTTP_HOST} !^www\.tr3c3\.com$ [NC]
+  RewriteRule ^ https://www.tr3c3.com%{REQUEST_URI} [R=301,L,NE]
+
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+  RewriteRule ^ https://www.tr3c3.com%{REQUEST_URI} [R=301,L,NE]
+
+  # Rutas históricas y contenidos consolidados. Reglas exactas para evitar cadenas.
+  RewriteRule ^menu/?$ /es/carta/ [R=301,L,NE]
+  RewriteRule ^contacto/?$ /es/contacto/ [R=301,L,NE]
+  RewriteRule ^(?:nosotros|equipo)/?$ /es/ [R=301,L,NE]
+  RewriteRule ^(es|ca|en|fr|de|zh|nl|it)/(?:nosotros|equipo)/?$ /$1/ [R=301,L,NE]
+  RewriteRule ^(?:cafe|brunch|kitchen)/?$ /es/carta/ [R=301,L,NE]
+  RewriteRule ^brunch-miami-platja/?$ /mejor-brunch-miami-platja/ [R=301,L,NE]
+  RewriteRule ^mejor-cafe-especialidad-miami-platja/?$ /mejor-cafeteria-especialidad-miami-platja/ [R=301,L,NE]
+  RewriteRule ^(?:mejores-cafeterias-miami-platja|cafeteria-premium-miami-platja|donde-tomar-cafe-miami-platja)/?$ /mejor-cafeteria-especialidad-miami-platja/ [R=301,L,NE]
+  RewriteRule ^desayunos-miami-platja/?$ /mejor-brunch-miami-platja/ [R=301,L,NE]
+</IfModule>
+
 <IfModule mod_brotli.c>
   AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/javascript application/javascript application/json image/svg+xml application/xml
 </IfModule>
@@ -11,56 +32,45 @@
   AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml application/xml application/rss+xml
 </IfModule>
 
-# ----------------------------------------------------------------------
-# MIME types
-# ----------------------------------------------------------------------
 <IfModule mod_mime.c>
   AddType font/woff2 .woff2
   AddType image/webp .webp
   AddType image/avif .avif
   AddType image/svg+xml .svg
+  AddType application/manifest+json .webmanifest
 </IfModule>
 
-# ----------------------------------------------------------------------
-# Cache-Control
-# ----------------------------------------------------------------------
 <IfModule mod_expires.c>
   ExpiresActive On
 
-  # Assets con hash en el nombre (CSS/JS de Astro) — cache permanente
-  <FilesMatch "\.[0-9a-zA-Z_-]{8,}\.(css|js)$">
-    Header set Cache-Control "public, max-age=31536000, immutable"
-  </FilesMatch>
-
-  # Fuentes — cambian rara vez
   ExpiresByType font/woff2 "access plus 1 year"
-  <FilesMatch "\.woff2$">
-    Header set Cache-Control "public, max-age=31536000, immutable"
-  </FilesMatch>
-
-  # Imágenes
   ExpiresByType image/webp "access plus 6 months"
   ExpiresByType image/avif "access plus 6 months"
   ExpiresByType image/svg+xml "access plus 6 months"
   ExpiresByType image/png "access plus 6 months"
   ExpiresByType image/jpeg "access plus 6 months"
   ExpiresByType image/x-icon "access plus 1 year"
-
-  # CSS/JS sin hash (por si acaso)
   ExpiresByType text/css "access plus 1 week"
   ExpiresByType application/javascript "access plus 1 week"
+  ExpiresByType application/manifest+json "access plus 1 day"
+  ExpiresByType application/xml "access plus 1 hour"
 
-  # HTML — siempre revalidar para reflejar cambios de contenido
   ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.[0-9a-zA-Z_-]{8,}\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.woff2$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
   <FilesMatch "\.html$">
     Header set Cache-Control "public, max-age=0, must-revalidate"
   </FilesMatch>
-</IfModule>
-
-# ----------------------------------------------------------------------
-# Cabeceras de seguridad básicas (sin romper nada)
-# ----------------------------------------------------------------------
-<IfModule mod_headers.c>
-  Header set X-Content-Type-Options "nosniff"
-  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=31536000"
 </IfModule>

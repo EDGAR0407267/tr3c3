@@ -1,0 +1,202 @@
+---
+import { languages, localizedPath, type Language, type PageKey } from "../i18n/config";
+import {
+  business,
+  BUSINESS_ADDRESS,
+  BUSINESS_ALTERNATE_NAMES,
+  BUSINESS_CUISINES,
+  BUSINESS_DESCRIPTION,
+  BUSINESS_LANGUAGES,
+  BUSINESS_NAME,
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+  GEO_COORDINATES,
+  GOOGLE_MAPS_URL,
+  INSTAGRAM_URL,
+  OPENING_HOURS,
+  PRICE_RANGE,
+  RESERVATION_URL,
+  SITE_URL,
+  TIKTOK_URL,
+} from "../config/business";
+import {
+  languageTagByCode,
+  ogLocaleByLanguage,
+  type BreadcrumbItem,
+  type PageSchemaType,
+} from "../config/seo";
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Language;
+  page: PageKey;
+  canonicalPath: string;
+  image: string;
+  imageAlt: string;
+  socialImage?: string;
+  socialImageAlt?: string;
+  pageType?: "website" | "article";
+  schemaType?: PageSchemaType;
+  schema?: Record<string, unknown>;
+  localizedAlternates?: boolean;
+  languagePaths?: Partial<Record<Language, string>>;
+  noindex?: boolean;
+  dateModified?: string;
+  breadcrumbs?: BreadcrumbItem[];
+}
+
+const {
+  title,
+  description,
+  lang,
+  page,
+  canonicalPath,
+  image,
+  imageAlt,
+  socialImage = business.socialImagePath,
+  socialImageAlt = `${BUSINESS_NAME} · Specialty Coffee & Brunch en Miami Platja`,
+  pageType = "website",
+  schemaType = "WebPage",
+  schema,
+  localizedAlternates = true,
+  languagePaths,
+  noindex = false,
+  dateModified,
+  breadcrumbs = [],
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL(SITE_URL);
+const canonical = new URL(canonicalPath, siteUrl).toString();
+const absoluteImage = new URL(image, siteUrl).toString();
+const absoluteSocialImage = new URL(socialImage, siteUrl).toString();
+const businessId = new URL("/#local-business", siteUrl).toString();
+const websiteId = new URL("/#website", siteUrl).toString();
+const logoId = new URL("/#logo", siteUrl).toString();
+const webPageId = `${canonical}#webpage`;
+const breadcrumbId = `${canonical}#breadcrumb`;
+const sameAs = [INSTAGRAM_URL, TIKTOK_URL, GOOGLE_MAPS_URL].filter((value): value is string => Boolean(value));
+const alternatePathForLanguage = (code: Language) => languagePaths?.[code] ?? localizedPath(code, page);
+const alternateUrls = localizedAlternates
+  ? languages.map((code) => ({ code, tag: languageTagByCode[code], href: new URL(alternatePathForLanguage(code), siteUrl).toString() }))
+  : [];
+
+const businessNode: Record<string, unknown> = {
+  "@type": ["Restaurant", "CafeOrCoffeeShop"],
+  "@id": businessId,
+  name: BUSINESS_NAME,
+  alternateName: BUSINESS_ALTERNATE_NAMES,
+  url: new URL("/es/", siteUrl).toString(),
+  logo: { "@type": "ImageObject", "@id": logoId, url: new URL(business.logoPath, siteUrl).toString(), width: 512, height: 512 },
+  image: [absoluteSocialImage, absoluteImage],
+  description: BUSINESS_DESCRIPTION,
+  email: CONTACT_EMAIL,
+  ...(CONTACT_PHONE ? { telephone: CONTACT_PHONE } : {}),
+  ...(sameAs.length ? { sameAs } : {}),
+  hasMap: GOOGLE_MAPS_URL,
+  menu: new URL(business.menuPath, siteUrl).toString(),
+  address: { "@type": "PostalAddress", ...BUSINESS_ADDRESS },
+  ...(GEO_COORDINATES ? { geo: { "@type": "GeoCoordinates", ...GEO_COORDINATES } } : {}),
+  areaServed: ["Miami Platja", "Mont-roig del Camp", "Hospitalet de l’Infant", "Cambrils", "Costa Daurada", "Tarragona"],
+  servesCuisine: BUSINESS_CUISINES,
+  knowsLanguage: BUSINESS_LANGUAGES,
+  ...(PRICE_RANGE ? { priceRange: PRICE_RANGE } : {}),
+  ...(RESERVATION_URL ? { acceptsReservations: RESERVATION_URL } : {}),
+  openingHoursSpecification: OPENING_HOURS.map((hours) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: hours.dayOfWeek.map((day) => `https://schema.org/${day}`),
+    opens: hours.opens,
+    closes: hours.closes,
+  })),
+  contactPoint: [{
+    "@type": "ContactPoint",
+    contactType: "customer service",
+    email: CONTACT_EMAIL,
+    ...(CONTACT_PHONE ? { telephone: CONTACT_PHONE } : {}),
+    availableLanguage: BUSINESS_LANGUAGES,
+  }],
+};
+
+const websiteNode = {
+  "@type": "WebSite",
+  "@id": websiteId,
+  url: siteUrl.toString(),
+  name: BUSINESS_NAME,
+  alternateName: "TR3C3",
+  inLanguage: BUSINESS_LANGUAGES,
+  publisher: { "@id": businessId },
+};
+
+const webPageNode: Record<string, unknown> = {
+  "@type": schemaType,
+  "@id": webPageId,
+  url: canonical,
+  name: title,
+  description,
+  inLanguage: languageTagByCode[lang],
+  isPartOf: { "@id": websiteId },
+  about: { "@id": businessId },
+  primaryImageOfPage: { "@type": "ImageObject", url: absoluteImage, caption: imageAlt },
+  ...(dateModified ? { dateModified } : {}),
+  ...(breadcrumbs.length ? { breadcrumb: { "@id": breadcrumbId } } : {}),
+};
+
+const breadcrumbNode = breadcrumbs.length ? {
+  "@type": "BreadcrumbList",
+  "@id": breadcrumbId,
+  itemListElement: breadcrumbs.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.name,
+    item: new URL(item.href, siteUrl).toString(),
+  })),
+} : undefined;
+
+const extraNodes: Record<string, unknown>[] = [];
+if (schema) {
+  if (Array.isArray(schema["@graph"])) {
+    extraNodes.push(...(schema["@graph"] as Record<string, unknown>[]));
+  } else {
+    const { "@context": _context, ...node } = schema;
+    extraNodes.push(node);
+  }
+}
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [businessNode, websiteNode, webPageNode, ...(breadcrumbNode ? [breadcrumbNode] : []), ...extraNodes],
+};
+---
+
+<meta name="robots" content={noindex ? "noindex,follow" : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"} />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+{alternateUrls.map((alternate) => <link rel="alternate" hreflang={alternate.tag} href={alternate.href} />)}
+{localizedAlternates && <link rel="alternate" hreflang="x-default" href={new URL(alternatePathForLanguage("es"), siteUrl).toString()} />}
+<meta property="og:type" content={pageType} />
+<meta property="og:site_name" content={BUSINESS_NAME} />
+<meta property="og:locale" content={ogLocaleByLanguage[lang]} />
+{alternateUrls.filter((alternate) => alternate.code !== lang).map((alternate) => <meta property="og:locale:alternate" content={ogLocaleByLanguage[alternate.code]} />)}
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={absoluteSocialImage} />
+<meta property="og:image:secure_url" content={absoluteSocialImage} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:alt" content={socialImageAlt} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={absoluteSocialImage} />
+<meta name="twitter:image:alt" content={socialImageAlt} />
+{dateModified && <meta property="article:modified_time" content={dateModified} />}
+<script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />

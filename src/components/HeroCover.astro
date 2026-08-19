@@ -1,111 +1,100 @@
-﻿---
-import { getTranslation, localizedPath, type Language } from "../i18n/config";
-import { GOOGLE_MAPS_URL } from "../data/location";
-import { BUSINESS_NAME, INSTAGRAM_HANDLE, INSTAGRAM_URL, TIKTOK_URL } from "../data/site";
-import BrandEmblem from "./BrandEmblem.astro";
-import LanguageMenu from "./LanguageMenu.astro";
+---
+import { getHeroTranslation, getTranslation, localizedPath, type Language } from "../i18n/config";
+import { BUSINESS_NAME } from "../data/site";
 import OrganicDivider from "./OrganicDivider.astro";
+import "../styles/hero-cinema.css";
+import "../styles/hero-all-day.css";
 
 interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = getTranslation(lang);
-const home = localizedPath(lang);
+const hero = getHeroTranslation(lang);
 const menuPath = localizedPath(lang, "menu");
-
-const navItems = [
-  { href: menuPath, label: t.nav.menu },
-  { href: localizedPath(lang, "contact"), label: t.nav.contact },
-];
-
-const heroCopy: Record<Language, { description: string }> = {
-  es: { description: "Café de especialidad, brunch mediterráneo y cocina con alma en Miami Platja. Tu nuevo sitio favorito de la Costa Daurada." },
-  ca: { description: "Cafè d’especialitat, brunch mediterrani i cuina amb ànima a Miami Platja. El teu nou lloc preferit de la Costa Daurada." },
-  en: { description: "Specialty coffee, Mediterranean brunch and cooking with soul in Miami Platja. Your new favourite spot on the Costa Daurada." },
-  fr: { description: "Café de spécialité, brunch méditerranéen et cuisine avec âme à Miami Platja. Votre nouvelle adresse préférée de la Costa Daurada." },
-  de: { description: "Specialty Coffee, mediterraner Brunch und Küche mit Seele in Miami Platja. Dein neuer Lieblingsort an der Costa Daurada." },
-  zh: { description: "Miami Platja çš„ç²¾å“å’–å•¡ã€åœ°ä¸­æµ·æ—©åˆé¤ä¸Žæœ‰çµé­‚çš„æ–™ç†ã€‚ä½ åœ¨ Costa Daurada çš„æ–°æœ€çˆ±ã€‚" },
-  nl: { description: "Specialty coffee, mediterrane brunch en keuken met ziel in Miami Platja. Jouw nieuwe favoriete plek aan de Costa Daurada." },
-  it: { description: "Caffè specialty, brunch mediterraneo e cucina con anima a Miami Platja. Il tuo nuovo posto preferito della Costa Daurada." },
+const contactPath = `${localizedPath(lang, "contact")}#contenido`;
+const reserveCta: Record<Language, string> = {
+  es: "Reservar mesa",
+  ca: "Reservar taula",
+  en: "Book a table",
+  fr: "Réserver une table",
+  de: "Tisch reservieren",
+  zh: "预订餐桌",
+  nl: "Tafel reserveren",
+  it: "Prenota un tavolo",
 };
 ---
 
-<section class="hero-cover" aria-label={BUSINESS_NAME}>
-  <div class="hero-cover__bg" data-hero-parallax>
-    <img
-      src="/images/hero-tr3c3-coffee-brunch.webp"
-      srcset="/images/hero-tr3c3-coffee-brunch-640.webp 640w, /images/hero-tr3c3-coffee-brunch-1080.webp 1080w, /images/hero-tr3c3-coffee-brunch.webp 1600w"
-      sizes="100vw"
-      alt="Cafe de especialidad y brunch mediterraneo en TR3C3 Coffee & Brunch en Miami Platja"
-      width="1600"
-      height="900"
-      loading="eager"
-      fetchpriority="high"
-      decoding="async"
-    />
+<section class="hero-cover hero-cinema" aria-labelledby="hero-title" aria-describedby="hero-description" data-loop-motion>
+  <div class="hero-cinema__media" data-hero-parallax>
+    <picture class="hero-cinema__fallback">
+      <source
+        srcset="/images/hero-tr3c3-coffee-brunch-480.avif 480w, /images/hero-tr3c3-coffee-brunch-640.avif 640w, /images/hero-tr3c3-coffee-brunch-828.avif 828w, /images/hero-tr3c3-coffee-brunch-1080.avif 1080w, /images/hero-tr3c3-coffee-brunch.avif 1600w"
+        sizes="100vw"
+        type="image/avif"
+      />
+      <source
+        srcset="/images/hero-tr3c3-coffee-brunch-480.webp 480w, /images/hero-tr3c3-coffee-brunch-640.webp 640w, /images/hero-tr3c3-coffee-brunch-828.webp 828w, /images/hero-tr3c3-coffee-brunch-1080.webp 1080w, /images/hero-tr3c3-coffee-brunch.webp 1600w"
+        sizes="100vw"
+        type="image/webp"
+      />
+      <img
+        src="/images/hero-tr3c3-coffee-brunch.webp"
+        alt=""
+        width="1600"
+        height="900"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
+
+    <video
+      class="hero-cinema__video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="none"
+      aria-hidden="true"
+      data-hero-video
+    >
+      <!-- Vídeo temporal seleccionado: https://pixabay.com/videos/latte-art-coffee-33434/ · Pixabay Content License. -->
+      <!-- TODO: Sustituir este vídeo temporal por el vídeo oficial de TR3C3. -->
+    </video>
   </div>
 
-  <div class="hero-bar">
-    <a href={home} class="hero-bar__logo hero-bar__logo--badge site-logo site-logo--badge" aria-label="TR3C3 Coffee & Brunch - Inicio">
-      <BrandEmblem />
-    </a>
+  <div class="hero-cinema__shade" aria-hidden="true"></div>
+  <div class="hero-cinema__grain" aria-hidden="true"></div>
 
-    <div class="hero-bar__actions">
-      <LanguageMenu lang={lang} page="home" tone="dark" />
-      {(INSTAGRAM_URL || TIKTOK_URL) && <span class="hero-bar__divider" aria-hidden="true"></span>}
-      {INSTAGRAM_URL && (
-        <a href={INSTAGRAM_URL} class="hero-social hero-social--ig" target="_blank" rel="me noopener noreferrer" aria-label={`Instagram ${INSTAGRAM_HANDLE}`}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
-            <circle cx="12" cy="12" r="4.2" />
-            <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
-          </svg>
-          <span>{INSTAGRAM_HANDLE}</span>
-        </a>
-      )}
-      {TIKTOK_URL && <a href={TIKTOK_URL} class="hero-social" target="_blank" rel="me noopener noreferrer" aria-label="TikTok de TR3C3"><span>TikTok</span></a>}
-    </div>
-  </div>
+  <div class="tr-shell hero-cinema__layout">
+    <div class="hero-cinema__content">
+      <p class="hero-cinema__eyebrow" data-hero-reveal>{hero.offer}</p>
 
-  <span class="hero-cover__ghost" aria-hidden="true">TR3C3</span>
-
-  <div class="hero-cover__frame tr-shell">
-    <div class="hero-cover__brand">
-      <h1 class="hero-cover__headline hero-wordmark" aria-label="TR3C3 Coffee & Brunch, cafetería de especialidad y brunch en Miami Platja">
-        <span class="hero-wordmark__main">TR3C3</span>
-        <span class="hero-wordmark__divider" aria-hidden="true"></span>
-        <span class="hero-wordmark__subtitle">COFFEE &amp; BRUNCH</span>
+      <h1 id="hero-title" class="hero-cinema__title" aria-label={`${BUSINESS_NAME}, ${hero.statement}`}>
+        <span class="hero-cinema__title-mask"><span class="hero-cinema__brand">TR3C3</span></span>
+        <span class="hero-cinema__title-claim">{hero.statement}</span>
       </h1>
-      <p class="hero-cover__kicker">Miami Platja · Costa Daurada</p>
-      <p class="hero-cover__description">{heroCopy[lang].description}</p>
-      <ul class="hero-cover__signals" aria-label="TR3C3 experience">
-        <li>Speciality Coffee</li>
-        <li>Mediterranean Brunch</li>
-        <li>Coffee Ritual</li>
-      </ul>
-      <div class="hero-cover__quick-links">
-        <a class="tr-button tr-button--primary" href={menuPath}>{t.home.menuCta}</a>
-        <a class="tr-button tr-button--secondary" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}</a>
+
+      <p id="hero-description" class="hero-cinema__description" data-hero-reveal>{hero.description}</p>
+      <p class="hero-cinema__location" data-hero-reveal>
+        <span aria-hidden="true"></span>{hero.location}
+      </p>
+
+      <div class="hero-cinema__actions" data-hero-reveal>
+        <a class="hero-cinema__primary" href={menuPath}>
+          <span>{t.home.menuCta}</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+        </a>
+        <a class="hero-cinema__secondary" href={contactPath}>
+          <span>{reserveCta[lang]}</span><span aria-hidden="true">&#8594;</span>
+        </a>
       </div>
     </div>
-
-    <nav class="hero-cover__nav" aria-label={t.nav.open}>
-      <ol>
-        {navItems.map((item, index) => (
-          <li style={`--i:${index}`}>
-            <a href={item.href}>
-              <span class="hero-cover__nav-index">0{index + 1}</span>
-              <span class="hero-cover__nav-line">
-                <span class="hero-cover__nav-label">{item.label}</span>
-                <svg viewBox="0 0 34 14" aria-hidden="true"><path d="M1 7h29M24 2l6 5-6 5" /></svg>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ol>
-    </nav>
   </div>
-  <OrganicDivider tone="cream" variant="shore" className="hero-cover__divider" />
+
+  <a class="hero-cinema__scroll" href="#home-ritual-title">
+    <span>{hero.scroll}</span><i aria-hidden="true"></i>
+  </a>
+
+  <OrganicDivider tone="cream" variant="shore" className="hero-cinema__divider" />
 </section>
-
-
 

@@ -6,16 +6,15 @@ interface Props { lang: Language }
 const { lang } = Astro.props;
 
 const tiles = [
-  { src: "/images/specialty-coffee.webp", alt: "Café de especialidad recién preparado en TR3C3" },
-  { src: "/images/brunch-table.webp", alt: "Mesa de brunch mediterráneo en TR3C3" },
-  { src: "/images/drinks/iced-latte.webp", alt: "Iced latte de TR3C3 Coffee & Brunch" },
-  { src: "/images/croissant-coffee.webp", alt: "Croissant y café en TR3C3" },
-  { src: "/images/drinks/matcha-orange.webp", alt: "Matcha con naranja de TR3C3" },
-  { src: "/images/interior-cafe.webp", alt: "Interior cálido de TR3C3 en Miami Platja" },
-  { src: "/images/drinks/iced-caramel-macchiato.webp", alt: "Iced caramel macchiato de TR3C3" },
-  { src: "/images/kitchen-evening.webp", alt: "Cocina de TR3C3 al atardecer" },
-  { src: "/images/tr3c3-team.webp", alt: "El equipo de TR3C3 Coffee & Brunch" },
-  { src: "/images/hero-tr3c3-coffee-brunch.webp", alt: "Brunch y café de TR3C3 en Miami Platja" },
+  { src: "/images/carousel-cafes-latte-cappuccino.webp", alt: "Dos cafés de especialidad con arte latte sobre una tabla de madera en TR3C3" },
+  { src: "/images/carousel-cheesecake.webp", alt: "Porción de tarta de queso cremosa con flores comestibles en TR3C3" },
+  { src: "/images/carousel-cocteles.webp", alt: "Dos cócteles rojos con lima y hielo en la terraza de TR3C3" },
+  { src: "/images/carousel-sandwich-brioche.webp", alt: "Sándwiches de brioche a la plancha con flores comestibles en TR3C3" },
+  { src: "/images/carousel-brioche-tartar.webp", alt: "Brioche con tartar de ternera y micromezclum en TR3C3" },
+  { src: "/images/carousel-torrija-helado.webp", alt: "Torrija con helado, chocolate y frutos secos en TR3C3" },
+  { src: "/images/carousel-tostadas-salmon.webp", alt: "Tostada de salmón ahumado y aguacate en TR3C3" },
+  { src: "/images/carousel-cafe-latte-art.webp", alt: "Café con arte latte servido en bandeja de madera en TR3C3" },
+  { src: "/images/carousel-sandwiches-plato-rosa.webp", alt: "Sándwiches triangulares a la plancha en plato rosa en TR3C3" },
 ];
 
 const labels: Record<Language, { kicker: string; title: string; lead: string }> = {
@@ -30,8 +29,27 @@ const labels: Record<Language, { kicker: string; title: string; lead: string }> 
 };
 const l = labels[lang] ?? labels.es;
 const handle = INSTAGRAM_HANDLE ?? "@tr3c3";
+const carouselSourceWidths: Record<string, number> = {
+  "/images/carousel-cafes-latte-cappuccino.webp": 1200,
+  "/images/carousel-cheesecake.webp": 900,
+  "/images/carousel-cocteles.webp": 900,
+  "/images/carousel-sandwich-brioche.webp": 900,
+  "/images/carousel-brioche-tartar.webp": 900,
+  "/images/carousel-torrija-helado.webp": 900,
+  "/images/carousel-tostadas-salmon.webp": 900,
+  "/images/carousel-cafe-latte-art.webp": 675,
+  "/images/carousel-sandwiches-plato-rosa.webp": 900,
+};
+const responsiveSrcset = (src: string, ext = ".webp") => {
+  const sourceWidth = carouselSourceWidths[src] ?? 900;
+  const base = src.replace(/\.webp$/, "");
+  const variants = [320, 480, 560, 640, 828]
+    .filter((width) => width < sourceWidth)
+    .map((width) => base + "-" + width + ext + " " + width + "w");
+  return [...variants, base + ext + " " + sourceWidth + "w"].join(", ");
+};
 ---
-<section class="tr3c3-gallery reveal" data-reveal aria-label={l.title}>
+<section class="tr3c3-gallery reveal" data-reveal data-loop-motion aria-label={l.title}>
   <span class="tr3c3-gallery__brush tr3c3-gallery__brush--one" aria-hidden="true"></span>
   <span class="tr3c3-gallery__brush tr3c3-gallery__brush--two" aria-hidden="true"></span>
   <div class="tr-shell">
@@ -62,7 +80,10 @@ const handle = INSTAGRAM_HANDLE ?? "@tr3c3";
         const clone = index >= tiles.length;
         const inner = (
           <Fragment>
-            <img src={tile.src} alt={clone ? "" : tile.alt} width="640" height="800" loading="lazy" decoding="async" />
+            <picture class="pic">
+              <source type="image/avif" srcset={responsiveSrcset(tile.src, ".avif")} sizes="(max-width: 650px) 68vw, (max-width: 1280px) 24vw, 19rem" />
+              <img src={tile.src} srcset={responsiveSrcset(tile.src)} sizes="(max-width: 650px) 68vw, (max-width: 1280px) 24vw, 19rem" alt={clone ? "" : tile.alt} width="640" height="800" loading="lazy" decoding="async" />
+            </picture>
             <span class="tr3c3-gallery__veil" aria-hidden="true"></span>
             <span class="tr3c3-gallery__tag" aria-hidden="true">{handle}</span>
           </Fragment>

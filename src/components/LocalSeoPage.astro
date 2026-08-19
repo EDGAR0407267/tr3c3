@@ -4,7 +4,8 @@ import InternalHero from "./InternalHero.astro";
 import Img from "./Img.astro";
 import { localSeoPages, type LocalSeoSlug } from "../data/local-seo-pages";
 import { GOOGLE_MAPS_URL, HOURS_SUMMARY, LOCATION_ADDRESS_LINES } from "../data/location";
-import { BUSINESS_NAME, CONTACT_EMAIL, SITE_URL } from "../data/site";
+import { BUSINESS_NAME, CONTACT_PHONE, SITE_URL } from "../data/site";
+import { languageTagByCode } from "../config/seo";
 
 interface Props { slug: LocalSeoSlug }
 const { slug } = Astro.props;
@@ -12,6 +13,12 @@ const page = localSeoPages[slug];
 const canonicalPath = `/${slug}/`;
 const canonical = new URL(canonicalPath, SITE_URL).toString();
 const relatedPages = page.related.map((relatedSlug) => ({ slug: relatedSlug, ...localSeoPages[relatedSlug] }));
+const heroImageDot = page.heroImage.lastIndexOf(".");
+const heroImageBase = heroImageDot > 0 ? page.heroImage.slice(0, heroImageDot) : page.heroImage;
+const heroImageExt = heroImageDot > 0 ? page.heroImage.slice(heroImageDot) : "";
+const heroImageSrcset = `${heroImageBase}-480${heroImageExt} 480w, ${heroImageBase}-640${heroImageExt} 640w, ${heroImageBase}-828${heroImageExt} 828w, ${heroImageBase}-1080${heroImageExt} 1080w, ${page.heroImage} 1600w`;
+// Preload must match what <picture> selects: InternalHero serves AVIF first.
+const heroImageAvifSrcset = `${heroImageBase}-480.avif 480w, ${heroImageBase}-640.avif 640w, ${heroImageBase}-828.avif 828w, ${heroImageBase}-1080.avif 1080w, ${heroImageBase}.avif 1600w`;
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
@@ -21,19 +28,12 @@ const schema = {
       headline: page.h1,
       description: page.description,
       image: new URL(page.heroImage, SITE_URL).toString(),
-      inLanguage: "es",
-      mainEntityOfPage: canonical,
+      inLanguage: languageTagByCode.es,
+      mainEntityOfPage: { "@id": `${canonical}#webpage` },
+      isPartOf: { "@id": `${canonical}#webpage` },
       author: { "@id": `${SITE_URL}/#local-business` },
       publisher: { "@id": `${SITE_URL}/#local-business` },
       about: { "@id": `${SITE_URL}/#local-business` },
-    },
-    {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Inicio", item: `${SITE_URL}/es/` },
-        { "@type": "ListItem", position: 2, name: "Guías locales", item: `${SITE_URL}/es/#guias-locales` },
-        { "@type": "ListItem", position: 3, name: page.h1, item: canonical },
-      ],
     },
     {
       "@type": "FAQPage",
@@ -45,6 +45,11 @@ const schema = {
     },
   ],
 };
+const breadcrumbs = [
+  { name: "Inicio", href: "/es/" },
+  { name: "Guías locales", href: "/es/#guias-locales" },
+  { name: page.h1, href: canonicalPath },
+];
 ---
 
 <BaseLayout
@@ -56,8 +61,13 @@ const schema = {
   image={page.heroImage}
   imageAlt={page.heroAlt}
   schema={schema}
+  breadcrumbs={breadcrumbs}
   localizedAlternates={false}
   preloadImage
+  preloadImageHref={`${heroImageBase}.avif`}
+  preloadImageType="image/avif"
+  preloadImageSrcset={heroImageAvifSrcset}
+  preloadImageSizes="100vw"
 >
   <article class="local-seo-page">
     <nav class="local-breadcrumbs tr-shell" aria-label="Migas de pan">
@@ -107,7 +117,7 @@ const schema = {
           <a class="tr-button tr-button--secondary" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">Cómo llegar</a>
           <a class="tr-button tr-button--secondary" href="/es/contacto/">Contacto</a>
         </div>
-        <a class="local-visit-card__email" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        {CONTACT_PHONE && <a class="local-visit-card__email" href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}>{CONTACT_PHONE}</a>}
       </aside>
     </div>
 

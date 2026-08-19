@@ -1,5 +1,6 @@
-﻿---
+---
 import { getTranslation, languages, localizedPath, type Language, type PageKey } from "../i18n/config";
+import BrandEmblem from "./BrandEmblem.astro";
 import BrandLogo from "./BrandLogo.astro";
 import LanguageMenu from "./LanguageMenu.astro";
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL, TIKTOK_URL } from "../data/site";
@@ -15,9 +16,13 @@ const navItems = [
 ];
 ---
 
-<header class:list={["tr-header", { "tr-header--floating": floating }]}>
+<header class:list={["tr-header", { "tr-header--floating": floating }]} data-site-header>
   <div class="tr-shell tr-header__inner">
-    <a href={home} class="tr-logo" aria-label="TR3C3 Coffee & Brunch, home"><BrandLogo variant="horizontal" tone="color" size="sm" eager /></a>
+    <a href={home} class:list={["tr-logo", { "tr-logo--emblem": floating }]} aria-label="TR3C3 Coffee & Brunch, home">
+      {floating
+        ? <BrandEmblem title="TR3C3 Coffee & Brunch Miami Platja" />
+        : <BrandLogo variant="horizontal" tone="color" size="sm" eager />}
+    </a>
     <nav class="tr-nav" aria-label="Primary navigation">
       {navItems.map((item) => <a href={item.href} aria-current={item.active ? "page" : undefined}>{item.label}</a>)}
     </nav>
@@ -31,8 +36,8 @@ const navItems = [
           </svg>
         </a>
       )}
-      <LanguageMenu lang={lang} page={page} tone="dark" paths={languagePaths} />
-      <button class="menu-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label={t.nav.open} data-menu-toggle>
+      <LanguageMenu lang={lang} page={page} tone="dark" compact paths={languagePaths} />
+      <button class="menu-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label={t.nav.open} data-label-open={t.nav.open} data-label-close={t.nav.close} data-menu-toggle>
         <span data-menu-line="top"></span><span data-menu-line="bottom"></span>
       </button>
     </div>
@@ -40,7 +45,7 @@ const navItems = [
   <div id="mobile-menu" class="mobile-menu-panel tr-mobile-menu" aria-hidden="true" inert data-mobile-menu>
     <div class="mobile-menu-panel__brand">
       <BrandLogo variant="primary" tone="color" size="lg" />
-      <span>Speciality Coffee &amp; Brunch</span>
+      <span>Speciality Coffee · Brunch · Dinner</span>
     </div>
     <nav aria-label="Mobile navigation">
       {navItems.map((item) => <a href={item.href} aria-current={item.active ? "page" : undefined} data-mobile-link>{item.label}</a>)}

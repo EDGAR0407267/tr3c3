@@ -6,41 +6,35 @@ import {
   LOCATION_CONTEXT,
   WEEKDAY_HOURS,
 } from "../data/location";
-import { BUSINESS_ADDRESS, BUSINESS_SHORT_NAME } from "../data/site";
+import { BUSINESS_ADDRESS, BUSINESS_SHORT_NAME, CONTACT_PHONE } from "../data/site";
+import { locationSectionCopy } from "../data/location-copy";
 import { localizedPath, type Language } from "../i18n/config";
+import ContextualCta from "./ContextualCta.astro";
+import locationHoursStylesHref from "../styles/location-hours.css?url";
+import DeferredStyles from "./DeferredStyles.astro";
 
 interface Props { lang: Language }
 const { lang } = Astro.props;
 
-const copy = lang === "es" ? {
-  kicker: "Visítanos",
-  title: "Te esperamos en Miami Platja",
-  lead: "Café de especialidad, brunch mediterráneo y tardes para quedarse. Tu mesa en Miami Platja ya está lista.",
-  phrase: "Del primer café a la última copa.",
-  directions: "Cómo llegar",
-  menu: "Ver carta",
-  hours: "Horarios",
-  everyday: "Lunes — Domingo",
-  mapTitle: "Mapa de TR3C3 en Miami Platja",
-  details: ["Speciality coffee", "Mediterranean brunch", "Late drinks", "Terrace"],
-} : {
-  kicker: "Visit us",
-  title: "We'll see you in Miami Platja",
-  lead: "Specialty coffee, Mediterranean brunch and slow evenings by the coast. Your table in Miami Platja is ready.",
-  phrase: "From first coffee to last glass.",
-  directions: "Get directions",
-  menu: "View menu",
-  hours: "Opening hours",
-  everyday: "Monday — Sunday",
-  mapTitle: "Map of TR3C3 in Miami Platja",
-  details: ["Speciality coffee", "Mediterranean brunch", "Late drinks", "Terrace"],
-};
+const copy = locationSectionCopy[lang];
 
 const menuPath = localizedPath(lang, "menu");
+const callCta: Record<Language, string> = {
+  es: "Llamar al restaurante",
+  ca: "Trucar al restaurant",
+  en: "Call the restaurant",
+  fr: "Appeler le restaurant",
+  de: "Restaurant anrufen",
+  zh: "致电餐厅",
+  nl: "Bel het restaurant",
+  it: "Chiama il ristorante",
+};
+const phoneHref = CONTACT_PHONE ? `tel:${CONTACT_PHONE.replace(/[^\d+]/g, "")}` : undefined;
 const addressLabel = `${BUSINESS_ADDRESS.streetAddress}, ${BUSINESS_ADDRESS.postalCode} ${BUSINESS_ADDRESS.addressLocality}, ${BUSINESS_ADDRESS.addressRegion}`;
 const [weekdayOpen, weekdayClose] = WEEKDAY_HOURS.time.split("–");
 ---
 
+<DeferredStyles href={locationHoursStylesHref} />
 <section id="visit" class="home-visit-section reveal" data-reveal aria-labelledby="home-visit-title">
   <span class="home-visit-section__curve" aria-hidden="true"></span>
   <span class="home-visit-section__bean home-visit-section__bean--one" aria-hidden="true"></span>
@@ -73,12 +67,18 @@ const [weekdayOpen, weekdayClose] = WEEKDAY_HOURS.time.split("–");
     <div class="home-visit-section__visual">
       <figure class="home-visit-map reveal" data-reveal>
         <span class="home-visit-map__badge" aria-hidden="true">{BUSINESS_SHORT_NAME}</span>
-        <iframe
-          src={GOOGLE_MAPS_EMBED_URL}
-          title={copy.mapTitle}
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
+        <div
+          class="home-visit-map__frame tr-map-facade"
+          data-src={GOOGLE_MAPS_EMBED_URL}
+          data-map-facade
+          data-title={copy.mapTitle}
+          data-referrerpolicy="no-referrer-when-downgrade"
+          role="img"
+          aria-label={copy.mapTitle}
+        >
+          <strong>TR3C3</strong>
+          <span>MIAMI PLATJA · COSTA DAURADA</span>
+        </div>
         <figcaption>
           <strong>{BUSINESS_SHORT_NAME}</strong>
           <address>{addressLabel}</address>
@@ -94,6 +94,7 @@ const [weekdayOpen, weekdayClose] = WEEKDAY_HOURS.time.split("–");
             <strong><time datetime={weekdayOpen}>{weekdayOpen}</time> — <time datetime={weekdayClose}>{weekdayClose}</time></strong>
           </div>
         </div>
+        {phoneHref && <ContextualCta className="home-visit-hours__call" href={phoneHref} label={callCta[lang]} ariaLabel={`${callCta[lang]}: ${CONTACT_PHONE}`} tone="copper" />}
       </article>
     </div>
   </div>

@@ -1,4 +1,5 @@
-﻿---
+---
+import "../styles/wine-notes.css";
 import { wineCategories } from "../data/cartas";
 import { languages, localizedPath, type Language } from "../i18n/config";
 import BrandLogo from "./BrandLogo.astro";
@@ -188,7 +189,7 @@ const wineMenuCopy: Record<Language, WineMenuCopy> = {
 const copy = wineMenuCopy[lang] ?? wineMenuCopy.es;
 ---
 
-<section id="contenido" class="wine-menu-section" aria-labelledby="wine-menu-title">
+<section id="contenido" class="wine-menu-section" aria-labelledby="wine-menu-title" data-loop-motion>
   <div class="wine-menu-section__wash wine-menu-section__wash--one" aria-hidden="true"></div>
   <div class="wine-menu-section__wash wine-menu-section__wash--two" aria-hidden="true"></div>
   <div class="wine-menu-section__wash wine-menu-section__wash--three" aria-hidden="true"></div>

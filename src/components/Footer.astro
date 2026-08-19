@@ -1,48 +1,222 @@
-﻿---
+---
 import { getTranslation, localizedPath, type Language } from "../i18n/config";
-import { BUSINESS_ADDRESS, BUSINESS_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL, LOCAL_GUIDES, TIKTOK_URL } from "../data/site";
-import { GOOGLE_MAPS_URL, HOURS_SUMMARY } from "../data/location";
+import {
+  BUSINESS_ADDRESS,
+  BUSINESS_NAME,
+  CONTACT_PHONE,
+  INSTAGRAM_HANDLE,
+  INSTAGRAM_URL,
+  LOCAL_GUIDES,
+} from "../data/site";
+import { GOOGLE_MAPS_URL } from "../data/location";
 import BrandLogo from "./BrandLogo.astro";
+import footerStylesHref from "../styles/footer-editorial.css?url";
+import DeferredStyles from "./DeferredStyles.astro";
+
 interface Props { lang: Language }
+
+type FooterEditorialCopy = {
+  visit: string;
+  venue: string;
+  location: string;
+  schedule: string;
+  hours: string;
+  contact: string;
+  discover: string;
+};
+
+const footerEditorialCopy: Record<Language, FooterEditorialCopy> = {
+  es: {
+    visit: "Ven por el café. Quédate por el brunch, la luz y la sobremesa.",
+    venue: "El local",
+    location: "Ubicación",
+    schedule: "Horario",
+    hours: "Lunes a domingo · 09:00–00:00 · Horario seguido",
+    contact: "Contacto directo",
+    discover: "Descubre Miami Platja",
+  },
+  ca: {
+    visit: "Vine pel cafè. Queda't pel brunch, la llum i la sobretaula.",
+    venue: "El local",
+    location: "Ubicació",
+    schedule: "Horari",
+    hours: "Dilluns a diumenge · 09:00–00:00 · Horari continu",
+    contact: "Contacte directe",
+    discover: "Descobreix Miami Platja",
+  },
+  en: {
+    visit: "Come for the coffee. Stay for brunch, the light and long conversations.",
+    venue: "The venue",
+    location: "Location",
+    schedule: "Opening hours",
+    hours: "Monday to Sunday · 09:00–00:00 · Open all day",
+    contact: "Direct contact",
+    discover: "Discover Miami Platja",
+  },
+  fr: {
+    visit: "Venez pour le café. Restez pour le brunch, la lumière et les longues conversations.",
+    venue: "L'adresse",
+    location: "Adresse",
+    schedule: "Horaires",
+    hours: "Du lundi au dimanche · 09:00–00:00 · Service continu",
+    contact: "Contact direct",
+    discover: "Découvrez Miami Platja",
+  },
+  de: {
+    visit: "Komm für den Kaffee. Bleib für Brunch, Licht und lange Gespräche.",
+    venue: "Das Lokal",
+    location: "Adresse",
+    schedule: "Öffnungszeiten",
+    hours: "Montag bis Sonntag · 09:00–00:00 · Durchgehend geöffnet",
+    contact: "Direkter Kontakt",
+    discover: "Entdecke Miami Platja",
+  },
+  zh: {
+    visit: "为咖啡而来，为早午餐、阳光与悠长时光而留。",
+    venue: "门店信息",
+    location: "地址",
+    schedule: "营业时间",
+    hours: "周一至周日 · 09:00–00:00 · 全天营业",
+    contact: "直接联系",
+    discover: "探索 Miami Platja",
+  },
+  nl: {
+    visit: "Kom voor de koffie. Blijf voor brunch, het licht en lange gesprekken.",
+    venue: "De zaak",
+    location: "Locatie",
+    schedule: "Openingstijden",
+    hours: "Maandag tot zondag · 09:00–00:00 · Doorlopend geopend",
+    contact: "Direct contact",
+    discover: "Ontdek Miami Platja",
+  },
+  it: {
+    visit: "Vieni per il caffè. Resta per il brunch, la luce e le lunghe chiacchiere.",
+    venue: "Il locale",
+    location: "Indirizzo",
+    schedule: "Orari",
+    hours: "Da lunedì a domenica · 09:00–00:00 · Orario continuato",
+    contact: "Contatto diretto",
+    discover: "Scopri Miami Platja",
+  },
+};
+
 const { lang } = Astro.props;
 const t = getTranslation(lang);
+const copy = footerEditorialCopy[lang];
 const year = new Date().getFullYear();
-const footerVisit = lang === "es"
-  ? "Ven por el café. Quédate por el brunch, la luz y la sobremesa."
-  : "Come for coffee. Stay for brunch, light and lingering tables.";
+const homePath = localizedPath(lang);
+const essencePath = `${homePath}#home-ritual-title`;
 ---
 
-<footer class="tr-footer">
-  <span class="tr-footer__stamp" aria-hidden="true">Miami Platja</span>
-  <div class="tr-shell tr-footer__grid">
-    <div class="tr-footer__brand-block">
-      <a class="tr-logo tr-logo--light tr-footer__logo" href={localizedPath(lang)} aria-label={`${BUSINESS_NAME}, inicio`}><BrandLogo variant="primary" tone="light" size="lg" /></a>
-      <p class="tr-footer__line">{t.footer.line}</p>
-      <p class="tr-footer__visit">{footerVisit}</p>
-      <div class="tr-footer__actions">
-        <a class="tr-button tr-button--light" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}</a>
-        <a class="tr-button tr-button--ghost" href={localizedPath(lang, "menu")}>{t.home.menuCta}</a>
+<DeferredStyles href={footerStylesHref} />
+<footer id="site-footer" class="tr-footer footer-editorial" aria-labelledby="footer-brand-title">
+  <div class="tr-shell tr-footer__inner">
+    <div class="tr-footer__main">
+      <section class="tr-footer__brand" aria-labelledby="footer-brand-title">
+        <h2 id="footer-brand-title" class="sr-only">{BUSINESS_NAME}</h2>
+        <a class="tr-logo tr-logo--light tr-footer__logo" href={homePath} aria-label={`${BUSINESS_NAME}, ${t.nav.home}`}>
+          <BrandLogo variant="primary" tone="light" size="lg" />
+        </a>
+        <p class="tr-footer__line">{t.footer.line}</p>
+        <p class="tr-footer__visit">{copy.visit}</p>
+
+        <div class="tr-footer__actions" aria-label={`${BUSINESS_NAME}: ${t.home.mapCta}, ${t.home.menuCta}`}>
+          <a class="tr-footer__button tr-footer__button--primary" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">
+            <span>{t.home.mapCta}</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+          </a>
+          <a class="tr-footer__button tr-footer__button--secondary" href={localizedPath(lang, "menu")}>{t.home.menuCta}</a>
+        </div>
+
+        {INSTAGRAM_URL && (
+          <a class="tr-footer__instagram" href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer" aria-label={`Instagram ${INSTAGRAM_HANDLE}`}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.4" cy="6.7" r="1" class="tr-footer__icon-fill" />
+            </svg>
+            <span>{INSTAGRAM_HANDLE}</span>
+          </a>
+        )}
+      </section>
+
+      <section class="tr-footer__venue" aria-labelledby="footer-venue-title">
+        <p class="tr-footer__eyebrow">{copy.venue}</p>
+        <h2 id="footer-venue-title">TR3C3</h2>
+
+        <address class="tr-footer__venue-row">
+          <svg class="tr-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" />
+          </svg>
+          <span><small>{copy.location}</small>{BUSINESS_ADDRESS.streetAddress}<br />{BUSINESS_ADDRESS.postalCode} {BUSINESS_ADDRESS.addressLocality}, {BUSINESS_ADDRESS.addressRegion}</span>
+        </address>
+
+        <p class="tr-footer__venue-row">
+          <svg class="tr-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" />
+          </svg>
+          <span><small>{copy.schedule}</small>{copy.hours}</span>
+        </p>
+
+        <a class="tr-footer__map-link" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">
+          <span>{t.home.mapCta}</span><span aria-hidden="true">↗</span>
+        </a>
+      </section>
+
+      <div class="tr-footer__nav-contact">
+        <nav class="tr-footer__nav" aria-labelledby="footer-navigation-title">
+          <h2 id="footer-navigation-title">{t.footer.explore}</h2>
+          <ul class="tr-footer__nav-list">
+            <li><a href={homePath}>{t.nav.home}</a></li>
+            <li><a href={localizedPath(lang, "menu")}>{t.nav.menu}</a></li>
+            <li><a href={essencePath}>{t.nav.essence}</a></li>
+            <li><a href={localizedPath(lang, "contact")}>{t.nav.contact}</a></li>
+          </ul>
+        </nav>
+
+        <section class="tr-footer__contact" aria-labelledby="footer-contact-title">
+          <h2 id="footer-contact-title">{copy.contact}</h2>
+          {CONTACT_PHONE && <a href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}>{CONTACT_PHONE}</a>}
+          {INSTAGRAM_URL && <a href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer">Instagram {INSTAGRAM_HANDLE}</a>}
+        </section>
       </div>
     </div>
 
-    <div class="tr-footer__postcard">
-      <h2>TR3C3</h2>
-      <address class="tr-footer__address">
-        {BUSINESS_ADDRESS.streetAddress}<br />
-        {BUSINESS_ADDRESS.postalCode} {BUSINESS_ADDRESS.addressLocality}, {BUSINESS_ADDRESS.addressRegion}<br />
-        {HOURS_SUMMARY}
-      </address>
-      {(INSTAGRAM_URL || TIKTOK_URL) && (
-        <div class="tr-footer__socials" aria-label="TR3C3 social links">
-          {INSTAGRAM_URL && <a href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer">Instagram {INSTAGRAM_HANDLE}</a>}
-          {TIKTOK_URL && <a href={TIKTOK_URL} target="_blank" rel="me noopener noreferrer">TikTok</a>}
+    <details id="guias-locales" class="tr-footer__guides" open data-footer-guides>
+      <summary>
+        <span><small>{t.footer.guides}</small>{copy.discover}</span>
+        <svg viewBox="0 0 16 10" aria-hidden="true"><path d="m2 2 6 6 6-6" /></svg>
+      </summary>
+      <nav class="tr-footer__guides-content" aria-labelledby="footer-guides-title">
+        <div class="tr-footer__guides-head">
+          <p>{t.footer.guides}</p>
+          <h2 id="footer-guides-title">{copy.discover}</h2>
         </div>
-      )}
-    </div>
-
-    <div class="tr-footer__links"><h2>{t.footer.explore}</h2><a href={localizedPath(lang)}>{t.nav.home}</a><a href={localizedPath(lang, "menu")}>{t.nav.menu}</a><a href={localizedPath(lang, "contact")}>{t.nav.contact}</a></div>
-    <div class="tr-footer__links"><h2>Contacto</h2><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a><a href={localizedPath(lang, "contact")}>{t.nav.contact}</a></div>
-    <div class="tr-footer__links tr-footer__guides"><h2>{t.footer.guides}</h2>{LOCAL_GUIDES.map((guide) => <a href={guide.href}>{guide.label}</a>)}</div>
+        <ul class="tr-footer__guide-grid">
+          {LOCAL_GUIDES.map((guide) => (
+            <li><a href={guide.href}><span>{guide.label}</span><span aria-hidden="true">↗</span></a></li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+    <script is:inline>
+      (() => {
+        const guides = document.querySelector("[data-footer-guides]");
+        const mobile = window.matchMedia("(max-width: 520px)");
+        if (!(guides instanceof HTMLDetailsElement)) return;
+        const controller = new AbortController();
+        const syncGuides = (query) => guides.toggleAttribute("open", !query.matches);
+        syncGuides(mobile);
+        mobile.addEventListener?.("change", syncGuides, { signal: controller.signal });
+        document.addEventListener("astro:before-swap", () => controller.abort(), { once: true, signal: controller.signal });
+      })();
+    </script>
   </div>
-  <div class="tr-shell tr-footer__bottom"><span>© {year} {BUSINESS_NAME} · {t.footer.rights}</span><span>Speciality Coffee &amp; Brunch · Miami Platja</span></div>
+
+  <div class="tr-footer__bottom-wrap">
+    <div class="tr-shell tr-footer__bottom">
+      <span>© {year} {BUSINESS_NAME} · {t.footer.rights}</span>
+      <span>Speciality Coffee &amp; Brunch · Miami Platja</span>
+    </div>
+  </div>
 </footer>

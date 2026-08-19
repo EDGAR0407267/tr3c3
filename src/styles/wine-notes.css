@@ -1,0 +1,25 @@
+/* Wine tasting-note pills, scoped by component class names. */
+.wine-card__note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  align-items: center;
+}
+.wine-card__note-part {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.85rem;
+  padding: .38rem .58rem;
+  border: 1px solid color-mix(in srgb, var(--card-accent) 18%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--card-accent) 8%, rgb(253 248 240 / .7));
+  color: color-mix(in srgb, var(--copper-dark) 70%, rgb(120 96 78));
+  font-size: .72rem;
+  font-weight: 720;
+  letter-spacing: .03em;
+}
+.wine-card__note-part--origin {
+  color: var(--espresso);
+  border-color: color-mix(in srgb, var(--card-accent) 26%, transparent);
+  background: color-mix(in srgb, var(--card-accent) 12%, rgb(253 248 240 / .84));
+}

@@ -1,0 +1,25 @@
+---
+import { localizedPath, type Language } from "../i18n/config";
+import { foodMenus, foodMenuUi, localize } from "../data/food-menus";
+
+interface Props { lang: Language; activeId?: string }
+const { lang, activeId } = Astro.props;
+const ui = foodMenuUi[lang];
+---
+
+<nav class="food-menu-nav" aria-label={ui.selectorLabel}>
+  <ul>
+    {foodMenus.map((menu) => (
+      <li>
+        <a
+          href={`${localizedPath(lang, "menu")}${menu.id}/`}
+          aria-current={activeId === menu.id ? "page" : undefined}
+        >
+          <span>{localize(menu.title, lang)}</span>
+          {menu.schedule && <small>{localize(menu.schedule, lang)}</small>}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+

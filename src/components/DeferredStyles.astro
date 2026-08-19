@@ -1,0 +1,14 @@
+---
+interface Props { href: string }
+const { href } = Astro.props;
+---
+<link rel="stylesheet" href={href} media="print" data-deferred-stylesheet />
+<noscript><link rel="stylesheet" href={href} /></noscript>
+
+<script>
+  document.querySelectorAll<HTMLLinkElement>("link[data-deferred-stylesheet]").forEach((link) => {
+    const activate = () => { link.media = "all"; };
+    if (link.sheet) activate();
+    else link.addEventListener("load", activate, { once: true });
+  });
+</script>

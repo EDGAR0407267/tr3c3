@@ -30,6 +30,8 @@
 //    }
 // =============================================================================
 
+import { GOOGLE_MAPS_URL } from "../config/business";
+
 export interface Review {
   /** Nombre del cliente tal y como aparece en Google. */
   name: string;
@@ -45,11 +47,11 @@ export interface Review {
   isSample?: boolean;
 }
 
-// Enlace directo a la ficha de Google Maps de TR3C3 (pestaña de reseñas).
-// Es el enlace real facilitado por el negocio; se usa en el botón
+// Enlace canónico a la nueva ficha de Google Maps de TR3C3.
+// Es la ubicación real facilitada por el negocio; se usa en el botón
 // "Ver más reseñas en Google".
 export const GOOGLE_REVIEWS_URL =
-  "https://www.google.com/maps/place/TRECE+Brunch+%26+Coffee/@41.005541,0.9320732,744m/data=!3m1!1e3!4m8!3m7!1s0x12a1411bf041c905:0x7a5aacd33cfb311d!8m2!3d41.005541!4d0.9346481!9m1!1b1!16s%2Fg%2F11h64vkhsw";
+  GOOGLE_MAPS_URL;
 
 // Valoración global de Google.
 // ⚠️ Rellena SOLO con los valores exactos que aparezcan hoy en la ficha.

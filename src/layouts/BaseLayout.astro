@@ -2,21 +2,11 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { languages, localizedPath, type Language, type PageKey } from "../i18n/config";
-import {
-  BUSINESS_ADDRESS,
-  BUSINESS_ALTERNATE_NAMES,
-  BUSINESS_DESCRIPTION,
-  BUSINESS_NAME,
-  CONTACT_EMAIL,
-  CONTACT_PHONE,
-  GEO_COORDINATES,
-  INSTAGRAM_URL,
-  OPENING_HOURS,
-  SITE_URL,
-  TIKTOK_URL,
-} from "../data/site";
-import { GOOGLE_MAPS_URL } from "../data/location";
+import FloatingActions from "../components/FloatingActions.astro";
+import SeoHead from "../components/SeoHead.astro";
+import { languageTagByCode, type BreadcrumbItem, type PageSchemaType } from "../config/seo";
+import { type Language, type PageKey } from "../i18n/config";
+import { BUSINESS_NAME } from "../config/business";
 
 interface Props {
   title: string;
@@ -26,14 +16,21 @@ interface Props {
   canonicalPath?: string;
   image?: string;
   imageAlt?: string;
+  socialImage?: string;
+  socialImageAlt?: string;
   pageType?: "website" | "article";
+  schemaType?: PageSchemaType;
   schema?: Record<string, unknown>;
+  breadcrumbs?: BreadcrumbItem[];
+  dateModified?: string;
   floatingHeader?: boolean;
   localizedAlternates?: boolean;
   languagePaths?: Partial<Record<Language, string>>;
   hideHeader?: boolean;
   hideFooter?: boolean;
   preloadImage?: boolean;
+  preloadImageHref?: string;
+  preloadImageType?: string;
   preloadImageSrcset?: string;
   preloadImageSizes?: string;
   noindex?: boolean;
@@ -47,134 +44,73 @@ const {
   canonicalPath = Astro.url.pathname,
   image = "/images/hero-tr3c3-coffee-brunch.webp",
   imageAlt = `${BUSINESS_NAME} en Miami Platja`,
+  socialImage,
+  socialImageAlt,
   pageType = "website",
+  schemaType = "WebPage",
   schema,
+  breadcrumbs,
+  dateModified,
   floatingHeader = false,
   localizedAlternates = true,
   languagePaths,
   hideHeader = false,
   hideFooter = false,
   preloadImage = false,
+  preloadImageHref,
+  preloadImageType,
   preloadImageSrcset,
   preloadImageSizes,
   noindex = false,
 } = Astro.props;
-
-const siteUrl = Astro.site ?? new URL(SITE_URL);
-const canonical = new URL(canonicalPath, siteUrl).toString();
-const absoluteImage = new URL(image, siteUrl).toString();
-const businessId = new URL("/#local-business", siteUrl).toString();
-const websiteId = new URL("/#website", siteUrl).toString();
-const webPageId = `${canonical}#webpage`;
-const sameAs = [INSTAGRAM_URL, TIKTOK_URL, GOOGLE_MAPS_URL].filter(Boolean);
-const localeByLanguage: Record<Language, string> = {
-  es: "es_ES", ca: "ca_ES", en: "en_GB", fr: "fr_FR",
-  de: "de_DE", zh: "zh_CN", nl: "nl_NL", it: "it_IT",
-};
-const alternatePathForLanguage = (code: Language) => languagePaths?.[code] ?? localizedPath(code, page);
-
-const globalSchema = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": ["LocalBusiness", "CafeOrCoffeeShop", "Restaurant"],
-      "@id": businessId,
-      name: BUSINESS_NAME,
-      alternateName: BUSINESS_ALTERNATE_NAMES,
-      url: siteUrl.toString(),
-      image: absoluteImage,
-      description: BUSINESS_DESCRIPTION,
-      email: CONTACT_EMAIL,
-      ...(CONTACT_PHONE ? { telephone: CONTACT_PHONE } : {}),
-      ...(sameAs.length ? { sameAs } : {}),
-      hasMap: GOOGLE_MAPS_URL,
-      address: { "@type": "PostalAddress", ...BUSINESS_ADDRESS },
-      ...(GEO_COORDINATES ? { geo: { "@type": "GeoCoordinates", ...GEO_COORDINATES } } : {}),
-      areaServed: [
-        "Miami Platja", "Mont-roig del Camp", "Hospitalet de l’Infant",
-        "Cambrils", "Costa Daurada", "Tarragona",
-      ],
-      servesCuisine: ["Brunch", "Specialty Coffee", "Mediterranean", "Breakfast"],
-      priceRange: "€€",
-      hasMenu: new URL("/es/carta/", siteUrl).toString(),
-      openingHoursSpecification: OPENING_HOURS.map((hours) => ({
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: hours.dayOfWeek.map((day) => `https://schema.org/${day}`),
-        opens: hours.opens,
-        closes: hours.closes,
-      })),
-    },
-    {
-      "@type": "WebSite",
-      "@id": websiteId,
-      url: siteUrl.toString(),
-      name: BUSINESS_NAME,
-      inLanguage: languages,
-      publisher: { "@id": businessId },
-    },
-    {
-      "@type": "WebPage",
-      "@id": webPageId,
-      url: canonical,
-      name: title,
-      description,
-      inLanguage: lang,
-      isPartOf: { "@id": websiteId },
-      about: { "@id": businessId },
-      primaryImageOfPage: { "@type": "ImageObject", url: absoluteImage },
-    },
-  ],
-};
+// Keep text-led pages stable while reserving contact-page priority for its
+// photographic LCP.
+const criticalFontHrefs = floatingHeader
+  ? ["/fonts/archivo-latin.woff2"]
+  : page === "contact" ? [] : ["/fonts/bodoni-moda-latin.woff2"];
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={languageTagByCode[lang]}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#f3e7d6" />
-    {/* Self-hosted fonts: @font-face lives in the bundled CSS (font-display: swap). Preload only the above-the-fold wordmark face (Jost latin) so it paints without a swap flash; the rest load on demand via unicode-range. */}
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/jost-normal-latin.woff2" crossorigin />
-    <meta name="robots" content={noindex ? "noindex,follow" : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"} />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
-    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
-    <link rel="icon" href="/favicon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
+    {criticalFontHrefs.map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
+    <SeoHead
+      title={title}
+      description={description}
+      lang={lang}
+      page={page}
+      canonicalPath={canonicalPath}
+      image={image}
+      imageAlt={imageAlt}
+      socialImage={socialImage}
+      socialImageAlt={socialImageAlt}
+      pageType={pageType}
+      schemaType={schemaType}
+      schema={schema}
+      breadcrumbs={breadcrumbs}
+      dateModified={dateModified}
+      localizedAlternates={localizedAlternates}
+      languagePaths={languagePaths}
+      noindex={noindex}
+    />
     {preloadImage && (preloadImageSrcset
-      ? <link rel="preload" as="image" href={image} imagesrcset={preloadImageSrcset} imagesizes={preloadImageSizes ?? "100vw"} fetchpriority="high" />
-      : <link rel="preload" as="image" href={image} fetchpriority="high" />)}
-    {localizedAlternates && languages.map((code) => <link rel="alternate" hreflang={code} href={new URL(alternatePathForLanguage(code), siteUrl)} />)}
-    {localizedAlternates && <link rel="alternate" hreflang="x-default" href={new URL(alternatePathForLanguage("es"), siteUrl)} />}
-    <meta property="og:type" content={pageType} />
-    <meta property="og:site_name" content={BUSINESS_NAME} />
-    <meta property="og:locale" content={localeByLanguage[lang]} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={absoluteImage} />
-    <meta property="og:image:alt" content={imageAlt} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={absoluteImage} />
-    <meta name="twitter:image:alt" content={imageAlt} />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(globalSchema)} />
-    {schema && <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />}
+      ? <link rel="preload" as="image" href={preloadImageHref ?? image} type={preloadImageType} imagesrcset={preloadImageSrcset} imagesizes={preloadImageSizes ?? "100vw"} fetchpriority="high" />
+      : <link rel="preload" as="image" href={preloadImageHref ?? image} type={preloadImageType} fetchpriority="high" />)}
+    <noscript><style>{".reveal{opacity:1!important;transform:none!important}.cp-directory__grid .cp-card{opacity:1!important;transform:none!important}[data-loop-motion] *{animation-play-state:running!important}"}</style></noscript>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Saltar al contenido</a>
     {!hideHeader && <Header lang={lang} page={page} floating={floatingHeader} languagePaths={languagePaths} />}
-    <main id="main-content"><slot /></main>
+    <main id="main-content" tabindex="-1">
+      <span class="floating-actions-trigger" data-floating-actions-trigger aria-hidden="true"></span>
+      <slot />
+    </main>
     {!hideFooter && <Footer lang={lang} />}
+    <FloatingActions lang={lang} />
     <script>import "../scripts/site.ts";</script>
   </body>
 </html>

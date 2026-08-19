@@ -6,12 +6,19 @@ import MapPreview from "./MapPreview.astro";
 import { getTranslation, localizedPath, type Language } from "../i18n/config";
 import { GOOGLE_MAPS_URL, HOURS_SUMMARY, LOCATION_ADDRESS_LINES } from "../data/location";
 import { CONTACT_PHONE, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "../data/site";
+import { breadcrumbLabels, getPageSeo } from "../config/seo";
 interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = getTranslation(lang);
+const contactPhoneHref = CONTACT_PHONE ? `tel:${CONTACT_PHONE.replace(/\s/g, "")}` : undefined;
+const seo = getPageSeo(lang, "contact");
+const breadcrumbs = [
+  { name: breadcrumbLabels[lang].home, href: localizedPath(lang) },
+  { name: breadcrumbLabels[lang].contact, href: localizedPath(lang, "contact") },
+];
 ---
 
-<BaseLayout title={t.contact.title} description={t.contact.description} lang={lang} page="contact" canonicalPath={localizedPath(lang, "contact")} image="/images/interior-cafe.webp">
+<BaseLayout title={seo.title} description={seo.description} lang={lang} page="contact" canonicalPath={localizedPath(lang, "contact")} image="/images/interior-cafe.webp" schemaType="ContactPage" breadcrumbs={breadcrumbs}>
   <InternalHero
     eyebrow="Miami Platja / Tarragona"
     title={t.contact.heading}
@@ -25,7 +32,7 @@ const t = getTranslation(lang);
 
   <section id="contenido" class="contact-actions">
     <div class="tr-shell contact-actions__grid">
-      <a class="contact-action" href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}><b>01</b><strong>{t.home.call}</strong><small>{CONTACT_PHONE}</small></a>
+      {CONTACT_PHONE && contactPhoneHref && <a class="contact-action" href={contactPhoneHref}><b>01</b><strong>{t.home.call}</strong><small>{CONTACT_PHONE}</small></a>}
       <a class="contact-action" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer"><b>02</b><strong>{t.home.maps}</strong><small>Google Maps &#8599;</small></a>
       <a class="contact-action" href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer"><b>03</b><strong>Instagram</strong><small>{INSTAGRAM_HANDLE}</small></a>
     </div>
@@ -39,7 +46,7 @@ const t = getTranslation(lang);
         <div class="contact-location__details">
           <p><span>Direccion</span>{LOCATION_ADDRESS_LINES.map((line) => <>{line}<br /></>)}</p>
           <p><span>Horario</span>{HOURS_SUMMARY}</p>
-          <p><span>Contacto</span>hola@tr3c3.com</p>
+          {CONTACT_PHONE && contactPhoneHref && <p><span>Contacto</span><a href={contactPhoneHref}>{CONTACT_PHONE}</a></p>}
         </div>
         <a class="editorial-link" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}<span aria-hidden="true">&#8599;</span></a>
       </aside>

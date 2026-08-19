@@ -1,0 +1,82 @@
+/* The hero keeps the cinematic TR3C3 entrance while making the full-day offer explicit. */
+.hero-cinema__title {
+  width: min(100%, 46rem);
+  display: grid;
+  gap: clamp(.9rem, 2.1vh, 1.35rem);
+  font-size: inherit;
+  line-height: 1;
+  text-shadow: none;
+}
+.hero-cinema__brand {
+  color: var(--cream);
+  font-family: var(--font-brand);
+  font-size: clamp(4.8rem, 7.4vw, 7.35rem);
+  font-weight: 800;
+  letter-spacing: -.055em;
+  line-height: .8;
+  text-shadow: 0 3px 24px rgb(18 11 7 / .18);
+}
+.hero-cinema__title-claim {
+  display: block;
+  max-width: 45rem;
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-size: clamp(2.15rem, 4vw, 3.65rem);
+  font-weight: 500;
+  letter-spacing: -.04em;
+  line-height: .92;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(1rem);
+  animation: heroCinemaDetail .85s .36s var(--ease) forwards;
+}
+.hero-cinema__description {
+  max-width: 35rem;
+  margin-top: clamp(1rem, 2.2vh, 1.35rem);
+  color: rgb(253 248 240 / .84);
+  font-family: var(--font-body);
+  font-size: clamp(.92rem, 1.05vw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.68;
+}
+.hero-cinema__location {
+  margin-top: clamp(1.15rem, 2.5vh, 1.6rem);
+  color: rgb(253 248 240 / .82);
+}
+
+@media (max-width: 1020px) {
+  .hero-cinema__brand { font-size: clamp(4.6rem, 9.7vw, 6.5rem); }
+  .hero-cinema__title-claim { font-size: clamp(2rem, 5vw, 3.45rem); }
+}
+
+@media (max-width: 760px) {
+  .hero-cinema__content { width: min(100%, 36rem); }
+  .hero-cinema__eyebrow { margin-bottom: .95rem; }
+  .hero-cinema__title { gap: .9rem; }
+  .hero-cinema__brand { font-size: clamp(3.75rem, 18vw, 5.55rem); }
+  .hero-cinema__title-claim { max-width: 31rem; font-size: clamp(1.86rem, 7.6vw, 2.65rem); line-height: .94; }
+  .hero-cinema__description { max-width: 30rem; margin-top: .85rem; font-size: .86rem; line-height: 1.62; }
+  .hero-cinema__location { margin-top: .9rem; }
+  .hero-cinema__actions { margin-top: 1.1rem; }
+}
+
+@media (max-width: 430px) {
+  .hero-cinema__layout { padding-bottom: 6.7rem; }
+  .hero-cinema__brand { font-size: clamp(3.6rem, 18.5vw, 4.9rem); }
+  .hero-cinema__title-claim { max-width: 25rem; font-size: clamp(1.66rem, 7.8vw, 2.2rem); line-height: .95; }
+  .hero-cinema__description { max-width: 26rem; }
+  .hero-cinema__location { font-size: .54rem; }
+  .hero-cinema__primary { min-height: 3.35rem; }
+}
+
+@media (max-height: 720px) and (min-width: 761px) {
+  .hero-cinema__title { gap: .8rem; }
+  .hero-cinema__brand { font-size: clamp(4rem, 10vh, 5.75rem); }
+  .hero-cinema__title-claim { font-size: clamp(1.9rem, 5.4vh, 3rem); }
+  .hero-cinema__description { margin-top: .7rem; line-height: 1.45; }
+  .hero-cinema__location { margin-top: .75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cinema__title-claim { opacity: 1; transform: none; animation: none; }
+}

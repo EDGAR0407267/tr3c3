@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Página no encontrada | TR3C3 Coffee & Brunch"
+  description="La página que buscas no está disponible. Vuelve a TR3C3 para consultar la carta, la ubicación y el horario del restaurante en Miami Platja."
+  lang="es"
+  canonicalPath="/404.html"
+  localizedAlternates={false}
+  noindex
+>
+  <section class="editorial-final-cta editorial-final-cta--copper" aria-labelledby="not-found-title">
+    <div class="tr-shell">
+      <p class="editorial-kicker">Error 404</p>
+      <h1 id="not-found-title">Esta mesa no existe.</h1>
+      <p>La página puede haber cambiado de dirección. Puedes volver al inicio o consultar la carta actual de TR3C3.</p>
+      <div class="editorial-actions">
+        <a class="tr-button tr-button--light" href="/es/">Volver al inicio</a>
+        <a class="tr-button tr-button--light" href="/es/carta/">Ver la carta</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
