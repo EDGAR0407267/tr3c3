@@ -15,6 +15,9 @@ const tiles = [
   { src: "/images/carousel-tostadas-salmon.webp", alt: "Tostada de salmón ahumado y aguacate en TR3C3" },
   { src: "/images/carousel-cafe-latte-art.webp", alt: "Café con arte latte servido en bandeja de madera en TR3C3" },
   { src: "/images/carousel-sandwiches-plato-rosa.webp", alt: "Sándwiches triangulares a la plancha en plato rosa en TR3C3" },
+  { src: "/images/carousel-espresso-dessert.webp", alt: "Cóctel de café con helado y borde de frutos secos en TR3C3" },
+  { src: "/images/carousel-cafes-latte-oso.webp", alt: "Dos cafés con arte latte, uno decorado con un oso, en TR3C3" },
+  { src: "/images/carousel-copa-naranja.webp", alt: "Copa de bebida naranja con burbujas en la barra de TR3C3" },
 ];
 
 const labels: Record<Language, { kicker: string; title: string; lead: string }> = {
@@ -39,6 +42,9 @@ const carouselSourceWidths: Record<string, number> = {
   "/images/carousel-tostadas-salmon.webp": 900,
   "/images/carousel-cafe-latte-art.webp": 675,
   "/images/carousel-sandwiches-plato-rosa.webp": 900,
+  "/images/carousel-espresso-dessert.webp": 900,
+  "/images/carousel-cafes-latte-oso.webp": 900,
+  "/images/carousel-copa-naranja.webp": 900,
 };
 const responsiveSrcset = (src: string, ext = ".webp") => {
   const sourceWidth = carouselSourceWidths[src] ?? 900;
@@ -88,12 +94,11 @@ const responsiveSrcset = (src: string, ext = ".webp") => {
             <span class="tr3c3-gallery__tag" aria-hidden="true">{handle}</span>
           </Fragment>
         );
-        const ariaHidden = clone ? "true" : undefined;
-        const tabindex = clone ? -1 : undefined;
+        if (clone) return <div class="tr3c3-gallery__tile" aria-hidden="true">{inner}</div>;
         return INSTAGRAM_URL ? (
-          <a class="tr3c3-gallery__tile" href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer" aria-hidden={ariaHidden} tabindex={tabindex}>{inner}</a>
+          <a class="tr3c3-gallery__tile" href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer">{inner}</a>
         ) : (
-          <figure class="tr3c3-gallery__tile" aria-hidden={ariaHidden}>{inner}</figure>
+          <figure class="tr3c3-gallery__tile">{inner}</figure>
         );
       })}
     </div>

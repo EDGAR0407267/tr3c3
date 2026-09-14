@@ -22,7 +22,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { extname, join, relative, resolve, sep } from "node:path";
 
 const dist = resolve("dist");
-const siteOrigin = "https://www.tr3c3.com";
+const siteOrigin = "https://trecemiami.com";
 const OFFICIAL_INSTAGRAM = "https://www.instagram.com/trece.coffee.brunch/";
 // Patrones de cuentas antiguas que NO deben aparecer en ningún archivo del sitio.
 const LEGACY_INSTAGRAM = [/trecebrunch/i, /a13coffee/i];

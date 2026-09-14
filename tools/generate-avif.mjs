@@ -7,8 +7,7 @@ import { readdirSync, statSync, existsSync } from "node:fs";
 import { join, extname } from "node:path";
 import { createRequire } from "node:module";
 
-const require = createRequire(import.meta.url);
-const sharp = require("sharp");
+const sharp = createRequire(import.meta.url)("sharp");
 
 const ROOT = "public/images";
 const QUALITY = 60; // visually equivalent to the source WebP, still clearly smaller

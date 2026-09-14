@@ -3,7 +3,7 @@
  * No añadir datos comerciales sin confirmarlos en la web y en Google Business Profile.
  */
 
-export const SITE_URL = "https://www.tr3c3.com";
+export const SITE_URL = "https://trecemiami.com";
 
 export const BUSINESS_NAME = "TR3C3 Coffee & Brunch";
 export const BUSINESS_SHORT_NAME = "TR3C3";
@@ -33,7 +33,7 @@ export const BUSINESS_COMPACT_ADDRESS =
 export const BUSINESS_MUNICIPALITY = "Mont-roig del Camp";
 export const BUSINESS_COUNTRY = "España";
 
-export const CONTACT_EMAIL = "hola@tr3c3.com";
+export const CONTACT_EMAIL = "hola@trecemiami.com";
 export const CONTACT_PHONE: string | undefined = "+34 877 91 52 61";
 export const INSTAGRAM_URL: string | undefined = "https://www.instagram.com/trece.coffee.brunch/";
 export const INSTAGRAM_HANDLE: string | undefined = INSTAGRAM_URL

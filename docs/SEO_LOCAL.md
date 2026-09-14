@@ -12,12 +12,12 @@ Todos los componentes y el JSON-LD deben obtener los datos desde `src/config/bus
 - Dirección en el proyecto: Avinguda de Barcelona, 160, 43892 Miami Platja, Tarragona.
 - Municipio: Mont-roig del Camp.
 - Teléfono: +34 877 91 52 61.
-- Correo: hola@tr3c3.com.
+- Correo: hola@trecemiami.com.
 - Horario: lunes a domingo, 09:00–00:00.
 - Coordenadas: 41.0058021, 0.9350192.
 - Google Maps: <https://maps.app.goo.gl/6R71tUa5TnFQnZVw5>
 - Instagram: <https://www.instagram.com/trecebrunch/>.
-- Carta canónica: <https://www.tr3c3.com/es/carta/>.
+- Carta canonica: <https://trecemiami.com/es/carta/>.
 
 Estos datos proceden del código y del contenido visible. Deben confirmarse con el responsable y con Google Business Profile antes de publicar; no añadir rango de precios, reservas, servicios ni horarios especiales sin fuente oficial.
 

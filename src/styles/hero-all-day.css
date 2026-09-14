@@ -26,9 +26,9 @@
   letter-spacing: -.04em;
   line-height: .92;
   text-wrap: balance;
-  opacity: 0;
-  transform: translateY(1rem);
-  animation: heroCinemaDetail .85s .36s var(--ease) forwards;
+  opacity: .32;
+  transform: translateY(.6rem);
+  animation: heroCinemaDetail .62s .08s var(--ease) forwards;
 }
 .hero-cinema__description {
   max-width: 35rem;

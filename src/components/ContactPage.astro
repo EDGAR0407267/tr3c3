@@ -11,6 +11,31 @@ interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = getTranslation(lang);
 const contactPhoneHref = CONTACT_PHONE ? `tel:${CONTACT_PHONE.replace(/\s/g, "")}` : undefined;
+const copyByLanguage: Record<Language, {
+  connectKicker: string;
+  connectTitle: string;
+  connectLead: string;
+  phone: string;
+  call: string;
+  instagram: string;
+  openInstagram: string;
+  locationKicker: string;
+  address: string;
+  hours: string;
+  contact: string;
+  visit: string;
+  heroAlt: string;
+}> = {
+  es: { connectKicker: "Contacto directo", connectTitle: "Hablemos sin formularios.", connectLead: "Elige la vía más rápida: llámanos o descubre el día a día de TR3C3 en Instagram.", phone: "Teléfono", call: "Llamar ahora", instagram: "Instagram oficial", openInstagram: "Abrir Instagram", locationKicker: "Dónde estamos", address: "Dirección", hours: "Horario", contact: "Contacto", visit: "Ven a disfrutar", heroAlt: "Interior de TR3C3 en Miami Platja" },
+  ca: { connectKicker: "Contacte directe", connectTitle: "Parlem sense formularis.", connectLead: "Tria la via més ràpida: truca'ns o descobreix el dia a dia de TR3C3 a Instagram.", phone: "Telèfon", call: "Trucar ara", instagram: "Instagram oficial", openInstagram: "Obrir Instagram", locationKicker: "On som", address: "Adreça", hours: "Horari", contact: "Contacte", visit: "Vine a gaudir", heroAlt: "Interior de TR3C3 a Miami Platja" },
+  en: { connectKicker: "Direct contact", connectTitle: "Let’s talk, no forms.", connectLead: "Choose the quickest route: call us or see daily life at TR3C3 on Instagram.", phone: "Phone", call: "Call now", instagram: "Official Instagram", openInstagram: "Open Instagram", locationKicker: "Where to find us", address: "Address", hours: "Opening hours", contact: "Contact", visit: "Come and enjoy", heroAlt: "TR3C3 interior in Miami Platja" },
+  fr: { connectKicker: "Contact direct", connectTitle: "Parlons sans formulaire.", connectLead: "Choisissez la voie la plus rapide : appelez-nous ou découvrez le quotidien de TR3C3 sur Instagram.", phone: "Téléphone", call: "Appeler maintenant", instagram: "Instagram officiel", openInstagram: "Ouvrir Instagram", locationKicker: "Où nous trouver", address: "Adresse", hours: "Horaires", contact: "Contact", visit: "Venez en profiter", heroAlt: "Intérieur de TR3C3 à Miami Platja" },
+  de: { connectKicker: "Direkter Kontakt", connectTitle: "Direkt sprechen, ohne Formular.", connectLead: "Wähle den schnellsten Weg: Ruf uns an oder entdecke den Alltag bei TR3C3 auf Instagram.", phone: "Telefon", call: "Jetzt anrufen", instagram: "Offizielles Instagram", openInstagram: "Instagram öffnen", locationKicker: "Wo du uns findest", address: "Adresse", hours: "Öffnungszeiten", contact: "Kontakt", visit: "Komm vorbei", heroAlt: "Innenraum des TR3C3 in Miami Platja" },
+  zh: { connectKicker: "直接联系", connectTitle: "无需表单，直接沟通。", connectLead: "选择最快捷的方式：致电我们，或在 Instagram 了解 TR3C3 的日常。", phone: "电话", call: "立即致电", instagram: "官方 Instagram", openInstagram: "打开 Instagram", locationKicker: "我们的位置", address: "地址", hours: "营业时间", contact: "联系方式", visit: "欢迎前来", heroAlt: "TR3C3 Miami Platja 店内空间" },
+  nl: { connectKicker: "Direct contact", connectTitle: "Even praten, zonder formulier.", connectLead: "Kies de snelste route: bel ons of ontdek het dagelijks leven bij TR3C3 op Instagram.", phone: "Telefoon", call: "Nu bellen", instagram: "Officiële Instagram", openInstagram: "Instagram openen", locationKicker: "Waar je ons vindt", address: "Adres", hours: "Openingstijden", contact: "Contact", visit: "Kom genieten", heroAlt: "Interieur van TR3C3 in Miami Platja" },
+  it: { connectKicker: "Contatto diretto", connectTitle: "Parliamo, senza moduli.", connectLead: "Scegli la via più rapida: chiamaci o scopri la quotidianità di TR3C3 su Instagram.", phone: "Telefono", call: "Chiama ora", instagram: "Instagram ufficiale", openInstagram: "Apri Instagram", locationKicker: "Dove siamo", address: "Indirizzo", hours: "Orari", contact: "Contatto", visit: "Vieni a trovarci", heroAlt: "Interno di TR3C3 a Miami Platja" },
+};
+const copy = copyByLanguage[lang] ?? copyByLanguage.es;
 const seo = getPageSeo(lang, "contact");
 const breadcrumbs = [
   { name: breadcrumbLabels[lang].home, href: localizedPath(lang) },
@@ -24,29 +49,47 @@ const breadcrumbs = [
     title={t.contact.heading}
     lead={t.contact.lead}
     image="/images/interior-cafe.webp"
-    alt="Interior de TR3C3 cerca del Mediterraneo"
+    alt={copy.heroAlt}
     variant="contact"
     primaryHref={GOOGLE_MAPS_URL}
     primaryLabel={t.home.mapCta}
   />
 
-  <section id="contenido" class="contact-actions">
-    <div class="tr-shell contact-actions__grid">
-      {CONTACT_PHONE && contactPhoneHref && <a class="contact-action" href={contactPhoneHref}><b>01</b><strong>{t.home.call}</strong><small>{CONTACT_PHONE}</small></a>}
-      <a class="contact-action" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer"><b>02</b><strong>{t.home.maps}</strong><small>Google Maps &#8599;</small></a>
-      <a class="contact-action" href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer"><b>03</b><strong>Instagram</strong><small>{INSTAGRAM_HANDLE}</small></a>
+  <section id="contenido" class="contact-connect" aria-labelledby="contact-connect-title">
+    <div class="tr-shell contact-connect__layout">
+      <div class="contact-connect__heading reveal" data-reveal>
+        <p class="editorial-kicker">{copy.connectKicker}</p>
+        <h2 id="contact-connect-title">{copy.connectTitle}</h2>
+        <p>{copy.connectLead}</p>
+      </div>
+      <div class="contact-connect__channels">
+        {CONTACT_PHONE && contactPhoneHref && (
+          <a class="contact-channel contact-channel--call" href={contactPhoneHref} aria-label={`${copy.call}: ${CONTACT_PHONE}`}>
+            <span class="contact-channel__number">01</span>
+            <span class="contact-channel__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.2 3.8 4.8 5.4c-.8.6-.5 2.5.6 4.8 1.6 3.2 4.2 5.9 7.5 7.8 2.5 1.4 4.6 1.7 5.3.8l1.7-2.6-4.2-2.3-1.8 1.7c-2.1-1.1-4.8-3.8-5.8-5.9L9.8 8z"/></svg></span>
+            <span class="contact-channel__copy"><small>{copy.phone}</small><strong>{CONTACT_PHONE}</strong><span>{copy.call}<i aria-hidden="true">&#8594;</i></span></span>
+          </a>
+        )}
+        {INSTAGRAM_URL && (
+          <a class="contact-channel contact-channel--instagram" href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer" aria-label={`${copy.openInstagram}: ${INSTAGRAM_HANDLE}`}>
+            <span class="contact-channel__number">02</span>
+            <span class="contact-channel__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.8" r="1" class="contact-channel__icon-fill"/></svg></span>
+            <span class="contact-channel__copy"><small>{copy.instagram}</small><strong>{INSTAGRAM_HANDLE}</strong><span>{copy.openInstagram}<i aria-hidden="true">&#8599;</i></span></span>
+          </a>
+        )}
+      </div>
     </div>
   </section>
 
   <section class="editorial-section contact-location reveal" data-reveal>
     <div class="tr-shell contact-location__grid">
       <aside>
-        <p class="editorial-kicker">Donde estamos</p>
+        <p class="editorial-kicker">{copy.locationKicker}</p>
         <h2>Miami Platja,<br />Tarragona.</h2>
         <div class="contact-location__details">
-          <p><span>Direccion</span>{LOCATION_ADDRESS_LINES.map((line) => <>{line}<br /></>)}</p>
-          <p><span>Horario</span>{HOURS_SUMMARY}</p>
-          {CONTACT_PHONE && contactPhoneHref && <p><span>Contacto</span><a href={contactPhoneHref}>{CONTACT_PHONE}</a></p>}
+          <p><span>{copy.address}</span>{LOCATION_ADDRESS_LINES.map((line) => <>{line}<br /></>)}</p>
+          <p><span>{copy.hours}</span>{HOURS_SUMMARY}</p>
+          {CONTACT_PHONE && contactPhoneHref && <p><span>{copy.contact}</span><a href={contactPhoneHref}>{CONTACT_PHONE}</a></p>}
         </div>
         <a class="editorial-link" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}<span aria-hidden="true">&#8599;</span></a>
       </aside>
@@ -54,23 +97,8 @@ const breadcrumbs = [
     </div>
   </section>
 
-  <section class="contact-form-editorial reveal" data-reveal>
-    <div class="tr-shell contact-form-editorial__heading"><p class="editorial-kicker">Escribenos</p><h2>{t.contact.heading}</h2><p>{t.contact.description}</p></div>
-    <form class="tr-shell editorial-form" action="mailto:hola@tr3c3.com" method="post" enctype="text/plain">
-      <label><span>01 / {t.contact.name}</span><input name="name" autocomplete="name" required /></label>
-      <label><span>02 / {t.contact.email}</span><input name="email" type="email" autocomplete="email" required /></label>
-      <label class="editorial-form__message"><span>03 / {t.contact.message}</span><textarea name="message" rows="5" required></textarea></label>
-      <button class="tr-button tr-button--primary" type="submit">{t.contact.send}</button>
-      <small>{t.contact.formNote}</small>
-    </form>
-  </section>
-
   <section class="contact-visit reveal" data-reveal>
     <Img src="/images/croissant-coffee.webp" alt="Cafe servido en una mesa de TR3C3" width={1400} height={900} sizes="100vw" />
-    <div class="tr-shell"><p class="editorial-kicker">Ven a disfrutar</p><h2>{t.home.contactTitle}</h2><a class="tr-button tr-button--light" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}</a></div>
-  </section>
-
-  <section class="contact-careers-editorial">
-    <div class="tr-shell"><h2>{t.contact.careers}</h2><a href="mailto:curriculum@tr3c3.com?subject=Candidatura%20para%20trabajar%20en%20TR3C3">curriculum@tr3c3.com</a><a class="editorial-link" href="mailto:curriculum@tr3c3.com?subject=Candidatura%20para%20trabajar%20en%20TR3C3">{t.contact.careersCta}<span aria-hidden="true">&#8594;</span></a></div>
+    <div class="tr-shell"><p class="editorial-kicker">{copy.visit}</p><h2>{t.home.contactTitle}</h2><a class="tr-button tr-button--light" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">{t.home.mapCta}</a></div>
   </section>
 </BaseLayout>

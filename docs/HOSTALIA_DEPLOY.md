@@ -9,7 +9,7 @@ npm ci
 npm run validate
 ```
 
-La salida estática se genera en `dist/`. El build final esperado contiene 98 documentos de página, 70 URLs indexables, `404.html`, `.htaccess`, `robots.txt` y `sitemap-index.xml`.
+La salida estática se genera en `dist/`. El build final esperado contiene 98 documentos de página, 78 URLs indexables, `404.html`, `.htaccess`, `robots.txt` y `sitemap-index.xml`.
 
 ## 2. Subir el artefacto correcto
 
@@ -41,7 +41,7 @@ No subir `dist/` como subcarpeta ni subir `src/`, `node_modules/`, `.git/`, info
 
 `public/.htaccess` se copia a `dist/.htaccess` y configura:
 
-- HTTPS y `www.tr3c3.com` como host canónico.
+- HTTPS y `trecemiami.com` como host canonico.
 - Redirecciones 301 exactas para rutas históricas/consolidadas.
 - `ErrorDocument 404 /404.html`.
 - Brotli/Gzip cuando el módulo está disponible.
@@ -54,15 +54,15 @@ Comprobar que Hostalia permite `mod_rewrite`, `mod_headers`, `mod_expires` y `mo
 ## 4. Checklist posterior al despliegue
 
 ```powershell
-curl.exe -I http://tr3c3.com/es/
-curl.exe -I https://tr3c3.com/es/
-curl.exe -I https://www.tr3c3.com/menu/
-curl.exe -I https://www.tr3c3.com/ruta-inexistente-qa/
+curl.exe -I http://trecemiami.com/es/
+curl.exe -I https://trecemiami.com/es/
+curl.exe -I https://www.trecemiami.com/menu/
+curl.exe -I https://www.trecemiami.com/ruta-inexistente-qa/
 ```
 
 Verificar:
 
-- HTTP y dominio sin `www` hacen un único 301 a `https://www.tr3c3.com/...`.
+- HTTP y `www` hacen un unico 301 a `https://trecemiami.com/...`.
 - `/menu/` hace 301 a `/es/carta/` sin cadena.
 - Una URL inexistente devuelve estado 404 y el documento personalizado, no 200.
 - `/robots.txt` y `/sitemap-index.xml` responden 200.
@@ -81,4 +81,4 @@ Después de publicar:
 4. Ejecutar PageSpeed Insights sobre la URL pública.
 5. Confirmar que canonical, Open Graph y `hreflang` usan el dominio definitivo.
 
-Si el dominio final no es `https://www.tr3c3.com`, actualizar `astro.config.mjs`, `src/config/business.ts`, `public/robots.txt` y `.htaccess`, y volver a ejecutar el build antes de subirlo.
+Si el dominio final no es `https://trecemiami.com`, actualizar `astro.config.mjs`, `src/config/business.ts`, `public/robots.txt` y `.htaccess`, y volver a ejecutar el build antes de subirlo.

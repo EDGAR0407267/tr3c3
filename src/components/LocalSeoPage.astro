@@ -15,8 +15,6 @@ const canonical = new URL(canonicalPath, SITE_URL).toString();
 const relatedPages = page.related.map((relatedSlug) => ({ slug: relatedSlug, ...localSeoPages[relatedSlug] }));
 const heroImageDot = page.heroImage.lastIndexOf(".");
 const heroImageBase = heroImageDot > 0 ? page.heroImage.slice(0, heroImageDot) : page.heroImage;
-const heroImageExt = heroImageDot > 0 ? page.heroImage.slice(heroImageDot) : "";
-const heroImageSrcset = `${heroImageBase}-480${heroImageExt} 480w, ${heroImageBase}-640${heroImageExt} 640w, ${heroImageBase}-828${heroImageExt} 828w, ${heroImageBase}-1080${heroImageExt} 1080w, ${page.heroImage} 1600w`;
 // Preload must match what <picture> selects: InternalHero serves AVIF first.
 const heroImageAvifSrcset = `${heroImageBase}-480.avif 480w, ${heroImageBase}-640.avif 640w, ${heroImageBase}-828.avif 828w, ${heroImageBase}-1080.avif 1080w, ${heroImageBase}.avif 1600w`;
 const schema = {

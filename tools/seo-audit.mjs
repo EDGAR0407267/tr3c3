@@ -2,7 +2,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { extname, join, relative, resolve, sep } from "node:path";
 
 const dist = resolve("dist");
-const siteOrigin = "https://www.tr3c3.com";
+const siteOrigin = "https://trecemiami.com";
 const languagePrefixes = new Set(["es", "ca", "en", "fr", "de", "zh", "nl", "it"]);
 const errors = [];
 

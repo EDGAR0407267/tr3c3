@@ -63,11 +63,18 @@ const {
   preloadImageSizes,
   noindex = false,
 } = Astro.props;
-// Keep text-led pages stable while reserving contact-page priority for its
-// photographic LCP.
-const criticalFontHrefs = floatingHeader
-  ? ["/fonts/archivo-latin.woff2"]
-  : page === "contact" ? [] : ["/fonts/bodoni-moda-latin.woff2"];
+const layoutCopy: Record<Language, { skip: string }> = {
+  es: { skip: "Saltar al contenido" },
+  ca: { skip: "Saltar al contingut" },
+  en: { skip: "Skip to content" },
+  fr: { skip: "Aller au contenu" },
+  de: { skip: "Zum Inhalt springen" },
+  zh: { skip: "跳到主要内容" },
+  nl: { skip: "Ga naar de inhoud" },
+  it: { skip: "Vai al contenuto" },
+};
+const skipLabel = layoutCopy[lang]?.skip ?? layoutCopy.es.skip;
+const themeColor = floatingHeader ? "#2a1c12" : "#f3e7d6";
 ---
 
 <!doctype html>
@@ -76,8 +83,7 @@ const criticalFontHrefs = floatingHeader
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#f3e7d6" />
-    {criticalFontHrefs.map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
+    <meta name="theme-color" content={themeColor} />
     <SeoHead
       title={title}
       description={description}
@@ -103,10 +109,9 @@ const criticalFontHrefs = floatingHeader
     <noscript><style>{".reveal{opacity:1!important;transform:none!important}.cp-directory__grid .cp-card{opacity:1!important;transform:none!important}[data-loop-motion] *{animation-play-state:running!important}"}</style></noscript>
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+    <a class="skip-link" href="#main-content">{skipLabel}</a>
     {!hideHeader && <Header lang={lang} page={page} floating={floatingHeader} languagePaths={languagePaths} />}
     <main id="main-content" tabindex="-1">
-      <span class="floating-actions-trigger" data-floating-actions-trigger aria-hidden="true"></span>
       <slot />
     </main>
     {!hideFooter && <Footer lang={lang} />}

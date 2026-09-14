@@ -1,54 +1,30 @@
 ---
-import { localizedPath, type Language } from "../i18n/config";
-import { GOOGLE_MAPS_URL } from "../data/location";
+import { type Language } from "../i18n/config";
 import { CONTACT_PHONE } from "../data/site";
 import "../styles/action-system.css";
 
 interface Props { lang: Language }
-type FloatingCopy = {
-  nav: string;
-  menu: string;
-  maps: string;
-  call: string;
-  menuAria: string;
-  mapsAria: string;
-  callAria: string;
-};
 
 const { lang } = Astro.props;
-const copyByLanguage: Record<Language, FloatingCopy> = {
-  es: { nav: "Acciones rápidas", menu: "Carta", maps: "Maps", call: "Llamar", menuAria: "Abrir la carta de TR3C3", mapsAria: "Abrir TR3C3 en Google Maps", callAria: "Llamar al restaurante TR3C3" },
-  ca: { nav: "Accions ràpides", menu: "Carta", maps: "Maps", call: "Trucar", menuAria: "Obrir la carta de TR3C3", mapsAria: "Obrir TR3C3 a Google Maps", callAria: "Trucar al restaurant TR3C3" },
-  en: { nav: "Quick actions", menu: "Menu", maps: "Maps", call: "Call", menuAria: "Open the TR3C3 menu", mapsAria: "Open TR3C3 in Google Maps", callAria: "Call TR3C3 restaurant" },
-  fr: { nav: "Actions rapides", menu: "Carte", maps: "Maps", call: "Appeler", menuAria: "Ouvrir la carte de TR3C3", mapsAria: "Ouvrir TR3C3 dans Google Maps", callAria: "Appeler le restaurant TR3C3" },
-  de: { nav: "Schnellaktionen", menu: "Karte", maps: "Maps", call: "Anrufen", menuAria: "TR3C3 Karte öffnen", mapsAria: "TR3C3 in Google Maps öffnen", callAria: "Restaurant TR3C3 anrufen" },
-  zh: { nav: "快捷操作", menu: "菜单", maps: "地图", call: "致电", menuAria: "打开 TR3C3 菜单", mapsAria: "在 Google 地图中打开 TR3C3", callAria: "致电 TR3C3 餐厅" },
-  nl: { nav: "Snelle acties", menu: "Menu", maps: "Maps", call: "Bellen", menuAria: "Open het TR3C3-menu", mapsAria: "Open TR3C3 in Google Maps", callAria: "Bel restaurant TR3C3" },
-  it: { nav: "Azioni rapide", menu: "Menu", maps: "Maps", call: "Chiama", menuAria: "Apri il menu TR3C3", mapsAria: "Apri TR3C3 in Google Maps", callAria: "Chiama il ristorante TR3C3" },
+const copyByLanguage: Record<Language, { call: string; callAria: string }> = {
+  es: { call: "Llamar", callAria: "Llamar a TR3C3" },
+  ca: { call: "Trucar", callAria: "Trucar a TR3C3" },
+  en: { call: "Call", callAria: "Call TR3C3" },
+  fr: { call: "Appeler", callAria: "Appeler TR3C3" },
+  de: { call: "Anrufen", callAria: "TR3C3 anrufen" },
+  zh: { call: "致电", callAria: "致电 TR3C3" },
+  nl: { call: "Bellen", callAria: "Bel TR3C3" },
+  it: { call: "Chiama", callAria: "Chiama TR3C3" },
 };
 const copy = copyByLanguage[lang] ?? copyByLanguage.es;
 const phoneHref = CONTACT_PHONE ? `tel:${CONTACT_PHONE.replace(/[^\d+]/g, "")}` : undefined;
 ---
 
-<nav class="floating-actions" data-floating-actions aria-label={copy.nav} aria-hidden="true" inert>
-  <a class="floating-actions__item" href={localizedPath(lang, "menu")} aria-label={copy.menuAria}>
-    <span class="floating-actions__icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24"><path d="M5 4.5h11a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M8 4.5v15M11.5 8h4M11.5 12h4"/></svg>
+{phoneHref && (
+  <a class="floating-call" href={phoneHref} aria-label={`${copy.callAria}: ${CONTACT_PHONE}`} data-floating-call>
+    <span class="floating-call__label" aria-hidden="true">{copy.call}</span>
+    <span class="floating-call__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M7.2 3.8 4.8 5.4c-.8.6-.5 2.5.6 4.8 1.6 3.2 4.2 5.9 7.5 7.8 2.5 1.4 4.6 1.7 5.3.8l1.7-2.6-4.2-2.3-1.8 1.7c-2.1-1.1-4.8-3.8-5.8-5.9L9.8 8z"/></svg>
     </span>
-    <span class="floating-actions__label">{copy.menu}</span>
   </a>
-  <a class="floating-actions__item" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer" aria-label={copy.mapsAria}>
-    <span class="floating-actions__icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24"><path d="M12 21s6-5.1 6-11a6 6 0 1 0-12 0c0 5.9 6 11 6 11z"/><circle cx="12" cy="10" r="2.1"/></svg>
-    </span>
-    <span class="floating-actions__label">{copy.maps}</span>
-  </a>
-  {phoneHref && (
-    <a class="floating-actions__item" href={phoneHref} aria-label={`${copy.callAria}: ${CONTACT_PHONE}`}>
-      <span class="floating-actions__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M8.2 3.5 5.6 5.2c-.8.6-.6 2.4.5 4.6 1.6 3.3 4.8 6.5 8.1 8.1 2.2 1.1 4 1.3 4.6.5l1.7-2.6-4.3-2.2-1.7 1.6c-1.9-.9-4.8-3.8-5.7-5.7l1.6-1.7z"/></svg>
-      </span>
-      <span class="floating-actions__label">{copy.call}</span>
-    </a>
-  )}
-</nav>
+)}

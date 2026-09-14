@@ -22,7 +22,7 @@ export const drinksMenu: FoodMenuDefinition = {
         { name: same("Cold brew"), price: "3,00 €" },
         { name: tx("Batido de chocolate", "Batut de xocolata", "Chocolate shake", "Milk-shake au chocolat", "Schokoladen-Milkshake", "巧克力奶昔", "Chocoladeshake", "Frappè al cioccolato"), price: "3,00 €" },
         { name: tx("Tés e infusiones", "Tes i infusions", "Teas & infusions", "Thés & infusions", "Tee & Aufgüsse", "茶与花草茶", "Thee & infusies", "Tè e infusi"), price: "2,50 €" },
-        { name: same("Affogato"), price: "4,00 €", description: tx("Espresso con una bola de helado de vainilla.", "Espresso amb una bola de gelat de vainilla.", "Espresso with a scoop of vanilla ice cream.", "Espresso avec une boule de glace vanille.", "Espresso mit einer Kugel Vanilleeis.", "浓缩咖啡配一球香草冰淇淋。", "Espresso met een bol vanille-ijs.", "Espresso con una pallina di gelato alla vaniglia.") },
+        { name: same("Affogato"), price: "4,80 €", description: tx("Espresso con una bola de helado de vainilla.", "Espresso amb una bola de gelat de vainilla.", "Espresso with a scoop of vanilla ice cream.", "Espresso avec une boule de glace vanille.", "Espresso mit einer Kugel Vanilleeis.", "浓缩咖啡配一球香草冰淇淋。", "Espresso met een bol vanille-ijs.", "Espresso con una pallina di gelato alla vaniglia.") },
       ],
     },
     {
@@ -83,4 +83,3 @@ export const drinksMenu: FoodMenuDefinition = {
     },
   ],
 };
-

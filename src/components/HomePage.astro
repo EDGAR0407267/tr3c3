@@ -5,7 +5,6 @@ import homeDeferredStylesHref from "../styles/home-deferred.css?url";
 import homeExperienceStylesHref from "../styles/home-experience.css?url";
 import CoffeeMachineSection from "./CoffeeMachineSection.astro";
 import HeroCover from "./HeroCover.astro";
-import ReviewsSection from "./ReviewsSection.astro";
 import InstagramGallery from "./InstagramGallery.astro";
 import LocationHoursSection from "./LocationHoursSection.astro";
 import OrganicDivider from "./OrganicDivider.astro";
@@ -50,12 +49,17 @@ const cardCta: Record<Language, { menu: string; wine: string }> = {
 };
 
 const featuredIds = ["cafes-bebidas-cocteles", "desayunos-brunch", "comida-cena", "vinos"];
-const cardBadges: Record<string, string> = {
-  "cafes-bebidas-cocteles": "Speciality",
-  "desayunos-brunch": "Brunch Favorite",
-  "comida-cena": "Mediterranean Nights",
-  vinos: "Mediterranean Cellar",
+const cardBadgesByLanguage: Record<Language, Record<string, string>> = {
+  es: { "cafes-bebidas-cocteles": "Speciality", "desayunos-brunch": "Favoritos de brunch", "comida-cena": "Noches mediterráneas", vinos: "Bodega mediterránea" },
+  ca: { "cafes-bebidas-cocteles": "Speciality", "desayunos-brunch": "Preferits de brunch", "comida-cena": "Nits mediterrànies", vinos: "Celler mediterrani" },
+  en: { "cafes-bebidas-cocteles": "Specialty", "desayunos-brunch": "Brunch favourites", "comida-cena": "Mediterranean nights", vinos: "Mediterranean cellar" },
+  fr: { "cafes-bebidas-cocteles": "Spécialité", "desayunos-brunch": "Favoris du brunch", "comida-cena": "Soirées méditerranéennes", vinos: "Cave méditerranéenne" },
+  de: { "cafes-bebidas-cocteles": "Specialty", "desayunos-brunch": "Brunch-Favoriten", "comida-cena": "Mediterrane Abende", vinos: "Mediterraner Weinkeller" },
+  zh: { "cafes-bebidas-cocteles": "精品咖啡", "desayunos-brunch": "早午餐精选", "comida-cena": "地中海之夜", vinos: "地中海酒窖" },
+  nl: { "cafes-bebidas-cocteles": "Specialty", "desayunos-brunch": "Brunchfavorieten", "comida-cena": "Mediterrane avonden", vinos: "Mediterrane wijnkelder" },
+  it: { "cafes-bebidas-cocteles": "Specialty", "desayunos-brunch": "Preferiti del brunch", "comida-cena": "Notti mediterranee", vinos: "Cantina mediterranea" },
 };
+const cardBadges = cardBadgesByLanguage[lang] ?? cardBadgesByLanguage.es;
 const featuredSections = featuredIds
   .map((id) => cartaSections.find((section) => section.id === id))
   .filter((section): section is (typeof cartaSections)[number] => Boolean(section))
@@ -133,7 +137,6 @@ const featuredSections = featuredIds
     </div>
   </section>
 
-  <ReviewsSection lang={lang} />
   <ScrollImageCollage lang={lang} />
 
   <OrganicDivider tone="paper" variant="ribbon" className="home-divider home-divider--gallery" />

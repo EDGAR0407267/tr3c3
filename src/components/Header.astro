@@ -14,16 +14,27 @@ const navItems = [
   { href: localizedPath(lang, "menu"), label: t.nav.menu, active: page === "menu" },
   { href: localizedPath(lang, "contact"), label: t.nav.contact, active: page === "contact" },
 ];
+const navLabels: Record<Language, { desktop: string; mobile: string; social: string; home: string }> = {
+  es: { desktop: "Navegación principal", mobile: "Navegación móvil", social: "Redes sociales de TR3C3", home: "TR3C3 Coffee & Brunch, inicio" },
+  ca: { desktop: "Navegació principal", mobile: "Navegació mòbil", social: "Xarxes socials de TR3C3", home: "TR3C3 Coffee & Brunch, inici" },
+  en: { desktop: "Primary navigation", mobile: "Mobile navigation", social: "TR3C3 social links", home: "TR3C3 Coffee & Brunch, home" },
+  fr: { desktop: "Navigation principale", mobile: "Navigation mobile", social: "Réseaux sociaux de TR3C3", home: "TR3C3 Coffee & Brunch, accueil" },
+  de: { desktop: "Hauptnavigation", mobile: "Mobile Navigation", social: "TR3C3 in sozialen Medien", home: "TR3C3 Coffee & Brunch, Startseite" },
+  zh: { desktop: "主导航", mobile: "移动导航", social: "TR3C3 社交媒体", home: "TR3C3 Coffee & Brunch，首页" },
+  nl: { desktop: "Hoofdnavigatie", mobile: "Mobiele navigatie", social: "TR3C3 op sociale media", home: "TR3C3 Coffee & Brunch, home" },
+  it: { desktop: "Navigazione principale", mobile: "Navigazione mobile", social: "Social media TR3C3", home: "TR3C3 Coffee & Brunch, home" },
+};
+const labels = navLabels[lang] ?? navLabels.es;
 ---
 
 <header class:list={["tr-header", { "tr-header--floating": floating }]} data-site-header>
   <div class="tr-shell tr-header__inner">
-    <a href={home} class:list={["tr-logo", { "tr-logo--emblem": floating }]} aria-label="TR3C3 Coffee & Brunch, home">
+    <a href={home} class:list={["tr-logo", { "tr-logo--emblem": floating }]} aria-label={labels.home}>
       {floating
         ? <BrandEmblem title="TR3C3 Coffee & Brunch Miami Platja" />
         : <BrandLogo variant="horizontal" tone="color" size="sm" eager />}
     </a>
-    <nav class="tr-nav" aria-label="Primary navigation">
+    <nav class="tr-nav" aria-label={labels.desktop}>
       {navItems.map((item) => <a href={item.href} aria-current={item.active ? "page" : undefined}>{item.label}</a>)}
     </nav>
     <div class="tr-header__actions">
@@ -47,14 +58,14 @@ const navItems = [
       <BrandLogo variant="primary" tone="color" size="lg" />
       <span>Speciality Coffee · Brunch · Dinner</span>
     </div>
-    <nav aria-label="Mobile navigation">
+    <nav aria-label={labels.mobile}>
       {navItems.map((item) => <a href={item.href} aria-current={item.active ? "page" : undefined} data-mobile-link>{item.label}</a>)}
     </nav>
     <div class="mobile-language-list">
       {languages.map((code) => <a href={hrefForLanguage(code)} lang={code} aria-current={code === lang ? "true" : undefined} data-language-link data-language={code}>{code.toUpperCase()}</a>)}
     </div>
     {(INSTAGRAM_URL || TIKTOK_URL) && (
-      <div class="mobile-menu-panel__socials" aria-label="TR3C3 social links">
+      <div class="mobile-menu-panel__socials" aria-label={labels.social}>
         {INSTAGRAM_URL && <a href={INSTAGRAM_URL} target="_blank" rel="me noopener noreferrer">Instagram {INSTAGRAM_HANDLE}</a>}
         {TIKTOK_URL && <a href={TIKTOK_URL} target="_blank" rel="me noopener noreferrer">TikTok</a>}
       </div>

@@ -74,7 +74,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-const desktopMenuQuery = window.matchMedia("(min-width: 1021px)");
+const desktopMenuQuery = window.matchMedia("(min-width: 1101px)");
 desktopMenuQuery.addEventListener("change", (event) => {
   if (!event.matches) return;
   menuToggles.forEach(({ toggle, menu }) => {
@@ -103,73 +103,22 @@ if (floatingHeader) {
   window.addEventListener("resize", queuePinnedSync, { passive: true });
 }
 
-// Context-aware quick actions: enter after the opening scene, leave before the footer,
-// and stay out of the way while a menu or modal owns the interface.
-const floatingActions = document.querySelector<HTMLElement>("[data-floating-actions]");
-const floatingActionsTrigger = document.querySelector<HTMLElement>("[data-floating-actions-trigger]");
-const siteFooter = document.querySelector<HTMLElement>("#site-footer");
-
-if (floatingActions) {
-  let pastOpening = false;
-  let footerNear = false;
-  let menuOpen = document.documentElement.classList.contains("menu-open");
-  let fallbackFrame = 0;
-
-  const modalIsOpen = () => Boolean(document.querySelector(
-    'dialog[open], [aria-modal="true"]:not([hidden]):not([aria-hidden="true"])',
-  ));
-
-  const syncFloatingActions = () => {
-    const visible = pastOpening && !footerNear && !menuOpen && !modalIsOpen();
-    floatingActions.classList.toggle("is-visible", visible);
-    floatingActions.classList.toggle("is-footer-near", footerNear);
-    floatingActions.toggleAttribute("inert", !visible);
-    floatingActions.setAttribute("aria-hidden", String(!visible));
-  };
-
-  document.addEventListener("tr3c3:menu-state", (event) => {
-    menuOpen = Boolean((event as CustomEvent<{ open?: boolean }>).detail?.open);
-    syncFloatingActions();
-  });
-
-  const syncModalState = () => syncFloatingActions();
-  document.addEventListener("toggle", syncModalState, true);
-  document.addEventListener("close", syncModalState, true);
-
-  if ("IntersectionObserver" in window && floatingActionsTrigger) {
-    const openingObserver = new IntersectionObserver(([entry]) => {
-      pastOpening = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-      syncFloatingActions();
-    });
-    openingObserver.observe(floatingActionsTrigger);
-
-    if (siteFooter) {
-      const footerObserver = new IntersectionObserver(([entry]) => {
-        footerNear = entry.isIntersecting;
-        syncFloatingActions();
-      }, { rootMargin: "0px 0px 2% 0px" });
-      footerObserver.observe(siteFooter);
-    }
-  } else {
-    const syncFloatingFallback = () => {
-      fallbackFrame = 0;
-      const triggerTop = floatingActionsTrigger?.getBoundingClientRect().top ?? 0;
-      pastOpening = triggerTop < 0 || window.scrollY > Math.min(window.innerHeight * .72, 704);
-      footerNear = Boolean(siteFooter && siteFooter.getBoundingClientRect().top < window.innerHeight);
-      syncFloatingActions();
-    };
-    const queueFloatingFallback = () => {
-      if (!fallbackFrame) fallbackFrame = window.requestAnimationFrame(syncFloatingFallback);
-    };
-    syncFloatingFallback();
-    window.addEventListener("scroll", queueFloatingFallback, { passive: true });
-    window.addEventListener("resize", queueFloatingFallback, { passive: true });
-  }
-
-  syncFloatingActions();
-}
-
 const languageMenus = Array.from(document.querySelectorAll<HTMLDetailsElement>("[data-language-menu]"));
+
+// Keep the persistent phone shortcut useful without covering footer content.
+const floatingCall = document.querySelector<HTMLElement>("[data-floating-call]");
+const siteFooter = document.querySelector<HTMLElement>("#site-footer");
+if (floatingCall && siteFooter) {
+  const setFooterOverlap = (overlaps: boolean) => {
+    floatingCall.classList.toggle("is-footer-near", overlaps);
+    floatingCall.toggleAttribute("inert", overlaps);
+    floatingCall.setAttribute("aria-hidden", String(overlaps));
+  };
+  const footerObserver = new IntersectionObserver(([entry]) => setFooterOverlap(entry.isIntersecting), {
+    rootMargin: "0px 0px 16px 0px",
+  });
+  footerObserver.observe(siteFooter);
+}
 
 const closeLanguageMenus = (except?: HTMLDetailsElement) => {
   languageMenus.forEach((menu) => {
@@ -282,50 +231,6 @@ if (!deferredMaps.length) {
   }, { once: true });
 }
 
-// The poster is the default experience. Video starts after load only when a
-// real source exists, the scene is visible and the device permits motion.
-const heroVideo = document.querySelector<HTMLVideoElement>("[data-hero-video]");
-if (heroVideo) {
-  const hasSource = Boolean(heroVideo.querySelector<HTMLSourceElement>("source[src]"));
-  const canPlayMotion = hasSource && !conserveDecorativeMotion;
-
-  if (!canPlayMotion) {
-    heroVideo.autoplay = false;
-    heroVideo.pause();
-  } else {
-    let mayStart = document.readyState === "complete";
-    let videoInView = true;
-    const revealVideo = () => heroVideo.classList.add("is-ready");
-    const hideVideo = () => heroVideo.classList.remove("is-ready");
-    const syncVideo = () => {
-      if (!mayStart || document.visibilityState !== "visible" || !videoInView) {
-        heroVideo.pause();
-        return;
-      }
-      heroVideo.preload = "metadata";
-      heroVideo.play().catch(hideVideo);
-    };
-    const scheduleStart = () => window.setTimeout(() => {
-      mayStart = true;
-      syncVideo();
-    }, 350);
-
-    heroVideo.addEventListener("canplay", revealVideo, { once: true });
-    heroVideo.addEventListener("error", hideVideo);
-    document.addEventListener("visibilitychange", syncVideo);
-
-    if ("IntersectionObserver" in window) {
-      const videoObserver = new IntersectionObserver(([entry]) => {
-        videoInView = entry.isIntersecting;
-        syncVideo();
-      });
-      videoObserver.observe(heroVideo);
-    }
-
-    if (document.readyState === "complete") scheduleStart();
-    else window.addEventListener("load", scheduleStart, { once: true });
-  }
-}
 // Smooth, restrained hero motion. One frame follows each native scroll update;
 // there is no trailing interpolation competing with the user's gesture.
 const heroParallax = document.querySelector<HTMLElement>("[data-hero-parallax]");

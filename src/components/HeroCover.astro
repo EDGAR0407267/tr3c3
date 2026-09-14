@@ -1,6 +1,7 @@
 ---
 import { getHeroTranslation, getTranslation, localizedPath, type Language } from "../i18n/config";
 import { BUSINESS_NAME } from "../data/site";
+import { GOOGLE_MAPS_URL } from "../data/location";
 import OrganicDivider from "./OrganicDivider.astro";
 import "../styles/hero-cinema.css";
 import "../styles/hero-all-day.css";
@@ -10,17 +11,6 @@ const { lang } = Astro.props;
 const t = getTranslation(lang);
 const hero = getHeroTranslation(lang);
 const menuPath = localizedPath(lang, "menu");
-const contactPath = `${localizedPath(lang, "contact")}#contenido`;
-const reserveCta: Record<Language, string> = {
-  es: "Reservar mesa",
-  ca: "Reservar taula",
-  en: "Book a table",
-  fr: "Réserver une table",
-  de: "Tisch reservieren",
-  zh: "预订餐桌",
-  nl: "Tafel reserveren",
-  it: "Prenota un tavolo",
-};
 ---
 
 <section class="hero-cover hero-cinema" aria-labelledby="hero-title" aria-describedby="hero-description" data-loop-motion>
@@ -47,19 +37,6 @@ const reserveCta: Record<Language, string> = {
       />
     </picture>
 
-    <video
-      class="hero-cinema__video"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="none"
-      aria-hidden="true"
-      data-hero-video
-    >
-      <!-- Vídeo temporal seleccionado: https://pixabay.com/videos/latte-art-coffee-33434/ · Pixabay Content License. -->
-      <!-- TODO: Sustituir este vídeo temporal por el vídeo oficial de TR3C3. -->
-    </video>
   </div>
 
   <div class="hero-cinema__shade" aria-hidden="true"></div>
@@ -84,8 +61,8 @@ const reserveCta: Record<Language, string> = {
           <span>{t.home.menuCta}</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
         </a>
-        <a class="hero-cinema__secondary" href={contactPath}>
-          <span>{reserveCta[lang]}</span><span aria-hidden="true">&#8594;</span>
+        <a class="hero-cinema__secondary" href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">
+          <span>{t.home.mapCta}</span><span aria-hidden="true">&#8599;</span>
         </a>
       </div>
     </div>

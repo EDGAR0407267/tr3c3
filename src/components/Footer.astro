@@ -105,7 +105,6 @@ const t = getTranslation(lang);
 const copy = footerEditorialCopy[lang];
 const year = new Date().getFullYear();
 const homePath = localizedPath(lang);
-const essencePath = `${homePath}#home-ritual-title`;
 ---
 
 <DeferredStyles href={footerStylesHref} />
@@ -169,7 +168,6 @@ const essencePath = `${homePath}#home-ritual-title`;
           <ul class="tr-footer__nav-list">
             <li><a href={homePath}>{t.nav.home}</a></li>
             <li><a href={localizedPath(lang, "menu")}>{t.nav.menu}</a></li>
-            <li><a href={essencePath}>{t.nav.essence}</a></li>
             <li><a href={localizedPath(lang, "contact")}>{t.nav.contact}</a></li>
           </ul>
         </nav>

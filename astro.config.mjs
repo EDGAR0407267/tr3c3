@@ -2,25 +2,25 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
 const redirectOnlyUrls = new Set([
-  "https://www.tr3c3.com/",
-  "https://www.tr3c3.com/404.html",
-  "https://www.tr3c3.com/brunch-miami-platja/",
-  "https://www.tr3c3.com/mejor-cafe-especialidad-miami-platja/",
-  "https://www.tr3c3.com/mejores-cafeterias-miami-platja/",
-  "https://www.tr3c3.com/cafeteria-premium-miami-platja/",
-  "https://www.tr3c3.com/desayunos-miami-platja/",
-  "https://www.tr3c3.com/donde-tomar-cafe-miami-platja/",
-  "https://www.tr3c3.com/contacto/",
-  "https://www.tr3c3.com/equipo/",
-  "https://www.tr3c3.com/menu/",
-  "https://www.tr3c3.com/nosotros/",
-  "https://www.tr3c3.com/brunch/",
-  "https://www.tr3c3.com/cafe/",
-  "https://www.tr3c3.com/kitchen/",
+  "https://trecemiami.com/",
+  "https://trecemiami.com/404.html",
+  "https://trecemiami.com/brunch-miami-platja/",
+  "https://trecemiami.com/mejor-cafe-especialidad-miami-platja/",
+  "https://trecemiami.com/mejores-cafeterias-miami-platja/",
+  "https://trecemiami.com/cafeteria-premium-miami-platja/",
+  "https://trecemiami.com/desayunos-miami-platja/",
+  "https://trecemiami.com/donde-tomar-cafe-miami-platja/",
+  "https://trecemiami.com/contacto/",
+  "https://trecemiami.com/equipo/",
+  "https://trecemiami.com/menu/",
+  "https://trecemiami.com/nosotros/",
+  "https://trecemiami.com/brunch/",
+  "https://trecemiami.com/cafe/",
+  "https://trecemiami.com/kitchen/",
 ]);
 
 export default defineConfig({
-  site: "https://www.tr3c3.com",
+  site: "https://trecemiami.com",
   output: "static",
   trailingSlash: "always",
   redirects: {
@@ -32,7 +32,7 @@ export default defineConfig({
     sitemap({
       filter: (page) =>
         !redirectOnlyUrls.has(page) &&
-        !/\/(nosotros|equipo)\//.test(page),
+        !/\/equipo\//.test(page),
       i18n: {
         defaultLocale: "es",
         locales: {

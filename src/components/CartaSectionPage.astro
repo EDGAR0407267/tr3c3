@@ -42,7 +42,7 @@ const breadcrumbs = [
 ];
 
 const offerForPrice = (price: string) => {
-  const match = price.trim().match(/^(\d+),(\d{2})€$/);
+  const match = price.trim().match(/^(\d+),(\d{2})\s*€$/);
   return match ? {
     "@type": "Offer",
     price: `${match[1]}.${match[2]}`,

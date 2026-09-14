@@ -1,0 +1,156 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InternalHero from "./InternalHero.astro";
+import Img from "./Img.astro";
+import { homeExperienceCopy } from "../data/home-experience";
+import { getTranslation, localizedPath, type Language } from "../i18n/config";
+import { breadcrumbLabels, getPageSeo } from "../config/seo";
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const t = getTranslation(lang);
+const experience = homeExperienceCopy[lang];
+const seo = getPageSeo(lang, "essence");
+const menuPath = localizedPath(lang, "menu");
+const contactPath = localizedPath(lang, "contact");
+const canonicalPath = localizedPath(lang, "essence");
+
+const copyByLanguage: Record<Language, {
+  heroEyebrow: string;
+  storyKicker: string;
+  manifestoKicker: string;
+  principlesKicker: string;
+  principlesTitle: string;
+  dayKicker: string;
+  teamKicker: string;
+  teamCaption: string;
+  finalKicker: string;
+}> = {
+  es: { heroEyebrow: "TR3C3 · Miami Platja", storyKicker: "Nuestro origen", manifestoKicker: "El oficio", principlesKicker: "Lo que nos guía", principlesTitle: "Criterio en cada detalle.", dayKicker: "Del día a la noche", teamKicker: "Hospitalidad", teamCaption: "El equipo y la energía de TR3C3", finalKicker: "Ven a vivirlo" },
+  ca: { heroEyebrow: "TR3C3 · Miami Platja", storyKicker: "El nostre origen", manifestoKicker: "L'ofici", principlesKicker: "El que ens guia", principlesTitle: "Criteri en cada detall.", dayKicker: "Del dia a la nit", teamKicker: "Hospitalitat", teamCaption: "L'equip i l'energia de TR3C3", finalKicker: "Vine a viure-ho" },
+  en: { heroEyebrow: "TR3C3 · Miami Platja", storyKicker: "Our beginnings", manifestoKicker: "The craft", principlesKicker: "What guides us", principlesTitle: "Purpose in every detail.", dayKicker: "From day to night", teamKicker: "Hospitality", teamCaption: "The team and energy behind TR3C3", finalKicker: "Come and experience it" },
+  fr: { heroEyebrow: "TR3C3 · Miami Platja", storyKicker: "Nos débuts", manifestoKicker: "Le savoir-faire", principlesKicker: "Ce qui nous guide", principlesTitle: "Du sens dans chaque détail.", dayKicker: "Du jour à la nuit", teamKicker: "Hospitalité", teamCaption: "L'équipe et l'énergie de TR3C3", finalKicker: "Venez le vivre" },
+  de: { heroEyebrow: "TR3C3 · Miami Platja", storyKicker: "Unser Ursprung", manifestoKicker: "Das Handwerk", principlesKicker: "Was uns leitet", principlesTitle: "Haltung in jedem Detail.", dayKicker: "Vom Tag in die Nacht", teamKicker: "Gastlichkeit", teamCaption: "Das Team und die Energie von TR3C3", finalKicker: "Erlebe es selbst" },
+  zh: { heroEyebrow: "TR3C3 · Miami Platja", storyKicker: "我们的起点", manifestoKicker: "技艺", principlesKicker: "我们的坚持", principlesTitle: "每个细节都有考量。", dayKicker: "从白天到夜晚", teamKicker: "待客之道", teamCaption: "TR3C3 的团队与活力", finalKicker: "亲自体验" },
+  nl: { heroEyebrow: "TR3C3 · Miami Platja", storyKicker: "Ons begin", manifestoKicker: "Het vak", principlesKicker: "Wat ons leidt", principlesTitle: "Aandacht in elk detail.", dayKicker: "Van dag naar avond", teamKicker: "Gastvrijheid", teamCaption: "Het team en de energie van TR3C3", finalKicker: "Kom het beleven" },
+  it: { heroEyebrow: "TR3C3 · Miami Platja", storyKicker: "Le nostre origini", manifestoKicker: "Il mestiere", principlesKicker: "Ciò che ci guida", principlesTitle: "Criterio in ogni dettaglio.", dayKicker: "Dal giorno alla sera", teamKicker: "Ospitalità", teamCaption: "Il team e l'energia di TR3C3", finalKicker: "Vieni a viverlo" },
+};
+const copy = copyByLanguage[lang] ?? copyByLanguage.es;
+const breadcrumbs = [
+  { name: breadcrumbLabels[lang].home, href: localizedPath(lang) },
+  { name: breadcrumbLabels[lang].essence, href: canonicalPath },
+];
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  lang={lang}
+  page="essence"
+  canonicalPath={canonicalPath}
+  image="/images/tr3c3-team.webp"
+  imageAlt={copy.teamCaption}
+  schemaType="WebPage"
+  breadcrumbs={breadcrumbs}
+>
+  <InternalHero
+    eyebrow={copy.heroEyebrow}
+    title={t.nav.essence}
+    lead={t.home.story}
+    image="/images/tr3c3-team.webp"
+    alt={copy.teamCaption}
+    variant="essence"
+    primaryHref="#contenido"
+    primaryLabel={copy.storyKicker}
+  />
+
+  <section id="contenido" class="editorial-section story-chapter reveal" data-reveal aria-labelledby="essence-story-title">
+    <div class="tr-shell story-chapter__grid">
+      <div class="story-collage" aria-hidden="true">
+        <figure class="story-collage__wide"><Img src="/images/interior-cafe.webp" alt="" width={1600} height={1067} sizes="(max-width: 760px) 78vw, 38vw" /></figure>
+        <figure class="story-collage__small"><Img src="/images/croissant-coffee.webp" alt="" width={1400} height={900} sizes="(max-width: 760px) 44vw, 20vw" /></figure>
+      </div>
+      <div class="editorial-copy">
+        <p class="editorial-kicker">{copy.storyKicker}</p>
+        <h2 id="essence-story-title">{t.home.storyTitle}</h2>
+        <p>{t.home.story}</p>
+        <span class="editorial-signature">TR3C3 · Miami Platja</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="editorial-manifesto reveal" data-reveal aria-labelledby="essence-manifesto-title">
+    <div class="tr-shell editorial-manifesto__grid">
+      <p class="editorial-kicker">{copy.manifestoKicker}</p>
+      <h2 id="essence-manifesto-title">{experience.coffee.title}</h2>
+      <p>{experience.coffee.lead}</p>
+    </div>
+  </section>
+
+  <section class="editorial-section values-ledger reveal" data-reveal aria-labelledby="essence-principles-title">
+    <div class="tr-shell">
+      <div class="editorial-heading editorial-heading--split">
+        <p class="editorial-kicker">{copy.principlesKicker}</p>
+        <h2 id="essence-principles-title">{copy.principlesTitle}</h2>
+      </div>
+      <div class="values-ledger__list">
+        {experience.coffee.principles.map((principle, index) => (
+          <article>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <h3>{principle.title}</h3>
+            <p>{principle.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="editorial-triptych" aria-label={experience.day.title}>
+    {experience.day.moments.map((moment, index) => {
+      const images = ["/images/day-breakfast-toast.webp", "/images/day-brunch-salmon-toast.webp", "/images/day-dinner-mediterranean.webp"];
+      return (
+        <article>
+          <Img src={images[index]} alt={moment.alt} width={1200} height={900} sizes="(max-width: 760px) 100vw, 34vw" />
+          <div>
+            <p class="editorial-kicker">{index === 0 ? copy.dayKicker : moment.label}</p>
+            <h2>{moment.title}</h2>
+            <p>{moment.text}</p>
+          </div>
+        </article>
+      );
+    })}
+  </section>
+
+  <section class="editorial-quote reveal" data-reveal>
+    <div class="tr-shell">
+      <span aria-hidden="true">“</span>
+      <blockquote>{experience.coffee.quote}</blockquote>
+      <p>TR3C3 · Speciality Coffee</p>
+    </div>
+  </section>
+
+  <section class="editorial-section team-portrait reveal" data-reveal aria-labelledby="essence-team-title">
+    <div class="tr-shell team-portrait__grid">
+      <figure>
+        <Img src="/images/tr3c3-team.webp" alt={copy.teamCaption} width={1600} height={1067} sizes="(max-width: 760px) 100vw, 48vw" />
+        <figcaption>{copy.teamCaption}</figcaption>
+      </figure>
+      <div class="editorial-copy">
+        <p class="editorial-kicker">{copy.teamKicker}</p>
+        <h2 id="essence-team-title">{t.home.teamTitle}</h2>
+        <p>{t.home.team}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="editorial-final-cta editorial-final-cta--copper reveal" data-reveal>
+    <div class="tr-shell">
+      <p class="editorial-kicker">{copy.finalKicker}</p>
+      <h2>{t.home.contactTitle}</h2>
+      <div class="editorial-actions">
+        <a class="tr-button tr-button--light" href={menuPath}>{t.home.menuCta}</a>
+        <a class="tr-button tr-button--light" href={contactPath}>{t.nav.contact}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

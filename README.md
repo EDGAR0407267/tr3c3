@@ -1,89 +1,85 @@
 # TR3C3 Coffee & Brunch
 
-Web oficial de **TR3C3 Coffee & Brunch**, una propuesta de café de especialidad, brunch y gastronomía mediterránea en Miami Platja, Tarragona.
+Este repositorio contiene la web oficial de **TR3C3 Coffee & Brunch**, un espacio en Miami Platja (Tarragona) dedicado al café de especialidad, los desayunos, el brunch y la cocina mediterránea. He desarrollado esta web para trasladar al entorno digital la identidad de TR3C3: un lugar cercano, cuidado y pensado para disfrutar desde el primer café de la mañana hasta la cena y las copas de la noche.
 
-## Sobre el proyecto
+## La web
 
-Sitio web corporativo desarrollado para un negocio real de restauración y cafetería. El proyecto presenta la identidad y la propuesta gastronómica de TR3C3, facilita el acceso a sus cartas y centraliza la información de ubicación, horarios y contacto.
+Mi objetivo ha sido crear una experiencia visual, rápida y fácil de utilizar desde cualquier dispositivo. La web permite conocer el concepto de TR3C3, consultar sus cartas, descubrir al equipo y encontrar toda la información necesaria para visitar el local.
 
-## Objetivos
+Entre sus principales características están:
 
-- Presentar la marca y su propuesta de café de especialidad, brunch y cocina mediterránea.
-- Ofrecer cartas de comida, café, cócteles y vinos en varios idiomas.
-- Facilitar la ubicación, el contacto y el acceso a los perfiles sociales del negocio.
-- Mejorar la presencia digital mediante SEO técnico y páginas de búsqueda local.
-- Mantener una experiencia rápida, accesible y responsive en móvil, tablet y escritorio.
+- Diseño responsive para móvil, tablet y escritorio.
+- Cartas de desayunos, brunch, comida, bebidas, vinos y cócteles.
+- Contenido disponible en español, catalán, inglés, francés, alemán, neerlandés, italiano y chino simplificado.
+- Información de contacto, horarios y ubicación mediante Google Maps.
+- Integración con el perfil oficial de Instagram.
+- Imágenes optimizadas en formatos WebP y AVIF.
+- SEO técnico, datos estructurados, sitemap, etiquetas canonical y páginas orientadas a búsquedas locales.
+- Navegación accesible, página 404 y redirecciones para rutas antiguas.
+- Auditorías automáticas de SEO y enlaces internos.
 
-## Características
+## Tecnologías que he utilizado
 
-- Diseño responsive con navegación y menú móvil.
-- Contenido localizado en español, catalán, inglés, francés, alemán, neerlandés, italiano y chino simplificado.
-- Cartas estructuradas por secciones para comida, bebidas, cócteles y vinos.
-- Secciones editoriales sobre el equipo, la esencia de la marca y el café de especialidad.
-- Integración con Google Maps e Instagram.
-- Galerías, carruseles, reseñas y llamadas a la acción contextuales.
-- Metadatos SEO, datos estructurados, canonical, Open Graph, sitemap y `robots.txt`.
-- Imágenes responsive en WebP y AVIF y fuentes alojadas localmente.
-- Página 404 y redirecciones para rutas anteriores.
-- Auditorías automatizadas de SEO y enlaces internos.
+He construido el proyecto principalmente con:
 
-## Tecnologías
+- [Astro 5](https://astro.build/) para crear una web estática rápida, modular y optimizada.
+- **TypeScript** para mantener el código tipado, ordenado y fácil de mantener.
+- **JavaScript** para las interacciones y el comportamiento en el navegador.
+- **HTML semántico** y componentes `.astro` para estructurar el contenido.
+- **CSS** para desarrollar todo el sistema visual, las animaciones y el diseño responsive.
+- [`@astrojs/sitemap`](https://docs.astro.build/en/guides/integrations-guide/sitemap/) para generar el sitemap automáticamente.
+- **Node.js y npm** para gestionar dependencias, scripts de desarrollo, validación y build.
 
-- [Astro 5](https://astro.build/)
-- TypeScript
-- JavaScript
-- CSS
-- `@astrojs/sitemap`
+También he trabajado especialmente la optimización de recursos, el rendimiento, la accesibilidad, la arquitectura multidioma y el SEO local.
 
-## Instalación
+## Enlaces
 
-Requiere una versión moderna de Node.js y npm.
+- Web: [trecemiami.com](https://trecemiami.com)
+- Instagram: [@trece.coffee.brunch](https://www.instagram.com/trece.coffee.brunch/)
+
+## Desarrollo local
+
+Para ejecutar el proyecto es necesario tener instalada una versión moderna de Node.js y npm.
 
 ```bash
 npm install
 npm run dev
 ```
 
-El servidor de desarrollo muestra la URL local en la terminal.
-
-## Validación y build
+Para comprobar el código, generar la versión de producción y ejecutar las auditorías de SEO y enlaces:
 
 ```bash
 npm run validate
 ```
 
-Este comando ejecuta la comprobación de Astro y TypeScript, genera el build de producción y valida SEO y enlaces. Para ejecutar únicamente el build:
+También se puede generar únicamente el build de producción con:
 
 ```bash
 npm run build
 ```
 
-La salida estática se genera en `dist/`.
+Los archivos estáticos finales se generan en `dist/`.
 
-## Producción
-
-[www.tr3c3.com](https://www.tr3c3.com)
-
-## Estructura principal
+## Estructura del proyecto
 
 ```text
 src/
-  components/   Componentes Astro reutilizables
-  config/       Configuración canónica del negocio y SEO
+  components/   Componentes reutilizables de Astro
+  config/       Configuración del negocio y del SEO
   data/         Cartas, traducciones y contenido estructurado
   i18n/         Configuración multidioma
-  layouts/      Layout base y metadatos compartidos
-  pages/        Rutas principales, localizadas y páginas SEO
-  scripts/      Comportamiento del sitio en cliente
-  styles/       Sistema visual y estilos por sección
+  layouts/      Layout principal y metadatos compartidos
+  pages/        Rutas, páginas localizadas y páginas de SEO local
+  scripts/      Interacciones del lado del cliente
+  styles/       Sistema visual y estilos de cada sección
 public/
-  brand/        Logotipos e identidad visual
-  fonts/        Tipografías locales
+  brand/        Logotipos y recursos de identidad visual
+  fonts/        Tipografías alojadas localmente
   images/       Fotografías y variantes responsive
-tools/          Auditorías de SEO, enlaces y sitio completo
-docs/           Documentación técnica y de diseño
+tools/          Scripts de optimización y auditoría
+docs/           Documentación técnica y de despliegue
 ```
 
 ## Licencia y uso
 
-El código y los recursos visuales de este repositorio corresponden al proyecto TR3C3 Coffee & Brunch. No se concede permiso para reutilizar la marca, fotografías o identidad visual fuera de este proyecto.
+El código, la marca, las fotografías y los recursos visuales de este repositorio pertenecen al proyecto TR3C3 Coffee & Brunch. No se autoriza su reutilización fuera de este proyecto sin permiso previo.
