@@ -34,7 +34,7 @@ También he trabajado especialmente la optimización de recursos, el rendimiento
 
 ## Enlaces
 
-- Web: [trecemiami.com](https://trecemiami.com)
+- Web: [trecemiami.com/es/](https://trecemiami.com/es/)
 - Instagram: [@trece.coffee.brunch](https://www.instagram.com/trece.coffee.brunch/)
 
 ## Desarrollo local
