@@ -1,85 +1,61 @@
 # TR3C3 Coffee & Brunch
 
-Este repositorio contiene la web oficial de **TR3C3 Coffee & Brunch**, un espacio en Miami Platja (Tarragona) dedicado al café de especialidad, los desayunos, el brunch y la cocina mediterránea. He desarrollado esta web para trasladar al entorno digital la identidad de TR3C3: un lugar cercano, cuidado y pensado para disfrutar desde el primer café de la mañana hasta la cena y las copas de la noche.
+A multilingual website for a specialty coffee and brunch restaurant in Miami Platja, Spain. It brings the restaurant's menus, story, team, and visit information into one fast, responsive experience.
 
-## La web
+[Live website](https://trecemiami.com/es/) · [Spanish project guide](README.es.md)
 
-Mi objetivo ha sido crear una experiencia visual, rápida y fácil de utilizar desde cualquier dispositivo. La web permite conocer el concepto de TR3C3, consultar sus cartas, descubrir al equipo y encontrar toda la información necesaria para visitar el local.
+## Overview
 
-Entre sus principales características están:
+This real business website serves local customers and international visitors. Its static pages are designed for quick browsing and local search discovery.
 
-- Diseño responsive para móvil, tablet y escritorio.
-- Cartas de desayunos, brunch, comida, bebidas, vinos y cócteles.
-- Contenido disponible en español, catalán, inglés, francés, alemán, neerlandés, italiano y chino simplificado.
-- Información de contacto, horarios y ubicación mediante Google Maps.
-- Integración con el perfil oficial de Instagram.
-- Imágenes optimizadas en formatos WebP y AVIF.
-- SEO técnico, datos estructurados, sitemap, etiquetas canonical y páginas orientadas a búsquedas locales.
-- Navegación accesible, página 404 y redirecciones para rutas antiguas.
-- Auditorías automáticas de SEO y enlaces internos.
+## Features
 
-## Tecnologías que he utilizado
+- Menus and content in Spanish, Catalan, English, French, German, Dutch, Italian, and Simplified Chinese.
+- Responsive restaurant, team, menu, and local search pages.
+- Canonical URLs, structured data, sitemap, redirects, and internal link audits.
+- Optimized local images, accessible navigation, and a custom 404 page.
 
-He construido el proyecto principalmente con:
+## Tech Stack
 
-- [Astro 5](https://astro.build/) para crear una web estática rápida, modular y optimizada.
-- **TypeScript** para mantener el código tipado, ordenado y fácil de mantener.
-- **JavaScript** para las interacciones y el comportamiento en el navegador.
-- **HTML semántico** y componentes `.astro` para estructurar el contenido.
-- **CSS** para desarrollar todo el sistema visual, las animaciones y el diseño responsive.
-- [`@astrojs/sitemap`](https://docs.astro.build/en/guides/integrations-guide/sitemap/) para generar el sitemap automáticamente.
-- **Node.js y npm** para gestionar dependencias, scripts de desarrollo, validación y build.
+Astro 5, TypeScript, CSS, `@astrojs/sitemap`, Node.js, and npm.
 
-También he trabajado especialmente la optimización de recursos, el rendimiento, la accesibilidad, la arquitectura multidioma y el SEO local.
+## Architecture
 
-## Enlaces
+Astro generates static pages. Shared components and layouts provide navigation and metadata; `src/data/` and `src/i18n/` hold menus and localized content. Scripts in `tools/` audit the generated site.
 
-- Web: [trecemiami.com/es/](https://trecemiami.com/es/)
-- Instagram: [@trece.coffee.brunch](https://www.instagram.com/trece.coffee.brunch/)
+## Getting Started
 
-## Desarrollo local
+### Prerequisites
 
-Para ejecutar el proyecto es necesario tener instalada una versión moderna de Node.js y npm.
+Node.js and npm.
+
+### Installation and local run
 
 ```bash
-npm install
+git clone https://github.com/EDGAR0407267/tr3c3.git
+cd tr3c3
+npm ci
 npm run dev
 ```
 
-Para comprobar el código, generar la versión de producción y ejecutar las auditorías de SEO y enlaces:
+Astro prints the local URL. No environment variables are required for local development. To check types, build, and audit SEO and links, run `npm run validate`. `npm run build` creates `dist/`; `npm run preview` serves the build locally.
 
-```bash
-npm run validate
-```
+## Project Structure
 
-También se puede generar únicamente el build de producción con:
+| Path | Purpose |
+| --- | --- |
+| `src/pages/` | Localized routes and local search pages |
+| `src/components/`, `src/layouts/` | Reusable UI and page metadata |
+| `src/data/`, `src/i18n/` | Menus, translations, and locale configuration |
+| `public/` | Static brand, font, and image assets |
+| `tools/`, `docs/` | Audits, design, SEO, and deployment notes |
 
-```bash
-npm run build
-```
+## Status
 
-Los archivos estáticos finales se generan en `dist/`.
+**Production.** The site is available at [trecemiami.com](https://trecemiami.com/es/).
 
-## Estructura del proyecto
+## Author
 
-```text
-src/
-  components/   Componentes reutilizables de Astro
-  config/       Configuración del negocio y del SEO
-  data/         Cartas, traducciones y contenido estructurado
-  i18n/         Configuración multidioma
-  layouts/      Layout principal y metadatos compartidos
-  pages/        Rutas, páginas localizadas y páginas de SEO local
-  scripts/      Interacciones del lado del cliente
-  styles/       Sistema visual y estilos de cada sección
-public/
-  brand/        Logotipos y recursos de identidad visual
-  fonts/        Tipografías alojadas localmente
-  images/       Fotografías y variantes responsive
-tools/          Scripts de optimización y auditoría
-docs/           Documentación técnica y de despliegue
-```
+Edgar Pedret Girones · [GitHub](https://github.com/EDGAR0407267)
 
-## Licencia y uso
-
-El código, la marca, las fotografías y los recursos visuales de este repositorio pertenecen al proyecto TR3C3 Coffee & Brunch. No se autoriza su reutilización fuera de este proyecto sin permiso previo.
+The restaurant's brand and visual assets remain part of the TR3C3 project; see the [usage note](README.es.md#licencia-y-uso).
